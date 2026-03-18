@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0c0c0e" />
+      <stop offset="100%" stop-color="#18181c" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <rect x="48" y="48" width="1104" height="534" rx="28" fill="none" stroke="rgba(255,255,255,0.09)" />
+  <text x="92" y="170" fill="#c8f060" font-family="Georgia, serif" font-size="72">Walkcat</text>
+  <text x="92" y="280" fill="#e8e8ec" font-family="Arial, sans-serif" font-size="72" font-weight="700">Business systems</text>
+  <text x="92" y="360" fill="#e8e8ec" font-family="Arial, sans-serif" font-size="72" font-weight="700">&amp; web design</text>
+  <text x="92" y="450" fill="#9898a8" font-family="Arial, sans-serif" font-size="34">For Irish trade and service businesses that need less admin, better systems,</text>
+  <text x="92" y="495" fill="#9898a8" font-family="Arial, sans-serif" font-size="34">and websites that generate enquiries.</text>
+</svg>

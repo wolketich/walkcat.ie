@@ -1,0 +1,10 @@
+{
+  "name": "walkcat-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-site.mjs",
+    "dev": "python3 -m http.server 4321"
+  }
+}

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-labelledby="title desc">
+  <title id="title">Walkcat favicon</title>
+  <desc id="desc">Walkcat icon with a dark background and neon green WC lettering.</desc>
+  <rect width="180" height="180" rx="32" fill="#0c0c0e" />
+  <rect x="14" y="14" width="152" height="152" rx="24" fill="#111114" stroke="rgba(255,255,255,0.08)" />
+  <text x="90" y="106" text-anchor="middle" font-size="70" font-family="Georgia, serif" fill="#c8f060">W</text>
+  <text x="118" y="122" text-anchor="middle" font-size="42" font-family="Arial, sans-serif" font-weight="700" fill="#e8e8ec">c</text>
+</svg>
