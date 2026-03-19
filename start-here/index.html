@@ -9,6 +9,11 @@
   <meta name="author" content="Vladislav Cernega - Walkcat" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://walkcat.ie/start-here/" />
+  <link rel="alternate" hreflang="en-IE" href="https://walkcat.ie/start-here/" />
+  <link rel="alternate" hreflang="ru" href="https://walkcat.ie/ru/start-here/" />
+  <link rel="alternate" hreflang="uk" href="https://walkcat.ie/ua/start-here/" />
+  <link rel="alternate" hreflang="ro" href="https://walkcat.ie/ro/start-here/" />
+  <link rel="alternate" hreflang="x-default" href="https://walkcat.ie/start-here/" />
 
   <meta property="og:title" content="Start Here - Describe Your Problem | Walkcat Ireland" />
   <meta property="og:description" content="Tell Walkcat what is slow, manual, or broken in your business. No technical knowledge needed. Get a direct response within one working day." />
@@ -16,6 +21,9 @@
   <meta property="og:url" content="https://walkcat.ie/start-here/" />
   <meta property="og:image" content="https://walkcat.ie/assets/og/walkcat-og.svg" />
   <meta property="og:locale" content="en_IE" />
+  <meta property="og:locale:alternate" content="ru_RU" />
+  <meta property="og:locale:alternate" content="uk_UA" />
+  <meta property="og:locale:alternate" content="ro_RO" />
   <meta property="og:site_name" content="Walkcat" />
 
   <meta name="twitter:card" content="summary_large_image" />
@@ -70,7 +78,7 @@
     {
       "@type": "WebSite",
       "@id": "https://walkcat.ie/#website",
-      "url": "https://walkcat.ie",
+      "url": "https://walkcat.ie/",
       "name": "Walkcat",
       "description": "Business systems and web design for Irish SMEs",
       "publisher": {
@@ -108,7 +116,7 @@
 }
   </script>
 </head>
-<body data-page="contact">
+<body data-page="contact" data-locale="en" data-locale-prefix="">
   <nav>
     <div class="nav-inner">
       <a class="nav-logo" href="/">Walk<span>cat</span></a>
@@ -120,6 +128,9 @@
         <a href="/about/" data-page="about">About</a>
       </div>
       <div class="nav-cta">
+        <div class="lang-switcher nav-lang" aria-label="Language">
+    <a class="lang-switcher-link active" href="/start-here/" lang="en-IE" hreflang="en-IE">EN</a><a class="lang-switcher-link" href="/ru/start-here/" lang="ru" hreflang="ru">RU</a><a class="lang-switcher-link" href="/ua/start-here/" lang="uk" hreflang="uk">UA</a><a class="lang-switcher-link" href="/ro/start-here/" lang="ro" hreflang="ro">RO</a>
+  </div>
         <a class="btn-nav" href="/start-here/">Start With Your Problem</a>
         <button class="hamburger" id="hamburger" type="button" onclick="toggleMenu()" aria-label="Open navigation">
           <span></span>
@@ -130,6 +141,9 @@
     </div>
   </nav>
   <div class="mobile-menu" id="mobileMenu">
+    <div class="lang-switcher mobile-lang" aria-label="Language">
+    <a class="lang-switcher-link active" href="/start-here/" lang="en-IE" hreflang="en-IE">EN</a><a class="lang-switcher-link" href="/ru/start-here/" lang="ru" hreflang="ru">RU</a><a class="lang-switcher-link" href="/ua/start-here/" lang="uk" hreflang="uk">UA</a><a class="lang-switcher-link" href="/ro/start-here/" lang="ro" hreflang="ro">RO</a>
+  </div>
     <a href="/">Home</a>
     <a href="/services/">Services</a>
     <a href="/how-i-work/">How I Work</a>
@@ -283,7 +297,7 @@
     <div class="footer-inner">
       <div class="footer-brand">
         <a class="nav-logo" href="/" style="display:block;margin-bottom:10px;">Walk<span>cat</span></a>
-        <p>Business systems &amp; web design for Irish SMEs. Workflow automation, CRM setup, process improvement, and websites that generate leads. Based in Dublin, working across Ireland.</p>
+        <p>Business systems & web design for Irish SMEs. Workflow automation, CRM setup, process improvement, and websites that generate leads. Based in Dublin, working across Ireland.</p>
       </div>
       <div style="display: flex; flex-direction: column; gap: 24px;">
         <div class="footer-links">

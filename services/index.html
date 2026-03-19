@@ -9,6 +9,11 @@
   <meta name="author" content="Vladislav Cernega - Walkcat" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://walkcat.ie/services/" />
+  <link rel="alternate" hreflang="en-IE" href="https://walkcat.ie/services/" />
+  <link rel="alternate" hreflang="ru" href="https://walkcat.ie/ru/services/" />
+  <link rel="alternate" hreflang="uk" href="https://walkcat.ie/ua/services/" />
+  <link rel="alternate" hreflang="ro" href="https://walkcat.ie/ro/services/" />
+  <link rel="alternate" hreflang="x-default" href="https://walkcat.ie/services/" />
 
   <meta property="og:title" content="Services - Websites, Integrations &amp; Process Improvement | Walkcat" />
   <meta property="og:description" content="From lead-generating websites to workflow automation and CRM setup, Walkcat delivers practical technical fixes for Irish small businesses. No packages, no buzzwords." />
@@ -16,6 +21,9 @@
   <meta property="og:url" content="https://walkcat.ie/services/" />
   <meta property="og:image" content="https://walkcat.ie/assets/og/walkcat-og.svg" />
   <meta property="og:locale" content="en_IE" />
+  <meta property="og:locale:alternate" content="ru_RU" />
+  <meta property="og:locale:alternate" content="uk_UA" />
+  <meta property="og:locale:alternate" content="ro_RO" />
   <meta property="og:site_name" content="Walkcat" />
 
   <meta name="twitter:card" content="summary_large_image" />
@@ -70,7 +78,7 @@
     {
       "@type": "WebSite",
       "@id": "https://walkcat.ie/#website",
-      "url": "https://walkcat.ie",
+      "url": "https://walkcat.ie/",
       "name": "Walkcat",
       "description": "Business systems and web design for Irish SMEs",
       "publisher": {
@@ -80,68 +88,92 @@
     {
       "@type": "Service",
       "@id": "https://walkcat.ie/services/#service-1",
-      "serviceType": "Websites That Support Growth",
       "name": "Websites That Support Growth",
+      "serviceType": "Websites That Support Growth",
       "description": "Lead-generating websites for Irish trade and service businesses, built to turn visitors into enquiries.",
       "provider": {
         "@id": "https://walkcat.ie/#business"
       },
-      "areaServed": "Ireland"
+      "areaServed": {
+        "@type": "Country",
+        "name": "Ireland"
+      },
+      "url": "https://walkcat.ie/services/"
     },
     {
       "@type": "Service",
       "@id": "https://walkcat.ie/services/#service-2",
-      "serviceType": "Integrations and Workflow Fixes",
       "name": "Integrations and Workflow Fixes",
+      "serviceType": "Integrations and Workflow Fixes",
       "description": "Practical integrations between CRMs, inboxes, calendars, forms, and job systems to remove manual work.",
       "provider": {
         "@id": "https://walkcat.ie/#business"
       },
-      "areaServed": "Ireland"
+      "areaServed": {
+        "@type": "Country",
+        "name": "Ireland"
+      },
+      "url": "https://walkcat.ie/services/"
     },
     {
       "@type": "Service",
       "@id": "https://walkcat.ie/services/#service-3",
-      "serviceType": "Process Audits and Bottleneck Removal",
       "name": "Process Audits and Bottleneck Removal",
+      "serviceType": "Process Audits and Bottleneck Removal",
       "description": "Structured audits of how work flows through a business so the real bottleneck can be identified and fixed.",
       "provider": {
         "@id": "https://walkcat.ie/#business"
       },
-      "areaServed": "Ireland"
+      "areaServed": {
+        "@type": "Country",
+        "name": "Ireland"
+      },
+      "url": "https://walkcat.ie/services/"
     },
     {
       "@type": "Service",
       "@id": "https://walkcat.ie/services/#service-4",
-      "serviceType": "Automation and Repetitive Task Removal",
       "name": "Automation and Repetitive Task Removal",
+      "serviceType": "Automation and Repetitive Task Removal",
       "description": "Targeted automation for recurring admin, follow-up, reporting, and data movement across business tools.",
       "provider": {
         "@id": "https://walkcat.ie/#business"
       },
-      "areaServed": "Ireland"
+      "areaServed": {
+        "@type": "Country",
+        "name": "Ireland"
+      },
+      "url": "https://walkcat.ie/services/"
     },
     {
       "@type": "Service",
       "@id": "https://walkcat.ie/services/#service-5",
-      "serviceType": "Custom Internal Tools",
       "name": "Custom Internal Tools",
+      "serviceType": "Custom Internal Tools",
       "description": "Lightweight internal dashboards, quoting systems, trackers, and forms tailored to the business.",
       "provider": {
         "@id": "https://walkcat.ie/#business"
       },
-      "areaServed": "Ireland"
+      "areaServed": {
+        "@type": "Country",
+        "name": "Ireland"
+      },
+      "url": "https://walkcat.ie/services/"
     },
     {
       "@type": "Service",
       "@id": "https://walkcat.ie/services/#service-6",
-      "serviceType": "Practical IT and Technical Support",
       "name": "Practical IT and Technical Support",
+      "serviceType": "Practical IT and Technical Support",
       "description": "Direct technical help with setup, troubleshooting, and day-to-day systems issues affecting small teams.",
       "provider": {
         "@id": "https://walkcat.ie/#business"
       },
-      "areaServed": "Ireland"
+      "areaServed": {
+        "@type": "Country",
+        "name": "Ireland"
+      },
+      "url": "https://walkcat.ie/services/"
     }
   ]
 }
@@ -167,7 +199,7 @@
 }
   </script>
 </head>
-<body data-page="services">
+<body data-page="services" data-locale="en" data-locale-prefix="">
   <nav>
     <div class="nav-inner">
       <a class="nav-logo" href="/">Walk<span>cat</span></a>
@@ -179,6 +211,9 @@
         <a href="/about/" data-page="about">About</a>
       </div>
       <div class="nav-cta">
+        <div class="lang-switcher nav-lang" aria-label="Language">
+    <a class="lang-switcher-link active" href="/services/" lang="en-IE" hreflang="en-IE">EN</a><a class="lang-switcher-link" href="/ru/services/" lang="ru" hreflang="ru">RU</a><a class="lang-switcher-link" href="/ua/services/" lang="uk" hreflang="uk">UA</a><a class="lang-switcher-link" href="/ro/services/" lang="ro" hreflang="ro">RO</a>
+  </div>
         <a class="btn-nav" href="/start-here/">Start With Your Problem</a>
         <button class="hamburger" id="hamburger" type="button" onclick="toggleMenu()" aria-label="Open navigation">
           <span></span>
@@ -189,6 +224,9 @@
     </div>
   </nav>
   <div class="mobile-menu" id="mobileMenu">
+    <div class="lang-switcher mobile-lang" aria-label="Language">
+    <a class="lang-switcher-link active" href="/services/" lang="en-IE" hreflang="en-IE">EN</a><a class="lang-switcher-link" href="/ru/services/" lang="ru" hreflang="ru">RU</a><a class="lang-switcher-link" href="/ua/services/" lang="uk" hreflang="uk">UA</a><a class="lang-switcher-link" href="/ro/services/" lang="ro" hreflang="ro">RO</a>
+  </div>
     <a href="/">Home</a>
     <a href="/services/">Services</a>
     <a href="/how-i-work/">How I Work</a>
@@ -407,7 +445,7 @@
     <div class="footer-inner">
       <div class="footer-brand">
         <a class="nav-logo" href="/" style="display:block;margin-bottom:10px;">Walk<span>cat</span></a>
-        <p>Business systems &amp; web design for Irish SMEs. Workflow automation, CRM setup, process improvement, and websites that generate leads. Based in Dublin, working across Ireland.</p>
+        <p>Business systems & web design for Irish SMEs. Workflow automation, CRM setup, process improvement, and websites that generate leads. Based in Dublin, working across Ireland.</p>
       </div>
       <div style="display: flex; flex-direction: column; gap: 24px;">
         <div class="footer-links">

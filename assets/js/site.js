@@ -8,10 +8,83 @@ const routes = {
   blog: '/blog/'
 };
 
+const formCopy = {
+  "en": {
+    "subjectPrefix": "Walkcat enquiry",
+    "fallbackSubject": "New project brief",
+    "formTitle": "Walkcat intake form",
+    "name": "Name",
+    "businessName": "Business name",
+    "email": "Email",
+    "phone": "Phone / WhatsApp",
+    "website": "Website",
+    "businessType": "Business type",
+    "timeWaste": "What is currently wasting your time?",
+    "currentProblem": "What feels slow, manual, or broken right now?",
+    "desiredOutcome": "What outcome are you hoping for?",
+    "helpType": "What type of help do you think you need?",
+    "timeline": "Any timelines or constraints?"
+  },
+  "ru": {
+    "subjectPrefix": "запрос Walkcat",
+    "fallbackSubject": "Краткое описание нового проекта",
+    "formTitle": "Форма приема Walkcat",
+    "name": "Имя",
+    "businessName": "Название компании",
+    "email": "Электронная почта",
+    "phone": "Телефон/Ватсап",
+    "website": "Веб-сайт",
+    "businessType": "Тип бизнеса",
+    "timeWaste": "На что сейчас тратится ваше время?",
+    "currentProblem": "Что сейчас кажется медленным, ручным или сломанным?",
+    "desiredOutcome": "На какой результат вы надеетесь?",
+    "helpType": "Как вы думаете, какая помощь вам нужна?",
+    "timeline": "Есть ли какие-либо сроки или ограничения?"
+  },
+  "ua": {
+    "subjectPrefix": "Запит Walkcat",
+    "fallbackSubject": "Короткий опис нового проекту",
+    "formTitle": "Форма прийому Walkcat",
+    "name": "Ім'я",
+    "businessName": "Назва компанії",
+    "email": "Електронна пошта",
+    "phone": "Телефон / WhatsApp",
+    "website": "Веб-сайт",
+    "businessType": "Тип бізнесу",
+    "timeWaste": "Що зараз витрачає ваш час?",
+    "currentProblem": "Що зараз здається повільним, ручним або зламаним?",
+    "desiredOutcome": "На який результат ви сподіваєтесь?",
+    "helpType": "Який вид допомоги, на вашу думку, вам потрібен?",
+    "timeline": "Будь-які часові рамки чи обмеження?"
+  },
+  "ro": {
+    "subjectPrefix": "Întrebare Walkcat",
+    "fallbackSubject": "Un nou proiect",
+    "formTitle": "Formular de admisie Walkcat",
+    "name": "Nume",
+    "businessName": "Numele companiei",
+    "email": "E-mail",
+    "phone": "Telefon / WhatsApp",
+    "website": "Site-ul web",
+    "businessType": "Tipul afacerii",
+    "timeWaste": "Ce vă pierde timpul în prezent?",
+    "currentProblem": "Ce se simte lent, manual sau rupt acum?",
+    "desiredOutcome": "La ce rezultat speri?",
+    "helpType": "Ce tip de ajutor crezi că ai nevoie?",
+    "timeline": "Există termene sau constrângeri?"
+  }
+};
+
+function localizedPath(path) {
+  const prefix = document.body?.dataset?.localePrefix || '';
+  if (!prefix) return path;
+  return path === '/' ? `${prefix}/` : `${prefix}${path}`;
+}
+
 function showPage(id) {
   const target = routes[id];
   if (target) {
-    window.location.href = target;
+    window.location.href = localizedPath(target);
   }
 }
 
@@ -32,31 +105,36 @@ function toggleFaq(btn) {
   }
 }
 
-function buildMailtoUrl(data, email) {
-  const subject = encodeURIComponent(`Walkcat enquiry: ${data.business_name || data.name || 'New project brief'}`);
+function getFormCopy(locale) {
+  return formCopy[locale] || formCopy.en;
+}
+
+function buildMailtoUrl(data, email, locale) {
+  const copy = getFormCopy(locale);
+  const subject = encodeURIComponent(`${copy.subjectPrefix}: ${data.business_name || data.name || copy.fallbackSubject}`);
   const lines = [
-    'Walkcat intake form',
+    copy.formTitle,
     '',
-    `Name: ${data.name || ''}`,
-    `Business name: ${data.business_name || ''}`,
-    `Email: ${data.email || ''}`,
-    `Phone / WhatsApp: ${data.phone || ''}`,
-    `Website: ${data.website || ''}`,
-    `Business type: ${data.business_type || ''}`,
+    `${copy.name}: ${data.name || ''}`,
+    `${copy.businessName}: ${data.business_name || ''}`,
+    `${copy.email}: ${data.email || ''}`,
+    `${copy.phone}: ${data.phone || ''}`,
+    `${copy.website}: ${data.website || ''}`,
+    `${copy.businessType}: ${data.business_type || ''}`,
     '',
-    'What is currently wasting your time?',
+    copy.timeWaste,
     data.time_waste || '',
     '',
-    'What feels slow, manual, or broken right now?',
+    copy.currentProblem,
     data.current_problem || '',
     '',
-    'What outcome are you hoping for?',
+    copy.desiredOutcome,
     data.desired_outcome || '',
     '',
-    'What type of help do you think you need?',
+    copy.helpType,
     data.help_type || '',
     '',
-    'Any timelines or constraints?',
+    copy.timeline,
     data.timeline || ''
   ];
   return `mailto:${email}?subject=${subject}&body=${encodeURIComponent(lines.join('\n'))}`;
@@ -70,7 +148,8 @@ function handleSubmit(event) {
   const data = Object.fromEntries(new FormData(form).entries());
   const email = form.dataset.contactEmail || 'hello@walkcat.ie';
   const successPath = form.dataset.successPath || '/start-here/thanks/';
-  const mailtoUrl = buildMailtoUrl(data, email);
+  const locale = document.body?.dataset?.locale || 'en';
+  const mailtoUrl = buildMailtoUrl(data, email, locale);
 
   sessionStorage.setItem('walkcatDraft', JSON.stringify({
     email,

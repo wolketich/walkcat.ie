@@ -306,16 +306,25 @@ async function writePage(relativePath, html) {
   await writeFile(absolutePath, `${html.trim()}\n`, 'utf8');
 }
 
-function renderDocument({ pageKey, page, body, schemas, ogType = 'website', article = null, shouldIndex = true }) {
-  const canonical = `${site.baseUrl}${page.path === '/' ? '/' : page.path}`;
+function renderDocument({ locale, pageKey, page, body, schemas, basePath, ogType = 'website', article = null, shouldIndex = true }) {
+  const canonical = publicUrl(locale, basePath ?? page.path);
   const keywordsMeta = page.keywords ? `<meta name="keywords" content="${escapeHtmlAttribute(page.keywords)}" />\n` : '';
   const robots = shouldIndex ? 'index, follow' : 'noindex, follow';
+  const currentLocale = locales[locale];
   const articleMeta = article
     ? `<meta property="article:published_time" content="${article.published}" />\n  <meta property="article:author" content="${escapeHtmlAttribute(site.founder)}" />\n`
     : '';
+  const alternateLinks = localeOrder
+    .map((code) => `<link rel="alternate" hreflang="${escapeHtmlAttribute(locales[code].htmlLang)}" href="${publicUrl(code, basePath ?? page.path)}" />`)
+    .join('\n  ');
+  const xDefaultLink = `<link rel="alternate" hreflang="x-default" href="${publicUrl(defaultLocale, basePath ?? page.path)}" />`;
+  const alternateOgLocales = localeOrder
+    .filter((code) => code !== locale)
+    .map((code) => `<meta property="og:locale:alternate" content="${escapeHtmlAttribute(locales[code].ogLocale)}" />`)
+    .join('\n  ');
 
   return `<!DOCTYPE html>
-<html lang="en-IE">
+<html lang="${escapeHtmlAttribute(currentLocale.htmlLang)}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -324,13 +333,16 @@ function renderDocument({ pageKey, page, body, schemas, ogType = 'website', arti
   ${keywordsMeta}  <meta name="author" content="${escapeHtmlAttribute(`${site.founder} - ${site.name}`)}" />
   <meta name="robots" content="${robots}" />
   <link rel="canonical" href="${canonical}" />
+  ${alternateLinks}
+  ${xDefaultLink}
 
   <meta property="og:title" content="${escapeHtmlAttribute(page.title)}" />
   <meta property="og:description" content="${escapeHtmlAttribute(page.description)}" />
   <meta property="og:type" content="${ogType}" />
   <meta property="og:url" content="${canonical}" />
   <meta property="og:image" content="${site.baseUrl}${site.ogImagePath}" />
-  <meta property="og:locale" content="en_IE" />
+  <meta property="og:locale" content="${escapeHtmlAttribute(currentLocale.ogLocale)}" />
+  ${alternateOgLocales}
   <meta property="og:site_name" content="${escapeHtmlAttribute(site.name)}" />
 
   <meta name="twitter:card" content="summary_large_image" />
@@ -351,32 +363,33 @@ function renderDocument({ pageKey, page, body, schemas, ogType = 'website', arti
   <link rel="stylesheet" href="/assets/css/styles.css" />
   ${schemas.map((schema) => `<script type="application/ld+json">\n${JSON.stringify(schema, null, 2)}\n  </script>`).join('\n  ')}
 </head>
-<body data-page="${pageKey}">
-  ${renderNav(pageKey)}
-  ${renderMobileMenu()}
+<body data-page="${pageKey}" data-locale="${locale}" data-locale-prefix="${currentLocale.prefix}">
+  ${renderNav(locale, pageKey, basePath ?? page.path)}
+  ${renderMobileMenu(locale, basePath ?? page.path)}
   <main>
     ${body}
   </main>
-  ${renderFooter()}
+  ${renderFooter(locale)}
   <script src="/assets/js/site.js" defer></script>
 </body>
 </html>`;
 }
 
-function renderNav(pageKey) {
+function renderNav(locale, pageKey, basePath) {
   return `<nav>
     <div class="nav-inner">
-      <a class="nav-logo" href="/">Walk<span>cat</span></a>
+      <a class="nav-logo" href="${publicPath(locale, '/')}">Walk<span>cat</span></a>
       <div class="nav-links">
-        ${renderNavLink('home', '/', 'Home', pageKey)}
-        ${renderNavLink('services', '/services/', 'Services', pageKey)}
-        ${renderNavLink('process', '/how-i-work/', 'How I Work', pageKey)}
-        ${renderNavLink('cases', '/case-studies/', 'Case Studies', pageKey)}
-        ${renderNavLink('about', '/about/', 'About', pageKey)}
+        ${renderNavLink(locale, 'home', '/', tr(locale, 'Home'), pageKey)}
+        ${renderNavLink(locale, 'services', '/services/', tr(locale, 'Services'), pageKey)}
+        ${renderNavLink(locale, 'process', '/how-i-work/', tr(locale, 'How I Work'), pageKey)}
+        ${renderNavLink(locale, 'cases', '/case-studies/', tr(locale, 'Case Studies'), pageKey)}
+        ${renderNavLink(locale, 'about', '/about/', tr(locale, 'About'), pageKey)}
       </div>
       <div class="nav-cta">
-        <a class="btn-nav" href="/start-here/">Start With Your Problem</a>
-        <button class="hamburger" id="hamburger" type="button" onclick="toggleMenu()" aria-label="Open navigation">
+        ${renderLanguageSwitcher(locale, basePath, 'nav-lang')}
+        <a class="btn-nav" href="${publicPath(locale, '/start-here/')}">${tr(locale, 'Start With Your Problem')}</a>
+        <button class="hamburger" id="hamburger" type="button" onclick="toggleMenu()" aria-label="${escapeHtmlAttribute(tr(locale, 'Open navigation'))}">
           <span></span>
           <span></span>
           <span></span>
@@ -386,73 +399,83 @@ function renderNav(pageKey) {
   </nav>`;
 }
 
-function renderMobileMenu() {
+function renderMobileMenu(locale, basePath) {
   return `<div class="mobile-menu" id="mobileMenu">
-    <a href="/">Home</a>
-    <a href="/services/">Services</a>
-    <a href="/how-i-work/">How I Work</a>
-    <a href="/case-studies/">Case Studies</a>
-    <a href="/about/">About</a>
-    <a href="/blog/">Blog</a>
-    <a class="btn-nav" href="/start-here/">Start With Your Problem</a>
+    ${renderLanguageSwitcher(locale, basePath, 'mobile-lang')}
+    <a href="${publicPath(locale, '/')}">${tr(locale, 'Home')}</a>
+    <a href="${publicPath(locale, '/services/')}">${tr(locale, 'Services')}</a>
+    <a href="${publicPath(locale, '/how-i-work/')}">${tr(locale, 'How I Work')}</a>
+    <a href="${publicPath(locale, '/case-studies/')}">${tr(locale, 'Case Studies')}</a>
+    <a href="${publicPath(locale, '/about/')}">${tr(locale, 'About')}</a>
+    <a href="${publicPath(locale, '/blog/')}">${tr(locale, 'Blog')}</a>
+    <a class="btn-nav" href="${publicPath(locale, '/start-here/')}">${tr(locale, 'Start With Your Problem')}</a>
   </div>`;
 }
 
-function renderFooter() {
+function renderFooter(locale) {
   return `<footer>
     <div class="footer-inner">
       <div class="footer-brand">
-        <a class="nav-logo" href="/" style="display:block;margin-bottom:10px;">Walk<span>cat</span></a>
-        <p>Business systems &amp; web design for Irish SMEs. Workflow automation, CRM setup, process improvement, and websites that generate leads. Based in Dublin, working across Ireland.</p>
+        <a class="nav-logo" href="${publicPath(locale, '/')}" style="display:block;margin-bottom:10px;">Walk<span>cat</span></a>
+        <p>${tr(locale, 'Business systems & web design for Irish SMEs. Workflow automation, CRM setup, process improvement, and websites that generate leads. Based in Dublin, working across Ireland.')}</p>
       </div>
       <div style="display: flex; flex-direction: column; gap: 24px;">
         <div class="footer-links">
-          <a href="/">Home</a>
-          <a href="/services/">Services</a>
-          <a href="/how-i-work/">How I Work</a>
-          <a href="/case-studies/">Case Studies</a>
-          <a href="/about/">About</a>
-          <a href="/blog/">Blog</a>
-          <a href="/start-here/">Start Here</a>
+          <a href="${publicPath(locale, '/')}">${tr(locale, 'Home')}</a>
+          <a href="${publicPath(locale, '/services/')}">${tr(locale, 'Services')}</a>
+          <a href="${publicPath(locale, '/how-i-work/')}">${tr(locale, 'How I Work')}</a>
+          <a href="${publicPath(locale, '/case-studies/')}">${tr(locale, 'Case Studies')}</a>
+          <a href="${publicPath(locale, '/about/')}">${tr(locale, 'About')}</a>
+          <a href="${publicPath(locale, '/blog/')}">${tr(locale, 'Blog')}</a>
+          <a href="${publicPath(locale, '/start-here/')}">${tr(locale, 'Start Here')}</a>
         </div>
         <div style="display: flex; flex-wrap: wrap; gap: 8px;">
-          <span style="font-size: 0.72rem; color: var(--text-3); padding: 3px 10px; border: 1px solid var(--border); border-radius: 20px;">Web design Ireland</span>
-          <span style="font-size: 0.72rem; color: var(--text-3); padding: 3px 10px; border: 1px solid var(--border); border-radius: 20px;">Workflow automation Dublin</span>
-          <span style="font-size: 0.72rem; color: var(--text-3); padding: 3px 10px; border: 1px solid var(--border); border-radius: 20px;">CRM setup Ireland</span>
-          <span style="font-size: 0.72rem; color: var(--text-3); padding: 3px 10px; border: 1px solid var(--border); border-radius: 20px;">Business process improvement</span>
-          <span style="font-size: 0.72rem; color: var(--text-3); padding: 3px 10px; border: 1px solid var(--border); border-radius: 20px;">Trade business website Ireland</span>
-          <span style="font-size: 0.72rem; color: var(--text-3); padding: 3px 10px; border: 1px solid var(--border); border-radius: 20px;">Business automation Ireland</span>
+          <span style="font-size: 0.72rem; color: var(--text-3); padding: 3px 10px; border: 1px solid var(--border); border-radius: 20px;">${tr(locale, 'Web design Ireland')}</span>
+          <span style="font-size: 0.72rem; color: var(--text-3); padding: 3px 10px; border: 1px solid var(--border); border-radius: 20px;">${tr(locale, 'Workflow automation Dublin')}</span>
+          <span style="font-size: 0.72rem; color: var(--text-3); padding: 3px 10px; border: 1px solid var(--border); border-radius: 20px;">${tr(locale, 'CRM setup Ireland')}</span>
+          <span style="font-size: 0.72rem; color: var(--text-3); padding: 3px 10px; border: 1px solid var(--border); border-radius: 20px;">${tr(locale, 'Business process improvement')}</span>
+          <span style="font-size: 0.72rem; color: var(--text-3); padding: 3px 10px; border: 1px solid var(--border); border-radius: 20px;">${tr(locale, 'Trade business website Ireland')}</span>
+          <span style="font-size: 0.72rem; color: var(--text-3); padding: 3px 10px; border: 1px solid var(--border); border-radius: 20px;">${tr(locale, 'Business automation Ireland')}</span>
         </div>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 Walkcat. All rights reserved.</p>
-      <p>Dublin, Ireland</p>
+      <p>© 2026 Walkcat. ${tr(locale, 'All rights reserved.')}</p>
+      <p>${tr(locale, 'Dublin, Ireland')}</p>
     </div>
   </footer>`;
 }
 
-function renderNavLink(key, href, label, pageKey) {
-  const active = pageKey === key ? ' class="active"' : '';
-  return `<a href="${href}" data-page="${key}"${active}>${label}</a>`;
+function renderLanguageSwitcher(locale, basePath, className = '') {
+  return `<div class="lang-switcher ${className}" aria-label="${escapeHtmlAttribute(tr(locale, 'Language'))}">
+    ${localeOrder.map((code) => {
+      const active = code === locale ? ' active' : '';
+      return `<a class="lang-switcher-link${active}" href="${publicPath(code, basePath)}" lang="${escapeHtmlAttribute(locales[code].htmlLang)}" hreflang="${escapeHtmlAttribute(locales[code].htmlLang)}">${locales[code].label}</a>`;
+    }).join('')}
+  </div>`;
 }
 
-function renderBlogIndex() {
+function renderNavLink(locale, key, href, label, pageKey) {
+  const active = pageKey === key ? ' class="active"' : '';
+  return `<a href="${publicPath(locale, href)}" data-page="${key}"${active}>${label}</a>`;
+}
+
+function renderBlogIndex(locale, posts) {
   return `<div id="page-blog" class="page active page-wrap">
     <section class="cases-hero blog-hero">
       <div class="container">
         <div class="section-label-row">
-          <span class="label">Blog</span>
+          <span class="label">${tr(locale, 'Blog')}</span>
         </div>
-        <h1 class="display-xl" style="max-width: 700px; margin-bottom: 20px;">Plain-language articles<br>for Irish businesses fixing<br>slow systems.</h1>
-        <p class="lead" style="max-width: 560px;">Practical reading for owners and small teams dealing with manual admin, missed leads, weak websites, disconnected tools, and CRM confusion.</p>
+        <h1 class="display-xl" style="max-width: 700px; margin-bottom: 20px;">${tr(locale, 'Plain-language articles<br>for Irish businesses fixing<br>slow systems.')}</h1>
+        <p class="lead" style="max-width: 560px;">${tr(locale, 'Practical reading for owners and small teams dealing with manual admin, missed leads, weak websites, disconnected tools, and CRM confusion.')}</p>
       </div>
     </section>
 
     <section class="section" style="padding-top: 0;">
       <div class="container">
         <div class="blog-grid">
-          ${blogPosts.map(renderBlogIndexCard).join('\n          ')}
+          ${posts.map((post) => renderBlogIndexCard(locale, post)).join('\n          ')}
         </div>
       </div>
     </section>
@@ -461,17 +484,17 @@ function renderBlogIndex() {
       <div class="container">
         <div class="cta-band">
           <div class="cta-band-text">
-            <h2 class="display-md">Need help with<br>the live version?</h2>
-            <p style="margin-top: 12px;">Reading is useful. Fixing the actual bottleneck matters more. Describe the situation and I will tell you what should happen next.</p>
+            <h2 class="display-md">${tr(locale, 'Need help with<br>the live version?')}</h2>
+            <p style="margin-top: 12px;">${tr(locale, 'Reading is useful. Fixing the actual bottleneck matters more. Describe the situation and I will tell you what should happen next.')}</p>
           </div>
-          <a class="btn-primary" style="font-size: 1rem; padding: 16px 28px; flex-shrink: 0;" href="/start-here/">Start with your problem →</a>
+          <a class="btn-primary" style="font-size: 1rem; padding: 16px 28px; flex-shrink: 0;" href="${publicPath(locale, '/start-here/')}">${tr(locale, 'Start with your problem →')}</a>
         </div>
       </div>
     </div>
   </div>`;
 }
 
-function renderBlogIndexCard(post) {
+function renderBlogIndexCard(locale, post) {
   return `<article class="blog-card">
     <div class="blog-card-top">
       <div class="blog-card-kicker">
@@ -484,22 +507,22 @@ function renderBlogIndexCard(post) {
       </div>
     </div>
     <h2 class="blog-card-title">
-      <a href="/blog/${post.slug}/">${post.title}</a>
+      <a href="${publicPath(locale, `/blog/${post.slug}/`)}">${post.title}</a>
     </h2>
     <p class="blog-card-desc">${post.description}</p>
     <div class="blog-card-footer">
-      <div class="blog-card-date">Published ${formatPublished(post.published)}</div>
-      <a class="blog-card-link" href="/blog/${post.slug}/">Read article</a>
+      <div class="blog-card-date">${tr(locale, 'Published')} ${formatPublished(post.published, locale)}</div>
+      <a class="blog-card-link" href="${publicPath(locale, `/blog/${post.slug}/`)}">${tr(locale, 'Read article')}</a>
     </div>
   </article>`;
 }
 
-function renderBlogPost(post) {
+function renderBlogPost(locale, post) {
   return `<div id="page-blog-post" class="page active page-wrap">
     <section class="about-hero blog-post-hero">
       <div class="container">
         <div class="section-label-row">
-          <span class="label">Blog</span>
+          <span class="label">${tr(locale, 'Blog')}</span>
         </div>
         <div class="blog-post-meta">
           <div class="blog-card-kicker">
@@ -507,7 +530,7 @@ function renderBlogPost(post) {
             <span class="blog-card-dot"></span>
             <span>${post.readTime}</span>
             <span class="blog-card-dot"></span>
-            <span>${formatPublished(post.published)}</span>
+            <span>${formatPublished(post.published, locale)}</span>
           </div>
           <div class="blog-card-chip-row blog-post-chip-row">
             ${renderAudienceChips(post.audience, 'blog-card-chip')}
@@ -530,32 +553,32 @@ function renderBlogPost(post) {
 
           <aside class="blog-sidebar">
             <div class="about-fact">
-              <div class="about-fact-title">At a glance</div>
+              <div class="about-fact-title">${tr(locale, 'At a glance')}</div>
               <div class="blog-sidebar-metrics">
                 <div class="blog-sidebar-metric">
-                  <span class="blog-sidebar-label">Audience</span>
+                  <span class="blog-sidebar-label">${tr(locale, 'Audience')}</span>
                   <span class="blog-sidebar-value">${post.audience}</span>
                 </div>
                 <div class="blog-sidebar-metric">
-                  <span class="blog-sidebar-label">Focus</span>
+                  <span class="blog-sidebar-label">${tr(locale, 'Focus')}</span>
                   <span class="blog-sidebar-value">${post.category}</span>
                 </div>
                 <div class="blog-sidebar-metric">
-                  <span class="blog-sidebar-label">Read time</span>
+                  <span class="blog-sidebar-label">${tr(locale, 'Read time')}</span>
                   <span class="blog-sidebar-value">${post.readTime}</span>
                 </div>
                 <div class="blog-sidebar-metric">
-                  <span class="blog-sidebar-label">Published</span>
-                  <span class="blog-sidebar-value">${formatPublished(post.published)}</span>
+                  <span class="blog-sidebar-label">${tr(locale, 'Published')}</span>
+                  <span class="blog-sidebar-value">${formatPublished(post.published, locale)}</span>
                 </div>
               </div>
             </div>
             <div class="about-fact">
-              <div class="about-fact-title">Target keyword</div>
+              <div class="about-fact-title">${tr(locale, 'Target keyword')}</div>
               <div class="about-fact-text">${post.keyword}</div>
             </div>
             <div class="about-fact">
-              <div class="about-fact-title">What this article is for</div>
+              <div class="about-fact-title">${tr(locale, 'What this article is for')}</div>
               <div class="about-fact-text">${post.heroSummary}</div>
             </div>
 
@@ -564,10 +587,10 @@ function renderBlogPost(post) {
             </div>
 
             <div style="margin-top: 24px;">
-              <a class="btn-primary" style="width: 100%; justify-content: center;" href="/start-here/">Start with your problem →</a>
+              <a class="btn-primary" style="width: 100%; justify-content: center;" href="${publicPath(locale, '/start-here/')}">${tr(locale, 'Start with your problem →')}</a>
             </div>
             <div style="margin-top: 12px;">
-              <a class="btn-ghost" style="width: 100%; justify-content: center;" href="/blog/">Back to the blog</a>
+              <a class="btn-ghost" style="width: 100%; justify-content: center;" href="${publicPath(locale, '/blog/')}">${tr(locale, 'Back to the blog')}</a>
             </div>
           </aside>
         </div>
@@ -578,10 +601,10 @@ function renderBlogPost(post) {
       <div class="container">
         <div class="cta-band">
           <div class="cta-band-text">
-            <h2 class="display-md">Seeing this problem<br>in your business?</h2>
-            <p style="margin-top: 12px;">Describe what is happening in plain language. That is enough to work out whether the right fix is a website, a process change, an integration, or a focused audit.</p>
+            <h2 class="display-md">${tr(locale, 'Seeing this problem<br>in your business?')}</h2>
+            <p style="margin-top: 12px;">${tr(locale, 'Describe what is happening in plain language. That is enough to work out whether the right fix is a website, a process change, an integration, or a focused audit.')}</p>
           </div>
-          <a class="btn-primary" style="font-size: 1rem; padding: 16px 28px; flex-shrink: 0;" href="/start-here/">Explain the situation →</a>
+          <a class="btn-primary" style="font-size: 1rem; padding: 16px 28px; flex-shrink: 0;" href="${publicPath(locale, '/start-here/')}">${tr(locale, 'Explain the situation →')}</a>
         </div>
       </div>
     </div>
@@ -595,15 +618,15 @@ function renderArticleSection(section) {
     </section>`;
 }
 
-function renderThanksPage() {
+function renderThanksPage(locale) {
   return `<div id="page-contact-thanks" class="page active page-wrap" data-thanks-page="true">
     <section class="contact-hero">
       <div class="container">
         <div class="section-label-row">
-          <span class="label">Start Here</span>
+          <span class="label">${tr(locale, 'Start Here')}</span>
         </div>
-        <h1 class="display-xl" style="max-width: 760px; margin-bottom: 20px;">Your brief is ready.<br>If your email app did not open,<br><em style="color: var(--text-2);">send it manually here.</em></h1>
-        <p class="lead" style="max-width: 560px;">The intake form prepares a structured email so the message lands in one place with the right detail. If the draft did not open automatically, use the retry link or copy the fallback summary below.</p>
+        <h1 class="display-xl" style="max-width: 760px; margin-bottom: 20px;">${tr(locale, 'Your brief is ready.<br>If your email app did not open,<br><em style="color: var(--text-2);">send it manually here.</em>')}</h1>
+        <p class="lead" style="max-width: 560px;">${tr(locale, 'The intake form prepares a structured email so the message lands in one place with the right detail. If the draft did not open automatically, use the retry link or copy the fallback summary below.')}</p>
       </div>
     </section>
 
@@ -611,13 +634,13 @@ function renderThanksPage() {
       <div class="container">
         <div class="contact-layout">
           <div class="contact-sidebar">
-            <h3 class="display-md" style="margin-bottom: 16px;">What to do now.</h3>
-            <p>1. Click the retry link to open the prepared email again.</p>
-            <p>2. If your device blocks that, copy the fallback summary and send it manually.</p>
-            <p>3. Once it is sent, expect a direct reply within one working day in most cases.</p>
+            <h3 class="display-md" style="margin-bottom: 16px;">${tr(locale, 'What to do now.')}</h3>
+            <p>${tr(locale, '1. Click the retry link to open the prepared email again.')}</p>
+            <p>${tr(locale, '2. If your device blocks that, copy the fallback summary and send it manually.')}</p>
+            <p>${tr(locale, '3. Once it is sent, expect a direct reply within one working day in most cases.')}</p>
 
             <div style="margin-top: 32px; padding: 20px 24px; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius);">
-              <div class="service-detail-label" style="margin-bottom: 8px;">Fallback inbox</div>
+              <div class="service-detail-label" style="margin-bottom: 8px;">${tr(locale, 'Fallback inbox')}</div>
               <p class="body" style="font-size: 0.85rem;"><a href="mailto:${site.contactEmail}" id="fallbackInbox">${site.contactEmail}</a></p>
             </div>
           </div>
@@ -625,18 +648,18 @@ function renderThanksPage() {
           <div>
             <div class="form-success show" style="display: block;">
               <div class="form-success-icon">✓</div>
-              <h3>Retry the draft or copy the summary.</h3>
-              <p>If nothing opened automatically, use the buttons below. The summary will include the information from your last submission on this device.</p>
+              <h3>${tr(locale, 'Retry the draft or copy the summary.')}</h3>
+              <p>${tr(locale, 'If nothing opened automatically, use the buttons below. The summary will include the information from your last submission on this device.')}</p>
             </div>
 
             <div class="intake-form" style="margin-top: 20px;">
               <div class="form-group">
-                <label class="form-label">Retry the prepared email</label>
-                <a class="btn-primary" id="retryMailto" href="mailto:${site.contactEmail}" style="width: 100%; justify-content: center;">Open email draft →</a>
+                <label class="form-label">${tr(locale, 'Retry the prepared email')}</label>
+                <a class="btn-primary" id="retryMailto" href="mailto:${site.contactEmail}" style="width: 100%; justify-content: center;">${tr(locale, 'Open email draft →')}</a>
               </div>
               <div class="form-group">
-                <label class="form-label">Fallback summary</label>
-                <textarea class="form-textarea" id="fallbackSummary" style="min-height: 320px;" readonly>Describe what is slow, manual, or broken in your business and send it to ${site.contactEmail}.</textarea>
+                <label class="form-label">${tr(locale, 'Fallback summary')}</label>
+                <textarea class="form-textarea" id="fallbackSummary" style="min-height: 320px;" readonly>${tr(locale, 'Describe what is slow, manual, or broken in your business and send it to hello@walkcat.ie.').replace('hello@walkcat.ie', site.contactEmail)}</textarea>
               </div>
             </div>
           </div>
@@ -646,44 +669,44 @@ function renderThanksPage() {
   </div>`;
 }
 
-function renderNotFoundPage() {
+function renderNotFoundPage(locale) {
   return `<div id="page-not-found" class="page active page-wrap">
     <section class="about-hero">
       <div class="container">
         <div class="section-label-row">
           <span class="label">404</span>
         </div>
-        <h1 class="display-xl" style="max-width: 720px; margin-bottom: 20px;">That page does not exist.<br>The rest of the site does.</h1>
-        <p class="lead" style="max-width: 540px;">Use the links below to get back to the main pages, the blog, or the intake form.</p>
+        <h1 class="display-xl" style="max-width: 720px; margin-bottom: 20px;">${tr(locale, 'That page does not exist.<br>The rest of the site does.')}</h1>
+        <p class="lead" style="max-width: 540px;">${tr(locale, 'Use the links below to get back to the main pages, the blog, or the intake form.')}</p>
       </div>
     </section>
 
     <section class="section" style="padding-top: 0;">
       <div class="container">
         <div class="services-overview">
-          <a class="service-card" href="/services/">
+          <a class="service-card" href="${publicPath(locale, '/services/')}">
             <div class="service-card-num">01</div>
-            <div class="service-card-title">Services</div>
-            <div class="service-card-desc">Websites, systems, integrations, process audits, automation, and focused technical help.</div>
-            <div class="service-card-link">Go to Services</div>
+            <div class="service-card-title">${tr(locale, 'Services')}</div>
+            <div class="service-card-desc">${tr(locale, 'Websites, systems, integrations, process audits, automation, and focused technical help.')}</div>
+            <div class="service-card-link">${tr(locale, 'Go to Services')}</div>
           </a>
-          <a class="service-card" href="/case-studies/">
+          <a class="service-card" href="${publicPath(locale, '/case-studies/')}">
             <div class="service-card-num">02</div>
-            <div class="service-card-title">Case Studies</div>
-            <div class="service-card-desc">Illustrative examples of the kinds of operational problems Walkcat fixes.</div>
-            <div class="service-card-link">Go to Case Studies</div>
+            <div class="service-card-title">${tr(locale, 'Case Studies')}</div>
+            <div class="service-card-desc">${tr(locale, 'Illustrative examples of the kinds of operational problems Walkcat fixes.')}</div>
+            <div class="service-card-link">${tr(locale, 'Go to Case Studies')}</div>
           </a>
-          <a class="service-card" href="/blog/">
+          <a class="service-card" href="${publicPath(locale, '/blog/')}">
             <div class="service-card-num">03</div>
-            <div class="service-card-title">Blog</div>
-            <div class="service-card-desc">Practical guidance on CRM choice, admin reduction, websites, and lead follow-up.</div>
-            <div class="service-card-link">Go to Blog</div>
+            <div class="service-card-title">${tr(locale, 'Blog')}</div>
+            <div class="service-card-desc">${tr(locale, 'Practical guidance on CRM choice, admin reduction, websites, and lead follow-up.')}</div>
+            <div class="service-card-link">${tr(locale, 'Go to Blog')}</div>
           </a>
-          <a class="service-card" href="/start-here/">
+          <a class="service-card" href="${publicPath(locale, '/start-here/')}">
             <div class="service-card-num">04</div>
-            <div class="service-card-title">Start Here</div>
-            <div class="service-card-desc">Describe what is slow, manual, or broken and get a direct response.</div>
-            <div class="service-card-link">Go to the form</div>
+            <div class="service-card-title">${tr(locale, 'Start Here')}</div>
+            <div class="service-card-desc">${tr(locale, 'Describe what is slow, manual, or broken and get a direct response.')}</div>
+            <div class="service-card-link">${tr(locale, 'Go to the form')}</div>
           </a>
         </div>
       </div>
@@ -691,7 +714,40 @@ function renderNotFoundPage() {
   </div>`;
 }
 
-function buildBreadcrumbSchema(pageKey) {
+function buildCommonSchema(locale) {
+  const schema = translateValue(cloneSchema(commonSchemaBase), locale);
+  schema['@graph'][1]['@id'] = `${publicUrl(locale, '/')}#website`;
+  schema['@graph'][1].url = publicUrl(locale, '/');
+  schema['@graph'][1].publisher = {
+    '@id': `${site.baseUrl}/#business`
+  };
+  return schema;
+}
+
+function buildFaqSchema(locale) {
+  return translateValue(cloneSchema(faqSchemaBase), locale);
+}
+
+function buildServiceSchemaGraph(localizedServiceSchemas, locale) {
+  const pageUrl = publicUrl(locale, site.pages.services.path);
+  return localizedServiceSchemas.map((service, index) => ({
+    '@type': 'Service',
+    '@id': `${pageUrl}#service-${index + 1}`,
+    name: service.name,
+    serviceType: service.name,
+    description: service.description,
+    provider: {
+      '@id': `${site.baseUrl}/#business`
+    },
+    areaServed: {
+      '@type': 'Country',
+      name: tr(locale, 'Ireland')
+    },
+    url: pageUrl
+  }));
+}
+
+function buildBreadcrumbSchema(pageKey, locale) {
   const page = site.pages[pageKey];
   return {
     '@context': 'https://schema.org',
@@ -700,20 +756,20 @@ function buildBreadcrumbSchema(pageKey) {
       {
         '@type': 'ListItem',
         position: 1,
-        name: 'Home',
-        item: `${site.baseUrl}/`
+        name: tr(locale, 'Home'),
+        item: publicUrl(locale, '/')
       },
       {
         '@type': 'ListItem',
         position: 2,
-        name: toCrumbName(pageKey),
-        item: `${site.baseUrl}${page.path}`
+        name: toCrumbName(pageKey, locale),
+        item: publicUrl(locale, page.path)
       }
     ]
   };
 }
 
-function buildArticleBreadcrumbSchema(post) {
+function buildArticleBreadcrumbSchema(post, locale) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -721,26 +777,26 @@ function buildArticleBreadcrumbSchema(post) {
       {
         '@type': 'ListItem',
         position: 1,
-        name: 'Home',
-        item: `${site.baseUrl}/`
+        name: tr(locale, 'Home'),
+        item: publicUrl(locale, '/')
       },
       {
         '@type': 'ListItem',
         position: 2,
-        name: 'Blog',
-        item: `${site.baseUrl}/blog/`
+        name: tr(locale, 'Blog'),
+        item: publicUrl(locale, '/blog/')
       },
       {
         '@type': 'ListItem',
         position: 3,
         name: post.title,
-        item: `${site.baseUrl}/blog/${post.slug}/`
+        item: publicUrl(locale, `/blog/${post.slug}/`)
       }
     ]
   };
 }
 
-function buildArticleSchema(post) {
+function buildArticleSchema(post, locale) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -761,7 +817,7 @@ function buildArticleSchema(post) {
       }
     },
     image: `${site.baseUrl}${site.ogImagePath}`,
-    mainEntityOfPage: `${site.baseUrl}/blog/${post.slug}/`
+    mainEntityOfPage: publicUrl(locale, `/blog/${post.slug}/`)
   };
 }
 
@@ -780,11 +836,15 @@ function buildSitemapXml() {
     site.pages.thanks.path,
     site.pages.blog.path
   ];
-  const urls = [...staticPages, ...blogPosts.map((post) => `/blog/${post.slug}/`)];
+  const urls = localeOrder.flatMap((locale) => {
+    const localizedStatic = staticPages.map((url) => publicUrl(locale, url));
+    const localizedPosts = blogPosts.map((post) => publicUrl(locale, `/blog/${post.slug}/`));
+    return [...localizedStatic, ...localizedPosts];
+  });
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((url) => `  <url>\n    <loc>${site.baseUrl}${url}</loc>\n    <lastmod>${site.publishedDate}</lastmod>\n  </url>`).join('\n')}
+${urls.map((url) => `  <url>\n    <loc>${url}</loc>\n    <lastmod>${site.publishedDate}</lastmod>\n  </url>`).join('\n')}
 </urlset>
 `;
 }
@@ -819,6 +879,28 @@ function buildManifest() {
 }
 
 function buildScriptFile() {
+  const formCopy = Object.fromEntries(
+    localeOrder.map((locale) => [
+      locale,
+      {
+        subjectPrefix: tr(locale, 'Walkcat enquiry'),
+        fallbackSubject: tr(locale, 'New project brief'),
+        formTitle: tr(locale, 'Walkcat intake form'),
+        name: tr(locale, 'Name'),
+        businessName: tr(locale, 'Business name'),
+        email: tr(locale, 'Email'),
+        phone: tr(locale, 'Phone / WhatsApp'),
+        website: tr(locale, 'Website'),
+        businessType: tr(locale, 'Business type'),
+        timeWaste: tr(locale, 'What is currently wasting your time?'),
+        currentProblem: tr(locale, 'What feels slow, manual, or broken right now?'),
+        desiredOutcome: tr(locale, 'What outcome are you hoping for?'),
+        helpType: tr(locale, 'What type of help do you think you need?'),
+        timeline: tr(locale, 'Any timelines or constraints?')
+      }
+    ])
+  );
+
   return `const routes = {
   home: '/',
   services: '/services/',
@@ -829,10 +911,18 @@ function buildScriptFile() {
   blog: '/blog/'
 };
 
+const formCopy = ${JSON.stringify(formCopy, null, 2)};
+
+function localizedPath(path) {
+  const prefix = document.body?.dataset?.localePrefix || '';
+  if (!prefix) return path;
+  return path === '/' ? \`\${prefix}/\` : \`\${prefix}\${path}\`;
+}
+
 function showPage(id) {
   const target = routes[id];
   if (target) {
-    window.location.href = target;
+    window.location.href = localizedPath(target);
   }
 }
 
@@ -853,31 +943,36 @@ function toggleFaq(btn) {
   }
 }
 
-function buildMailtoUrl(data, email) {
-  const subject = encodeURIComponent(\`Walkcat enquiry: \${data.business_name || data.name || 'New project brief'}\`);
+function getFormCopy(locale) {
+  return formCopy[locale] || formCopy.en;
+}
+
+function buildMailtoUrl(data, email, locale) {
+  const copy = getFormCopy(locale);
+  const subject = encodeURIComponent(\`\${copy.subjectPrefix}: \${data.business_name || data.name || copy.fallbackSubject}\`);
   const lines = [
-    'Walkcat intake form',
+    copy.formTitle,
     '',
-    \`Name: \${data.name || ''}\`,
-    \`Business name: \${data.business_name || ''}\`,
-    \`Email: \${data.email || ''}\`,
-    \`Phone / WhatsApp: \${data.phone || ''}\`,
-    \`Website: \${data.website || ''}\`,
-    \`Business type: \${data.business_type || ''}\`,
+    \`\${copy.name}: \${data.name || ''}\`,
+    \`\${copy.businessName}: \${data.business_name || ''}\`,
+    \`\${copy.email}: \${data.email || ''}\`,
+    \`\${copy.phone}: \${data.phone || ''}\`,
+    \`\${copy.website}: \${data.website || ''}\`,
+    \`\${copy.businessType}: \${data.business_type || ''}\`,
     '',
-    'What is currently wasting your time?',
+    copy.timeWaste,
     data.time_waste || '',
     '',
-    'What feels slow, manual, or broken right now?',
+    copy.currentProblem,
     data.current_problem || '',
     '',
-    'What outcome are you hoping for?',
+    copy.desiredOutcome,
     data.desired_outcome || '',
     '',
-    'What type of help do you think you need?',
+    copy.helpType,
     data.help_type || '',
     '',
-    'Any timelines or constraints?',
+    copy.timeline,
     data.timeline || ''
   ];
   return \`mailto:\${email}?subject=\${subject}&body=\${encodeURIComponent(lines.join('\\n'))}\`;
@@ -891,7 +986,8 @@ function handleSubmit(event) {
   const data = Object.fromEntries(new FormData(form).entries());
   const email = form.dataset.contactEmail || 'hello@walkcat.ie';
   const successPath = form.dataset.successPath || '/start-here/thanks/';
-  const mailtoUrl = buildMailtoUrl(data, email);
+  const locale = document.body?.dataset?.locale || 'en';
+  const mailtoUrl = buildMailtoUrl(data, email, locale);
 
   sessionStorage.setItem('walkcatDraft', JSON.stringify({
     email,
@@ -1053,7 +1149,111 @@ function enhanceContactForm(html) {
     );
 }
 
-function toCrumbName(pageKey) {
+function tr(locale, value) {
+  if (locale === defaultLocale) {
+    return value;
+  }
+
+  return translations[locale]?.[value] ?? value;
+}
+
+function translateValue(value, locale, key = '') {
+  if (typeof value === 'string') {
+    if (['slug', 'path', 'baseUrl', 'contactEmail', 'ogImagePath', 'publishedDate', 'published', 'founder'].includes(key)) {
+      return value;
+    }
+    return tr(locale, value);
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => translateValue(item, locale, key));
+  }
+
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value).map(([childKey, childValue]) => [childKey, translateValue(childValue, locale, childKey)])
+    );
+  }
+
+  return value;
+}
+
+function publicPath(locale, basePath) {
+  const prefix = locales[locale].prefix;
+
+  if (!prefix) {
+    return basePath;
+  }
+
+  return basePath === '/' ? `${prefix}/` : `${prefix}${basePath}`;
+}
+
+function publicUrl(locale, basePath) {
+  return `${site.baseUrl}${publicPath(locale, basePath)}`;
+}
+
+function localizedOutputPath(locale, relativePath) {
+  if (locale === defaultLocale) {
+    return relativePath;
+  }
+
+  return path.join(locales[locale].prefix.slice(1), relativePath);
+}
+
+function localizeCorePageHtml(pageKey, html, locale) {
+  if (locale === defaultLocale) {
+    return pageKey === 'contact'
+      ? html.replace('data-success-path="/start-here/thanks/"', `data-success-path="${publicPath(locale, '/start-here/thanks/')}"`)
+      : html;
+  }
+
+  const translatedHtml = html
+    .replace(/>([^<>]+)</g, (match, text) => `>${translateHtmlTextNode(text, locale)}<`)
+    .replace(/\b(placeholder|aria-label)="([^"]+)"/g, (match, attribute, value) => {
+      const translatedValue = tr(locale, decodeHtmlEntities(value));
+      return `${attribute}="${escapeHtmlAttribute(translatedValue)}"`;
+    });
+
+  if (pageKey !== 'contact') {
+    return translatedHtml;
+  }
+
+  return translatedHtml.replace(
+    /data-success-path="[^"]*"/,
+    `data-success-path="${publicPath(locale, '/start-here/thanks/')}"`
+  );
+}
+
+function translateHtmlTextNode(text, locale) {
+  const normalized = decodeHtmlEntities(text).replace(/\s+/g, ' ').trim();
+
+  if (!normalized) {
+    return text;
+  }
+
+  const translated = tr(locale, normalized);
+
+  if (translated === normalized) {
+    return text;
+  }
+
+  const leading = text.match(/^\s*/)?.[0] ?? '';
+  const trailing = text.match(/\s*$/)?.[0] ?? '';
+  return `${leading}${escapeHtml(translated)}${trailing}`;
+}
+
+function decodeHtmlEntities(text) {
+  return text
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#x27;/g, "'")
+    .replace(/&nbsp;/g, ' ');
+}
+
+function toCrumbName(pageKey, locale) {
   const names = {
     services: 'Services',
     process: 'How I Work',
@@ -1062,11 +1262,11 @@ function toCrumbName(pageKey) {
     contact: 'Start Here',
     blog: 'Blog'
   };
-  return names[pageKey] || 'Page';
+  return tr(locale, names[pageKey] || 'Page');
 }
 
-function formatPublished(dateString) {
-  return new Date(dateString).toLocaleDateString('en-IE', {
+function formatPublished(dateString, locale = defaultLocale) {
+  return new Date(dateString).toLocaleDateString(locales[locale].dateLocale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
@@ -1084,6 +1284,47 @@ function renderAudienceChips(audience, chipClass) {
 
 function buildExtraStyles() {
   return `/* ============================================
+   LANGUAGE SWITCHER
+============================================ */
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(17,17,20,0.88);
+}
+.lang-switcher-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  transition: color 0.2s, background 0.2s;
+}
+.lang-switcher-link:hover {
+  color: var(--text);
+}
+.lang-switcher-link.active {
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+.nav-lang {
+  display: inline-flex;
+}
+.mobile-lang {
+  display: none;
+  width: fit-content;
+  margin-bottom: 12px;
+}
+
+/* ============================================
    BLOG
 ============================================ */
 .blog-hero { padding-bottom: 40px; }
@@ -1291,6 +1532,12 @@ function buildExtraStyles() {
 }
 
 @media (max-width: 1080px) {
+  .nav-lang {
+    display: none;
+  }
+  .mobile-lang {
+    display: inline-flex;
+  }
   .blog-grid,
   .blog-post-layout {
     grid-template-columns: 1fr;

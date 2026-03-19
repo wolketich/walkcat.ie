@@ -1077,6 +1077,47 @@
     }
 
 /* ============================================
+   LANGUAGE SWITCHER
+============================================ */
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(17,17,20,0.88);
+}
+.lang-switcher-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  transition: color 0.2s, background 0.2s;
+}
+.lang-switcher-link:hover {
+  color: var(--text);
+}
+.lang-switcher-link.active {
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+.nav-lang {
+  display: inline-flex;
+}
+.mobile-lang {
+  display: none;
+  width: fit-content;
+  margin-bottom: 12px;
+}
+
+/* ============================================
    BLOG
 ============================================ */
 .blog-hero { padding-bottom: 40px; }
@@ -1284,6 +1325,12 @@
 }
 
 @media (max-width: 1080px) {
+  .nav-lang {
+    display: none;
+  }
+  .mobile-lang {
+    display: inline-flex;
+  }
   .blog-grid,
   .blog-post-layout {
     grid-template-columns: 1fr;
