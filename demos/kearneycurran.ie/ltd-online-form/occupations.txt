@@ -1,0 +1,515 @@
+Accountant
+Actor - Entertainer
+Actuary
+Acupuncturist
+Administrator
+Adult Education Organiser
+Advertising Agent
+Agent
+Agricultural Labourer
+Agriculturalist
+Air Hostess Or Steward
+Aircraft Pilot, Navigator
+Analyst
+Announcer
+Arcade Owner
+Archaeologist
+Architect
+Army Officer
+Artist
+Artist/Sculptor
+Assembler Of Vehicle, Etc
+Assistant Bank Manager
+Assistant Manager
+Assistant Matron
+Astronomer
+Auctioneer/Valuer
+Audiometrician
+Auditor
+Author, Journalist Or Editor
+Bacteriologist/Pathologist
+Bank Official
+Bar Attendant
+Bar Or Public House Manager
+Barber/Hairdresser
+Barrister
+Beautician
+Berthing Master
+Bicycle Repairs
+Biologist
+Blacksmith Or Metal Worker
+Bleacher, Dyer Or Finisher
+Blind Installer
+Boat Builder
+Book Binder
+Book Keeper
+Bookmaker
+Bookseller
+Boot/Shoe Maker
+Bricklayer
+Broadcasting Operator
+Budget Clerk
+Builder-Contractor
+Building Contractor
+Building Inspector
+Bus Conductor
+Business Executive
+Butcher
+Cabinet Maker
+Camera Man
+Canteen Or Related Worker
+Car Park Attendant
+Car Salesman
+Cardiologist
+Career Guidance
+Carer
+Caretaker
+Carpenter Or Joiner
+Cashier
+Caterer
+Cattle Tester/Milk Inspector
+Chairman
+Chandler
+Charity Development Worker
+Chartered Accountant
+Chartered Company Secretary
+Cheese-Maker
+Chef
+Chemist
+Chief Commercial Officer
+Chief Executive Officer
+Chief Financial Officer
+Chief Operating Officer
+Childcare Worker
+Chiropodist
+Cinema Manager
+Civil Engineer
+Civil Servant
+Clergy
+Clerical Officer
+Clerk Of Works
+Clothing Manufacturer
+Coach (Training)
+College Bursar
+Commission Agent
+Commissioned Officer
+Community Development Worker
+Company Chairman
+Company Director
+Company Formation Agent
+Company Secretary
+Compositor/Monotype Operator
+Computer Operator
+Computer Programmer
+Computer Systems Manager
+Concrete Products Manufacturer
+Conductor
+Confectioner
+Consultant
+Contract Cleaning
+Cook
+Co-Operative Worker
+Councillor
+Counsellor
+County Council Worker
+County Development Office
+Courier
+Craftsman
+Crane/Hoist/Rigger Operator
+Creamery Manager
+Cultural Attache
+Curtain Manufacturer
+Cutter
+Dancer
+Data Processor
+Dealer
+Dealer In Agricultural Machinery
+Dental Nurse
+Dental Practicioner
+Dental/Orthodontic
+Deputy Principal
+Designer
+Dietician
+Director
+Director General
+Director Manufacturing
+Display Contractor
+Diver
+Dock Labourers
+Docker
+Doctor
+Domestic Servant
+Draughtsperson
+Driver
+Earthmove/Construction/Machine Operator
+Economist
+Editor
+Education Officer
+Egg Wholesaler
+Electrical Fitters
+Electrical Services
+Electrician
+Employment Advisor
+Engineer
+Engraver
+Entrepreneur
+Environmentalist
+Estate Agent
+Fabricator
+Facilitator
+Factory Manager
+Factory Worker
+Farm Managers
+Farmer
+Fashion Buyer
+Field Officer
+Film & Art Producer
+Film Maker
+Financial Consultant
+Financial Controller
+Fire Officer
+Fish Farm Manager
+Fisherman
+Fishery Board Agent/Inspector
+Fitness Consultant
+Fitness Therapist
+Fitter
+Fitter Turner
+Florist
+Foreman/Supervisor/Manager
+Forensic Officer
+Forester/Skilled Forestry
+Forestry Labourer
+Forestry Officer
+Forklift Rebuilder
+Formations Manager
+Freight Forwarder
+Fruit Merchant
+Furniture Manufacturer
+Furniture Retailer
+Furrier
+Garage Proprietor
+Garda Sergeant
+Garda Siochana
+Gardener - Skilled
+Gas And Chemical Worker
+Gas Operator
+General Manager
+General Operative
+Gerontologist
+Glass Cutter
+Glass Or Ceramic Worker
+Glass Silverer
+Glazier
+Goldsmith/Silversmith Etc
+Golfer
+Government Executive Officer
+Graphics Designer
+Grocer
+Groundsman
+Hairdresser
+Harbour Master
+Hardware Assistant
+Haulier
+Health Education Co-Ordinator
+Health Ins./Cardiographer
+Heating Engineer
+Historian
+Home-Maker
+Horticulturist
+Hospital Worker
+Hotelier
+Human Resources
+Importer
+Industrial Chemist
+Industrial Designers
+Inspector
+Instructor
+Insurance Agent
+Insurance Clerk
+Interior Decorator
+Interpreter
+Inventor
+Investigatory Executive
+Investment Consultant
+It Consultant
+It Developer
+It Technician
+Jewellery Designer
+Journalist
+Judge
+Judo Instructor
+Knitters/ Machine Operator
+Labourer
+Laundry/Dry Cleaning
+Law Clerk
+Lawyer
+Leather Worker
+Lecturer
+Legal Executive
+Legislative/Government Official
+Liaison Officer
+Librarian
+Lighthouse Keeper
+Linesman Or Cable Jointer
+Lithographer
+Livestock (Non-Farm) Work
+Livestock Dealer
+Locksmith
+M.E.P.
+Machine Tool Setter/Operator
+Maintenance Planner
+Maker Of Beverage
+Maker Of Food
+Maker Of Paper
+Maker Of Sugar/Confection
+Maker Of Tobacco Product
+Management Consultant
+Manager
+Manager Hotel/Restaurant
+Manager Or Company Secretary
+Manager Wholesale/Retail
+Manageress
+Managing Director
+Manual Worker
+Manufacturer
+Market Gardener/Nursery Manager
+Marketing Manager
+Master Mariner
+Mathematician/Statistician
+Matron/Supervisor Of School
+Meat Curer/Canner/Preserver
+Medical Consultant
+Medical Doctor
+Medical Laboratory Technician
+Medical Practitioner
+Merchant
+Messenger
+Metal Coater/Plater
+Metal Fabricator
+Metal Furniture Workers
+Metal Goods Inspectors
+Metalcaster/Moulder/Setter
+Milk Process/Maker Dairy
+Mill Worker : Semi-Skilled
+Mill Worker : Skilled
+Mine And Quarry Worker
+Mining Executive
+Motor Mechanic
+Music Shop Proprietor
+Musician
+Naturopath
+Naval Officer
+Neurologist
+None
+Nonmetallic Mineral Products
+Nun
+Nurse
+Nutritionist
+Obstetrician
+Oceanographer
+Office Manager
+Oil Distributor
+Operator
+Optician/Therapist/Etc.
+Orthopaedic Technician
+Osteopath
+Other Clothing Workers
+Other Ranks - Military
+Packer Or Bottler
+Paediatrician
+Painter Or Decorator
+Panel Beater
+Paper Products
+Parlimentary Assistant
+Pathologist
+Pathologist, Veterinary
+Pattern Cutter
+Personnel Officer
+Pest Controller
+Pharmacists Or Dispensers
+Photo Engraver
+Photographer
+Photographer/Camera Operator
+Physical Education
+Physician
+Physiotherapist
+Picture Framer
+Pilot
+Plant Operator
+Plasterer
+Plumber
+Plumber Or Gas Fitter
+Politican
+Porter
+Porter Transport Sector
+Postman/Post Office Sorter
+Postmaster
+Potter
+Precision Inst./Watch/Clock Manufacture
+Principal Tutor
+Printer
+Printing Press Operator
+Probation Officer
+Process Operator
+Producer
+Production Assistant
+Production Engineer
+Production Manager
+Production Worker
+Professional Worker
+Project Leader
+Proprietor
+Proprietor In Wholesale/Retail
+Proprietor Of Filling Station
+Prosthetist
+Psychologist
+Public Relations Consultant
+Public Representative
+Publican
+Publican/Wine Merchant/Off Licence
+Publishing Representative
+Purchasing Officer
+Quantity Surveyor
+Racehorse Trainer
+Radio, Television Repairs
+Railway Engine Driver
+Receptionist
+Record Producer
+Recruitment Officer
+Refrigeration Engineer
+Refuellers, Oilers
+Refuse Collector
+Registrar
+Religious Occupation
+Rent Collector
+Repair Man
+Restauranteur
+Retailer
+Retailer Of Veterinary Products
+Retired
+Revenue Collector
+Roundsman
+Rubber/Rubber Products
+Safety Equipment Officer
+Sailor
+Sales Executive
+Sales Manager
+Sand & Gravel Merchants
+Scientific Officer
+Scientist
+Scientist, Other Life
+Scientist, Physical Science
+Screen Maker
+Sculptor
+Secretary Administrator
+Security Consultant
+Security Engineer
+Security Officer
+Self Employed
+Senior Counsel
+Senior Staff Officer
+Service Engineer
+Service Manager
+Service Workers
+Sewers Embroiderers Machine Worker
+Sheet Metal Worker
+Shift Attendant
+Shipping Clerk
+Ship'S Officer
+Shipwright
+Shop Assistant
+Shopkeeper
+Sign Writer
+Signalman/Levelcrossing Keeper
+Singer
+Social Worker
+Software Consultant
+Software Developer
+Solicitor
+Sound Engineer
+Spinning, Weaving, Knitting
+Sportsman Or Related Work
+Stationery Engine Operator
+Statistician
+Statistician
+Stevedore
+Stock Controller
+Stockbroker
+Stonemason
+Store Manager
+Street Vendor/Hawker Etc.
+Structural Metal/Metalplate Worker
+Stud Owner
+Student
+Supervisor
+Supplier
+Surgeon, Veterinary
+Surveyor Chartered
+Surveyor, Valuation
+Swimming Pool Manager
+Systems Analyst
+Tailor Or Dressmaker
+Tanner/Fellmonger/Pelt Dresser
+Tax Consultant
+Taxi Driver
+Teacher
+Technical Consultant
+Technical Inspector
+Technical Or Related Work
+Technican, Life Sciences
+Technician
+Technician, Physical Science
+Technician, Telecommunications
+Technician/Electrical Engineer
+Technologist
+Telephone Installer, Repairs
+Telephone Technician
+Telephone/Telegraph/Radio
+Telephonist
+Therapist
+Ticket Checker/Inspector (Rail)
+Tiler
+Timber Preservation Advisor
+Toolmaker
+Tourist Official
+Town And Country Homes Planning
+Town Planner
+Trade Union Officials
+Trade Union Organiser
+Trader
+Tradesman
+Trainer
+Training Officer
+Transport
+Transport Controller
+Travel Agent
+Turf Accountant
+Turf Worker
+Typesetter
+Typist
+Undertaker
+Unemployed
+University Professor/Lecturer
+Unknown
+Upholsterer
+Urologist
+Veterinary Surgeon
+Vice President
+Victualler
+Waiter
+Waitress
+Warehouse Control
+Watchman Or Related Worker
+Weaver
+Welder Or Cutter
+Welfare Officer
+Wholesaler
+Window Cleaner
+Window Installer
+Windscreen Fitter
+Wood Preparation Worker
+Woodworking Machinist
+Working Prop. In Catering
+Writer
+Youth Service

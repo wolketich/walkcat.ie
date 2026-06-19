@@ -1,0 +1,2082 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Company Incorporation Order Form</title>
+  <style>
+    :root {
+      --ink: #111;
+      --muted: #666;
+      --line: #111;
+      --blue: #006fbf;
+      --red: #c90000;
+      --green: #009a48;
+      --paper: #fff;
+      --bg: #e8e8e8;
+      --field: #fbfbfb;
+      --field-focus: #fffde7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10.5px;
+      line-height: 1.25;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      background: #222;
+      color: #fff;
+      font-size: 13px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.22);
+    }
+
+    .toolbar button {
+      border: 1px solid #fff;
+      background: #fff;
+      color: #111;
+      padding: 7px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .toolbar button.secondary {
+      background: transparent;
+      color: #fff;
+    }
+
+    .toolbar span {
+      color: #ddd;
+      margin-left: 8px;
+    }
+
+    .sheet {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 14px auto;
+      padding: 18mm 20mm 12mm;
+      background: var(--paper);
+      box-shadow: 0 0 0 1px #ccc, 0 5px 20px rgba(0,0,0,.14);
+      position: relative;
+      page-break-after: always;
+    }
+
+    .sheet:last-child {
+      page-break-after: auto;
+    }
+
+    .brand {
+      display: grid;
+      grid-template-columns: 1fr 72px 1fr;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .brand-name {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #6b6b6b;
+      letter-spacing: .5px;
+    }
+
+    .brand-name.right {
+      text-align: right;
+    }
+
+    .seal {
+      width: 58px;
+      height: 58px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .seal img {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .strapline {
+      text-align: center;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 12px;
+      font-style: italic;
+      margin: 2px 0 12px;
+      color: #444;
+    }
+
+    .strapline strong {
+      font-style: italic;
+    }
+
+    .main-title {
+      text-align: center;
+      font-weight: 700;
+      letter-spacing: .2px;
+      margin: 8px 0 10px;
+    }
+
+    h2, h3 {
+      text-align: center;
+      margin: 10px 0 8px;
+      font-size: 11px;
+      text-decoration: underline;
+      text-transform: uppercase;
+    }
+
+    h2.blue, h3.blue { color: var(--blue); }
+    h2.red, h3.red { color: var(--red); }
+    h2.green, h3.green { color: var(--green); }
+
+    p {
+      margin: 5px 0;
+    }
+
+    .note-red {
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    .blue-text {
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .red-text {
+      color: var(--red);
+    }
+
+    .section {
+      margin: 9px 0;
+    }
+
+    .option-row {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 18px;
+      align-items: start;
+      margin: 10px 0;
+    }
+
+    input[type="checkbox"], input[type="radio"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #111;
+    }
+
+    .big-check {
+      width: 28px !important;
+      height: 18px !important;
+      margin: 0;
+    }
+
+    ol {
+      margin: 4px 0 0 22px;
+      padding: 0;
+    }
+
+    li {
+      margin: 1px 0;
+    }
+
+    .services-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 10px;
+    }
+
+    .services-table td {
+      border: 1px solid var(--line);
+      padding: 7px 8px;
+      vertical-align: top;
+    }
+
+    .services-table .left {
+      width: 45%;
+      text-align: center;
+      font-weight: 700;
+      color: var(--green);
+      font-style: italic;
+    }
+
+    .footer {
+      position: absolute;
+      left: 20mm;
+      right: 20mm;
+      bottom: 8mm;
+      text-align: center;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 8px;
+      color: #333;
+    }
+
+    .form-title {
+      text-align: center;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 15px;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .form-title em {
+      font-size: 14px;
+      color: #666;
+      text-decoration: underline;
+    }
+
+    .field-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 6px 0 13px;
+      table-layout: fixed;
+    }
+
+    .field-table td, .field-table th {
+      border: 1px solid var(--line);
+      padding: 0;
+      height: 19px;
+      vertical-align: middle;
+    }
+
+    .field-table th {
+      width: 36%;
+      text-align: left;
+      font-weight: 400;
+      padding: 2px 5px;
+      background: #fafafa;
+    }
+
+    .field-table .label-inline {
+      width: auto;
+      padding: 2px 5px;
+      white-space: nowrap;
+      background: #fafafa;
+    }
+
+    input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="number"], textarea, select {
+      width: 100%;
+      height: 100%;
+      min-height: 18px;
+      border: 0;
+      outline: 0;
+      padding: 2px 5px;
+      background: var(--field);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10.5px;
+      color: #111;
+    }
+
+    input[type="file"] {
+      width: 100%;
+      height: 100%;
+      min-height: 18px;
+      border: 0;
+      padding: 2px 5px;
+      background: var(--field);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10.5px;
+      color: #111;
+    }
+
+    textarea {
+      min-height: 34px;
+      resize: vertical;
+      display: block;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      background: var(--field-focus);
+      box-shadow: inset 0 0 0 1px #c8a700;
+    }
+
+    .validation-invalid {
+      background: #fff3f3 !important;
+      box-shadow: inset 0 0 0 1px var(--red) !important;
+    }
+
+    .suggestion-anchor {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .suggestion-anchor > input,
+    .suggestion-anchor > textarea {
+      display: block;
+    }
+
+    .field-table .attachment-label {
+      width: 28%;
+      white-space: normal;
+    }
+
+    .address-suggestions {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      z-index: 25;
+      display: none;
+      max-height: 104px;
+      overflow-y: auto;
+      border: 1px solid var(--line);
+      background: var(--paper);
+      box-shadow: 0 2px 5px rgba(0,0,0,.18);
+    }
+
+    .address-suggestions.open {
+      display: block;
+    }
+
+    .address-suggestions button {
+      display: block;
+      width: 100%;
+      border: 0;
+      border-bottom: 1px solid #d8d8d8;
+      padding: 3px 5px;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10.5px;
+      line-height: 1.2;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .address-suggestions button:last-child {
+      border-bottom: 0;
+    }
+
+    .address-suggestions button:hover,
+    .address-suggestions button:focus {
+      background: var(--field-focus);
+      outline: 0;
+    }
+
+    .director-block, .shareholder-block {
+      margin: 14px 0;
+    }
+
+    .alert-row {
+      color: var(--red);
+      text-align: center;
+      font-weight: 700;
+      font-size: 10px;
+      border: 1px solid var(--line);
+      border-top: 0;
+      padding: 3px 5px;
+    }
+
+    .two-col-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      border-left: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .two-col-row > label,
+    .two-col-row > div {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      border-right: 1px solid var(--line);
+      min-height: 19px;
+    }
+
+    .two-col-row > label:last-child,
+    .two-col-row > div:last-child {
+      border-right: 0;
+    }
+
+    .two-col-row span {
+      padding: 2px 5px;
+      white-space: nowrap;
+      background: #fafafa;
+    }
+
+    .arrow-note {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin: 12px 0;
+    }
+
+    .arrow-img {
+      width: 37px;
+      height: 23px;
+      display: block;
+      flex: 0 0 auto;
+      object-fit: contain;
+    }
+
+    .share-capital {
+      display: grid;
+      grid-template-columns: auto 22px auto 22px 1fr auto 22px;
+      gap: 5px;
+      align-items: center;
+      margin: 10px 0 5px;
+      font-size: 10.5px;
+    }
+
+    .line-input {
+      border-bottom: 1px solid #111 !important;
+      height: 18px !important;
+    }
+
+    .yes-no-row {
+      display: grid;
+      grid-template-columns: 1fr auto 34px auto 34px;
+      gap: 5px;
+      align-items: center;
+      margin: 9px 0 2px;
+    }
+
+    .delivery-lines {
+      display: grid;
+      grid-template-columns: auto 1fr auto 1fr;
+      gap: 4px 6px;
+      align-items: center;
+      margin-top: 13px;
+    }
+
+    .delivery-lines .full {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .delivery-lines input {
+      border-bottom: 1px solid #111;
+      background: transparent;
+      min-height: 18px;
+    }
+
+    .page-heading-red {
+      color: var(--red);
+      text-transform: uppercase;
+      margin: 40px 0 10px;
+      font-size: 11px;
+    }
+
+    .small-text {
+      font-size: 9.5px;
+    }
+
+    .no-print {
+      display: block;
+    }
+
+    @media print {
+      html, body {
+        background: #fff;
+      }
+
+      .toolbar {
+        display: none !important;
+      }
+
+      .sheet {
+        margin: 0;
+        width: 210mm;
+        min-height: 297mm;
+        box-shadow: none;
+        page-break-after: always;
+      }
+
+      .sheet:last-child {
+        page-break-after: auto;
+      }
+
+      input, textarea, select {
+        background: transparent !important;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      input[type="checkbox"], input[type="radio"] {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar no-print">
+    <button type="button" onclick="window.print()">Print or save as PDF</button>
+    <button type="button" class="secondary" onclick="exportData()">Export form data</button>
+    <button type="button" class="secondary" onclick="clearForm()">Clear saved data</button>
+    <span>Data is saved in this browser only.</span>
+  </div>
+
+  <form id="companyForm" autocomplete="on">
+    <section class="sheet">
+      <header class="brand">
+        <div class="brand-name">KEARNEY</div>
+        <div class="seal"><img src="data:image/png;base64,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" alt="Kearney Curran Company Seal"></div>
+        <div class="brand-name right">CURRAN</div>
+      </header>
+      <div class="strapline"><strong>Company Formations</strong> - Established 1986 - <strong>Company Searches</strong><br>e-mail: wcurrco@gmail.com</div>
+      <div class="main-title">COMPANY FORMATION PROCEDURES - PRIVATE LIMITED COMPANY - 2026</div>
+
+      <p>Please complete the following forms online or print off, complete and send to us in mail or email with payment of €199.00 <span class="blue-text">Max 1-2 Directors/Shareholders</span>. Cost for 3 Directors/shareholders is €299.00, 4-6 director/shareholders is €599.00.</p>
+
+      <h2 class="blue">Incorporation of Titles</h2>
+      <p class="red-text">CRO ignore such words as Group, Solutions, Ire, Trading, Enterprises and many more non descriptive titles when granting a name. A title may not be shorter title than one that is already registered. Dissolved company names are reserved for 20 years in case the owners wish to restore them.</p>
+
+      <p>You now have <strong>three</strong> choices when incorporating a company. Please tick appropriate box.</p>
+      <div class="option-row">
+        <input class="big-check" type="checkbox" name="service_first_directors" id="service_first_directors">
+        <label for="service_first_directors">Your clients are named as first directors/secretary/shareholders</label>
+      </div>
+      <div class="option-row">
+        <input class="big-check" type="checkbox" name="service_readymade" id="service_readymade">
+        <label for="service_readymade">Readymade companies. We offer readymade companies in case clients need to do something immediately. Cost is €399.00 min.</label>
+      </div>
+
+      <h2 class="blue">Expedited Service</h2>
+      <div class="option-row">
+        <input class="big-check" type="checkbox" name="service_expedited" id="service_expedited">
+        <label for="service_expedited">We are now offering an expedited service for persons needing a company urgently. Included in this is ordering a company seal in advance of incorporation and immediate dispatch of the corporate documents by courier or guaranteed by An Post next day delivery. Cost €299.00 all-in. A three day saving is expected.</label>
+      </div>
+
+      <h2 class="red">Registry of Beneficial Owners (RBO)</h2>
+      <div class="option-row">
+        <input class="big-check" type="checkbox" name="service_rbo" id="service_rbo">
+        <label for="service_rbo">On 29th July 2019, the Government brought in regulations that owners of all companies must file their interest in their company within 5 months of incorporation. Persons owning more than 25% of the issued share capital of any company are deemed to be beneficial owners. We could do the registration for you. We charge €100.00 plus VAT for one person, if two or more persons, we charge €75.00 plus VAT each person. Foreign resident €150.00 plus VAT. <span class="red-text">Banks won’t open accounts unless RBO is completed.</span></label>
+      </div>
+
+      <h2 class="blue">Company Requirements</h2>
+      <p><strong><em>Companies must have:</em></strong></p>
+      <ol>
+        <li>A minimum of one director. One must be EEA resident or else an insurance bond is required. We can arrange.</li>
+        <li>One secretary. If one director only, this person cannot be secretary as well. We could provide a secretary.</li>
+        <li>A minimum of one shareholder.</li>
+        <li>A registered office, a home address would suffice.</li>
+        <li>PPS Number required for directors. If no PPS number, must register for an IPN Number. We can arrange.</li>
+        <li class="red-text">PPS Numbers and eircode’s are now required by CRO for all directors and an IPN Number for those who don’t have a PPS Number including persons resident abroad.</li>
+      </ol>
+
+      <h2 class="green">More Things We Can Offer You</h2>
+      <table class="services-table">
+        <tr>
+          <td class="left">CORPORATE SECRETARIAL WORK</td>
+          <td><strong><em>Share Buybacks, Different Share Classes, Change of directors, shareholders etc, Share redemption, Change of Constitution, Treasury shares, Golden Shares, Notary docs, Rewriting company register, Parent/subsidiary shareholdings for inter-co loans, change CLG to limited or vice versa</em></strong></td>
+        </tr>
+        <tr>
+          <td class="left">HIGH COURT RESTORATION</td>
+          <td><strong><em>€5,550.00 plus VAT</em></strong></td>
+        </tr>
+        <tr>
+          <td class="left">DISTRICT COURT APPLICATION<br>LATE ANNUAL RETURNS</td>
+          <td><strong><em>€750.00 plus VAT</em></strong></td>
+        </tr>
+      </table>
+
+      <div class="footer">Address: Central Chambers, Dame Court, Dublin 2, Ireland. Tel: 6710140 (9 lines) Fax: 6710462 VAT: IE4808198N<br>Directors: Desmond J. Kearney, William Curran. Bankers: Allied Irish Banks Plc. Reg. No: 113803</div>
+    </section>
+
+    <section class="sheet">
+      <div class="form-title">ORDER FORM FOR A NEW COMPANY INCORPORATION<br><em>THIS FORM IS FILLABLE ONLINE</em></div>
+      <p><span class="note-red"><em>PLEASE NOTE:</em></span> <span class="red-text">PPS Numbers &amp; eircodes are now required by CRO for all directors.</span></p>
+
+      <table class="field-table">
+        <tr><th>Proposed Company Name</th><td><input type="text" name="proposed_company_name"></td></tr>
+        <tr><th>Email address for correspondence</th><td><input type="email" name="correspondence_email"></td></tr>
+        <tr><th>Proposed Registered Office<br><span class="red-text">Including eircode</span></th><td><textarea name="registered_office" data-address-input data-eircode-target="registered_office_eircode"></textarea></td></tr>
+        <tr>
+          <th>Registered Office Eircode</th>
+          <td><input type="text" name="registered_office_eircode" data-eircode-input data-address-target="registered_office" autocomplete="postal-code"></td>
+        </tr>
+        <tr><th>Purposed Activity of the Company</th><td><input type="text" name="company_activity"></td></tr>
+        <tr><th>Place in State where proposed Activity will be carried on</th><td><input type="text" name="activity_location" placeholder="If unknown yet, directors home address will suffice"></td></tr>
+        <tr><th>Place in State where central Administration will be carried on</th><td><input type="text" name="admin_location" placeholder="If unknown yet, directors home address will suffice"></td></tr>
+      </table>
+
+      <div class="director-block">
+        <table class="field-table">
+          <tr>
+            <th class="label-inline">Directors First Name:</th><td><input type="text" name="director1_first"></td>
+            <th class="label-inline"><span class="red-text">Middle:</span></th><td><input type="text" name="director1_middle"></td>
+            <th class="label-inline">Surname:</th><td><input type="text" name="director1_surname"></td>
+          </tr>
+          <tr><th class="label-inline">Directors Address:</th><td colspan="5"><textarea name="director1_address" data-address-input data-eircode-target="director1_eircode"></textarea></td></tr>
+          <tr>
+            <th class="label-inline"><span class="red-text">Eircode:</span></th>
+            <td colspan="5"><input type="text" name="director1_eircode" data-eircode-input data-address-target="director1_address" autocomplete="postal-code"></td>
+          </tr>
+          <tr>
+            <th class="label-inline">Date of Birth:</th><td><input type="date" min="iso-date" max="iso-date" name="director1_dob"></td>
+            <th class="label-inline">Nationality:</th><td><input type="text" name="director1_nationality" list="nationalitySuggestions"></td>
+            <th class="label-inline">Occupation:</th><td><input type="text" name="director1_occupation" list="occupationSuggestions"></td>
+          </tr>
+          <tr>
+            <th class="label-inline">PPS Number:</th>
+            <td><input type="text" name="director1_pps" data-pps-input maxlength="9" autocomplete="off"></td>
+            <th class="label-inline">Other Directorships:</th><td colspan="3"><input type="text" name="director1_other_directorships"></td>
+          </tr>
+          <tr>
+            <th class="label-inline">Passport / PSC card:</th>
+            <td colspan="5"><input type="file" name="director1_identity_attachment" multiple accept=".pdf,.jpg,.jpeg,.png,.heic,.heif,image/*"></td>
+          </tr>
+          <tr>
+            <th class="label-inline attachment-label">Other directorships files:</th>
+            <td colspan="5"><input type="file" name="director1_other_directorships_attachment" multiple></td>
+          </tr>
+        </table>
+        <div class="alert-row">COPY OF PASSPORT OR PUBLIC SERVICES CARD (PSC) IN RESPECT OF ALL DIRECTORS IS REQUIRED</div>
+      </div>
+
+      <div class="director-block">
+        <table class="field-table">
+          <tr>
+            <th class="label-inline">Directors First Name:</th><td><input type="text" name="director2_first"></td>
+            <th class="label-inline"><span class="red-text">Middle:</span></th><td><input type="text" name="director2_middle"></td>
+            <th class="label-inline">Surname:</th><td><input type="text" name="director2_surname"></td>
+          </tr>
+          <tr><th class="label-inline">Directors Address:</th><td colspan="5"><textarea name="director2_address" data-address-input data-eircode-target="director2_eircode"></textarea></td></tr>
+          <tr>
+            <th class="label-inline"><span class="red-text">Eircode:</span></th>
+            <td colspan="5"><input type="text" name="director2_eircode" data-eircode-input data-address-target="director2_address" autocomplete="postal-code"></td>
+          </tr>
+          <tr>
+            <th class="label-inline">Date of Birth:</th><td><input type="date" name="director2_dob"></td>
+            <th class="label-inline">Nationality:</th><td><input type="text" name="director2_nationality" list="nationalitySuggestions"></td>
+            <th class="label-inline">Occupation:</th><td><input type="text" name="director2_occupation" list="occupationSuggestions"></td>
+          </tr>
+          <tr>
+            <th class="label-inline">PPS Number:</th>
+            <td><input type="text" name="director2_pps" data-pps-input maxlength="9" autocomplete="off"></td>
+            <th class="label-inline">Other Directorships:</th><td colspan="3"><input type="text" name="director2_other_directorships"></td>
+          </tr>
+          <tr>
+            <th class="label-inline">Passport / PSC card:</th>
+            <td colspan="5"><input type="file" name="director2_identity_attachment" multiple accept=".pdf,.jpg,.jpeg,.png,.heic,.heif,image/*"></td>
+          </tr>
+          <tr>
+            <th class="label-inline attachment-label">Other directorships files:</th>
+            <td colspan="5"><input type="file" name="director2_other_directorships_attachment" multiple></td>
+          </tr>
+        </table>
+        <div class="alert-row">COPY OF PASSPORT OR PUBLIC SERVICES CARD (PSC) IN RESPECT OF ALL DIRECTORS IS REQUIRED</div>
+      </div>
+
+      <div class="arrow-note"><img class="arrow-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACUAAAAXCAYAAACMLIalAAAAAXNSR0IArs4c6QAAAIRlWElmTU0AKgAAAAgABQESAAMAAAABAAEAAAEaAAUAAAABAAAASgEbAAUAAAABAAAAUgEoAAMAAAABAAIAAIdpAAQAAAABAAAAWgAAAAAAAABIAAAAAQAAAEgAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAACWgAwAEAAAAAQAAABcAAAAAuBOH6gAAAAlwSFlzAAALEwAACxMBAJqcGAAAAP1JREFUSA3NlGEOgyAMRnG7WD2Z3cnkKN7E9TEwzjDCD1P2JZUKxL58VELwk/SWevRuvGEfUNrzHU8oeBYLJWnp2Vq8eU1UVeybsm3bZGO0qMrbqbAsmJUckyqRTbpDiUhY1xUeHkJyFVC7UySLAADMjpL0mOPlrH2UDAxD1jNMyUcxpbrmGmBaYMo4FIriVzB+TeYL4LBxmkAJs0Wk0f9CufGP/sKp4TJnvnprONC1pzi6oVD5WlBAzhoG9QsIOM7SJYAoykBHY59d8syN4wOVgTCiKvcrIcYYDAoY7qSq3KHmObG8jCZWiZwn1epxZIxNeTuFQ9okcl6U3npvkbvv3PX2R5YAAAAASUVORK5CYII=" alt="Arrow"><span>Extra directors to be completed on next page.</span></div>
+
+      <table class="field-table">
+        <tr><th>Secretary’s First Name/s:</th><td><input type="text" name="secretary_first"></td><th class="label-inline">Surname/s:</th><td><input type="text" name="secretary_surname"></td></tr>
+        <tr><th>Secretary’s Address:</th><td colspan="3"><textarea name="secretary_address" data-address-input data-eircode-target="secretary_eircode"></textarea></td></tr>
+        <tr>
+          <th>Eircode:</th>
+          <td colspan="3"><input type="text" name="secretary_eircode" data-eircode-input data-address-target="secretary_address" autocomplete="postal-code"></td>
+        </tr>
+        <tr><th>Secretary’s Date of Birth:</th><td><input type="date" name="secretary_dob"></td><th class="label-inline">Secretary’s Nationality:</th><td><input type="text" name="secretary_nationality" list="nationalitySuggestions"></td></tr>
+      </table>
+
+      <div class="share-capital">
+        <span>Nominal Share Capital<br>Standard €100,000</span>
+        <input type="checkbox" name="share_standard" id="share_standard">
+        <label for="share_other">Other</label>
+        <input type="checkbox" name="share_other" id="share_other">
+        <input class="line-input" type="text" name="share_other_details">
+        <label for="no_authorised_capital">No Authorised Capital to be stated</label>
+        <input type="checkbox" name="no_authorised_capital" id="no_authorised_capital">
+      </div>
+
+      <table class="field-table">
+        <tr><th>Shareholders Name:</th><td><input type="text" name="shareholder1_name"></td><th class="label-inline">Number of Shares</th><td><input type="number" name="shareholder1_shares" min="0"></td></tr>
+        <tr><th>Shareholders Address:</th><td colspan="3"><textarea name="shareholder1_address"></textarea></td></tr>
+      </table>
+      <table class="field-table">
+        <tr><th>Shareholders Name:</th><td><input type="text" name="shareholder2_name"></td><th class="label-inline">Number of Shares</th><td><input type="number" name="shareholder2_shares" min="0"></td></tr>
+        <tr><th>Shareholders Address:</th><td colspan="3"><textarea name="shareholder2_address"></textarea></td></tr>
+      </table>
+
+      <div class="yes-no-row">
+        <span>Are the above shareholders the beneficial owners of the shares:</span>
+        <label for="beneficial_yes">Yes</label><input type="radio" name="beneficial_owners" id="beneficial_yes" value="yes">
+        <label for="beneficial_no">No</label><input type="radio" name="beneficial_owners" id="beneficial_no" value="no">
+      </div>
+      <p class="small-text">If no, give details of beneficial owners entitled to more than 25% of the share capital of the company</p>
+      <textarea name="beneficial_owner_details" placeholder="Beneficial owner details"></textarea>
+
+      <div class="delivery-lines">
+        <label>Client Name</label><input type="text" name="client_name">
+        <label>Contact Name:</label><input type="text" name="contact_name">
+        <div class="full"><label>Address, where parcel to be delivered:</label><input type="text" name="delivery_address_1"></div>
+        <div class="full"><label></label><input type="text" name="delivery_address_2"></div>
+        <label>Tel:</label><input type="tel" name="client_tel">
+        <label>Email Address:</label><input type="email" name="client_email">
+      </div>
+    </section>
+
+    <section class="sheet">
+      <header class="brand">
+        <div class="brand-name">KEARNEY</div>
+        <div class="seal"><img src="data:image/png;base64,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" alt="Kearney Curran Company Seal"></div>
+        <div class="brand-name right">CURRAN</div>
+      </header>
+      <div class="strapline"><strong>Company Formations</strong> - Established 1986 - <strong>Company Searches</strong><br>e-mail: wcurrco@gmail.com</div>
+      <div class="page-heading-red">Additional Directors/Shareholders</div>
+
+      <div class="director-block">
+        <table class="field-table">
+          <tr>
+            <th class="label-inline">Directors First Name:</th><td><input type="text" name="director3_first"></td>
+            <th class="label-inline"><span class="red-text">Middle:</span></th><td><input type="text" name="director3_middle"></td>
+            <th class="label-inline">Surname:</th><td><input type="text" name="director3_surname"></td>
+          </tr>
+          <tr><th class="label-inline">Directors Address:</th><td colspan="5"><textarea name="director3_address" data-address-input data-eircode-target="director3_eircode"></textarea></td></tr>
+          <tr>
+            <th class="label-inline">Including <span class="red-text">eircode</span></th>
+            <td colspan="5"><input type="text" name="director3_eircode" data-eircode-input data-address-target="director3_address" autocomplete="postal-code"></td>
+          </tr>
+          <tr>
+            <th class="label-inline">Date of Birth:</th><td><input type="date" name="director3_dob"></td>
+            <th class="label-inline">Nationality:</th><td><input type="text" name="director3_nationality" list="nationalitySuggestions"></td>
+            <th class="label-inline">Occupation:</th><td><input type="text" name="director3_occupation" list="occupationSuggestions"></td>
+          </tr>
+          <tr>
+            <th class="label-inline">PPS Number:</th>
+            <td><input type="text" name="director3_pps" data-pps-input maxlength="9" autocomplete="off"></td>
+            <th class="label-inline">Other Directorships:</th><td colspan="3"><input type="text" name="director3_other_directorships"></td>
+          </tr>
+          <tr>
+            <th class="label-inline">Passport / PSC card:</th>
+            <td colspan="5"><input type="file" name="director3_identity_attachment" multiple accept=".pdf,.jpg,.jpeg,.png,.heic,.heif,image/*"></td>
+          </tr>
+          <tr>
+            <th class="label-inline attachment-label">Other directorships files:</th>
+            <td colspan="5"><input type="file" name="director3_other_directorships_attachment" multiple></td>
+          </tr>
+        </table>
+        <div class="alert-row">COPY OF PASSPORT OR PUBLIC SERVICES CARD (PSC) IN RESPECT OF ALL DIRECTORS IS REQUIRED</div>
+      </div>
+
+      <div class="director-block">
+        <table class="field-table">
+          <tr>
+            <th class="label-inline">Directors First Name:</th><td><input type="text" name="director4_first"></td>
+            <th class="label-inline"><span class="red-text">Middle:</span></th><td><input type="text" name="director4_middle"></td>
+            <th class="label-inline">Surname:</th><td><input type="text" name="director4_surname"></td>
+          </tr>
+          <tr><th class="label-inline">Directors Address:</th><td colspan="5"><textarea name="director4_address" data-address-input data-eircode-target="director4_eircode"></textarea></td></tr>
+          <tr>
+            <th class="label-inline">Including <span class="red-text">eircode</span></th>
+            <td colspan="5"><input type="text" name="director4_eircode" data-eircode-input data-address-target="director4_address" autocomplete="postal-code"></td>
+          </tr>
+          <tr>
+            <th class="label-inline">Date of Birth:</th><td><input type="date" name="director4_dob"></td>
+            <th class="label-inline">Nationality:</th><td><input type="text" name="director4_nationality" list="nationalitySuggestions"></td>
+            <th class="label-inline">Occupation:</th><td><input type="text" name="director4_occupation" list="occupationSuggestions"></td>
+          </tr>
+          <tr>
+            <th class="label-inline">PPS Number:</th>
+            <td><input type="text" name="director4_pps" data-pps-input maxlength="9" autocomplete="off"></td>
+            <th class="label-inline">Other Directorships:</th><td colspan="3"><input type="text" name="director4_other_directorships"></td>
+          </tr>
+          <tr>
+            <th class="label-inline">Passport / PSC card:</th>
+            <td colspan="5"><input type="file" name="director4_identity_attachment" multiple accept=".pdf,.jpg,.jpeg,.png,.heic,.heif,image/*"></td>
+          </tr>
+          <tr>
+            <th class="label-inline attachment-label">Other directorships files:</th>
+            <td colspan="5"><input type="file" name="director4_other_directorships_attachment" multiple></td>
+          </tr>
+        </table>
+        <div class="alert-row">COPY OF PASSPORT OR PUBLIC SERVICES CARD (PSC) IN RESPECT OF ALL DIRECTORS IS REQUIRED</div>
+      </div>
+
+      <div class="director-block">
+        <table class="field-table">
+          <tr>
+            <th class="label-inline">Directors First Name:</th><td><input type="text" name="director5_first"></td>
+            <th class="label-inline"><span class="red-text">Middle:</span></th><td><input type="text" name="director5_middle"></td>
+            <th class="label-inline">Surname:</th><td><input type="text" name="director5_surname"></td>
+          </tr>
+          <tr><th class="label-inline">Directors Address:</th><td colspan="5"><textarea name="director5_address" data-address-input data-eircode-target="director5_eircode"></textarea></td></tr>
+          <tr>
+            <th class="label-inline">Including <span class="red-text">eircode</span></th>
+            <td colspan="5"><input type="text" name="director5_eircode" data-eircode-input data-address-target="director5_address" autocomplete="postal-code"></td>
+          </tr>
+          <tr>
+            <th class="label-inline">Date of Birth:</th><td><input type="date" name="director5_dob"></td>
+            <th class="label-inline">Nationality:</th><td><input type="text" name="director5_nationality" list="nationalitySuggestions"></td>
+            <th class="label-inline">Occupation:</th><td><input type="text" name="director5_occupation" list="occupationSuggestions"></td>
+          </tr>
+          <tr>
+            <th class="label-inline">PPS Number:</th>
+            <td><input type="text" name="director5_pps" data-pps-input maxlength="9" autocomplete="off"></td>
+            <th class="label-inline">Other Directorships:</th><td colspan="3"><input type="text" name="director5_other_directorships"></td>
+          </tr>
+          <tr>
+            <th class="label-inline">Passport / PSC card:</th>
+            <td colspan="5"><input type="file" name="director5_identity_attachment" multiple accept=".pdf,.jpg,.jpeg,.png,.heic,.heif,image/*"></td>
+          </tr>
+          <tr>
+            <th class="label-inline attachment-label">Other directorships files:</th>
+            <td colspan="5"><input type="file" name="director5_other_directorships_attachment" multiple></td>
+          </tr>
+        </table>
+        <div class="alert-row">COPY OF PASSPORT OR PUBLIC SERVICES CARD (PSC) IN RESPECT OF ALL DIRECTORS IS REQUIRED</div>
+      </div>
+
+      <table class="field-table">
+        <tr><th>Shareholders Name:</th><td><input type="text" name="shareholder3_name"></td><th class="label-inline">Number of Shares</th><td><input type="number" name="shareholder3_shares" min="0"></td></tr>
+        <tr><th>Shareholders Address:</th><td colspan="3"><textarea name="shareholder3_address"></textarea></td></tr>
+      </table>
+      <table class="field-table">
+        <tr><th>Shareholders Name:</th><td><input type="text" name="shareholder4_name"></td><th class="label-inline">Number of Shares</th><td><input type="number" name="shareholder4_shares" min="0"></td></tr>
+        <tr><th>Shareholders Address:</th><td colspan="3"><textarea name="shareholder4_address"></textarea></td></tr>
+      </table>
+      <table class="field-table">
+        <tr><th>Shareholders Name:</th><td><input type="text" name="shareholder5_name"></td><th class="label-inline">Number of Shares</th><td><input type="number" name="shareholder5_shares" min="0"></td></tr>
+        <tr><th>Shareholders Address:</th><td colspan="3"><textarea name="shareholder5_address"></textarea></td></tr>
+      </table>
+      <table class="field-table">
+        <tr><th>Shareholders Name:</th><td><input type="text" name="shareholder6_name"></td><th class="label-inline">Number of Shares</th><td><input type="number" name="shareholder6_shares" min="0"></td></tr>
+        <tr><th>Shareholders Address:</th><td colspan="3"><textarea name="shareholder6_address"></textarea></td></tr>
+      </table>
+
+      <div class="footer">Address: Central Chambers, Dame Court, Dublin 2, Ireland. Tel: 6710140 (9 lines) Fax: 6710462 VAT: IE4808198N<br>Directors: Desmond J. Kearney, William Curran. Bankers: Allied Irish Banks Plc. Reg. No: 113803</div>
+    </section>
+  </form>
+
+<!-- suggestion lists -->
+  <datalist id="nationalitySuggestions">
+    <option value="Afghanistan"></option>
+    <option value="Åland Islands"></option>
+    <option value="Albania"></option>
+    <option value="Algeria"></option>
+    <option value="American Samoa"></option>
+    <option value="Andorra"></option>
+    <option value="Angola"></option>
+    <option value="Anguilla"></option>
+    <option value="Antarctica"></option>
+    <option value="Antigua and Barbuda"></option>
+    <option value="Argentina"></option>
+    <option value="Armenia"></option>
+    <option value="Aruba"></option>
+    <option value="Australia"></option>
+    <option value="Austria"></option>
+    <option value="Azerbaijan"></option>
+    <option value="Bahamas"></option>
+    <option value="Bahrain"></option>
+    <option value="Bangladesh"></option>
+    <option value="Barbados"></option>
+    <option value="Belarus"></option>
+    <option value="Belgium"></option>
+    <option value="Belize"></option>
+    <option value="Benin"></option>
+    <option value="Bermuda"></option>
+    <option value="Bhutan"></option>
+    <option value="Bolivia, Plurinational State of"></option>
+    <option value="Bonaire, Sint Eustatius and Saba"></option>
+    <option value="Bosnia and Herzegovina"></option>
+    <option value="Botswana"></option>
+    <option value="Bouvet Island"></option>
+    <option value="Brazil"></option>
+    <option value="British Indian Ocean Territory"></option>
+    <option value="Brunei Darussalam"></option>
+    <option value="Bulgaria"></option>
+    <option value="Burkina Faso"></option>
+    <option value="Burundi"></option>
+    <option value="Cambodia"></option>
+    <option value="Cameroon"></option>
+    <option value="Canada"></option>
+    <option value="Cape Verde"></option>
+    <option value="Cayman Islands"></option>
+    <option value="Central African Republic"></option>
+    <option value="Chad"></option>
+    <option value="Chile"></option>
+    <option value="China"></option>
+    <option value="Christmas Island"></option>
+    <option value="Cocos (Keeling) Islands"></option>
+    <option value="Colombia"></option>
+    <option value="Comoros"></option>
+    <option value="Congo"></option>
+    <option value="Congo, the Democratic Republic of the"></option>
+    <option value="Cook Islands"></option>
+    <option value="Costa Rica"></option>
+    <option value="Côte d'Ivoire"></option>
+    <option value="Croatia"></option>
+    <option value="Cuba"></option>
+    <option value="Curaçao"></option>
+    <option value="Cyprus"></option>
+    <option value="Czech Republic"></option>
+    <option value="Denmark"></option>
+    <option value="Djibouti"></option>
+    <option value="Dominica"></option>
+    <option value="Dominican Republic"></option>
+    <option value="Ecuador"></option>
+    <option value="Egypt"></option>
+    <option value="El Salvador"></option>
+    <option value="England"></option>
+    <option value="Equatorial Guinea"></option>
+    <option value="Eritrea"></option>
+    <option value="Estonia"></option>
+    <option value="Eswatini"></option>
+    <option value="Ethiopia"></option>
+    <option value="Falkland Islands (Malvinas)"></option>
+    <option value="Faroe Islands"></option>
+    <option value="Fiji"></option>
+    <option value="Finland"></option>
+    <option value="France"></option>
+    <option value="French Guiana"></option>
+    <option value="French Polynesia"></option>
+    <option value="French Southern Territories"></option>
+    <option value="Gabon"></option>
+    <option value="Gambia"></option>
+    <option value="Georgia"></option>
+    <option value="Germany"></option>
+    <option value="Ghana"></option>
+    <option value="Gibraltar"></option>
+    <option value="Greece"></option>
+    <option value="Greenland"></option>
+    <option value="Grenada"></option>
+    <option value="Guadeloupe"></option>
+    <option value="Guam"></option>
+    <option value="Guatemala"></option>
+    <option value="Guernsey"></option>
+    <option value="Guinea"></option>
+    <option value="Guinea-Bissau"></option>
+    <option value="Guyana"></option>
+    <option value="Haiti"></option>
+    <option value="Heard Island and McDonald Islands"></option>
+    <option value="Holy See (Vatican City State)"></option>
+    <option value="Honduras"></option>
+    <option value="Hong Kong"></option>
+    <option value="Hungary"></option>
+    <option value="Iceland"></option>
+    <option value="India"></option>
+    <option value="Indonesia"></option>
+    <option value="Iran, Islamic Republic of"></option>
+    <option value="Iraq"></option>
+    <option value="Ireland"></option>
+    <option value="Isle of Man"></option>
+    <option value="Israel"></option>
+    <option value="Italy"></option>
+    <option value="Jamaica"></option>
+    <option value="Japan"></option>
+    <option value="Jersey"></option>
+    <option value="Jordan"></option>
+    <option value="Kazakhstan"></option>
+    <option value="Kenya"></option>
+    <option value="Kiribati"></option>
+    <option value="Korea, Democratic People's Republic of"></option>
+    <option value="Korea, Republic of"></option>
+    <option value="Kosovo"></option>
+    <option value="Kuwait"></option>
+    <option value="Kyrgyzstan"></option>
+    <option value="Lao People's Democratic Republic"></option>
+    <option value="Latvia"></option>
+    <option value="Lebanon"></option>
+    <option value="Lesotho"></option>
+    <option value="Liberia"></option>
+    <option value="Libya"></option>
+    <option value="Liechtenstein"></option>
+    <option value="Lithuania"></option>
+    <option value="Luxembourg"></option>
+    <option value="Macao"></option>
+    <option value="Madagascar"></option>
+    <option value="Malawi"></option>
+    <option value="Malaysia"></option>
+    <option value="Maldives"></option>
+    <option value="Mali"></option>
+    <option value="Malta"></option>
+    <option value="Marshall Islands"></option>
+    <option value="Martinique"></option>
+    <option value="Mauritania"></option>
+    <option value="Mauritius"></option>
+    <option value="Mayotte"></option>
+    <option value="Mexico"></option>
+    <option value="Micronesia, Federated States of"></option>
+    <option value="Moldova, Republic of"></option>
+    <option value="Monaco"></option>
+    <option value="Mongolia"></option>
+    <option value="Montenegro"></option>
+    <option value="Montserrat"></option>
+    <option value="Morocco"></option>
+    <option value="Mozambique"></option>
+    <option value="Myanmar"></option>
+    <option value="Namibia"></option>
+    <option value="Nauru"></option>
+    <option value="Nepal"></option>
+    <option value="Netherlands"></option>
+    <option value="Netherlands Antilles"></option>
+    <option value="New Caledonia"></option>
+    <option value="New Zealand"></option>
+    <option value="Nicaragua"></option>
+    <option value="Niger"></option>
+    <option value="Nigeria"></option>
+    <option value="Niue"></option>
+    <option value="Norfolk Island"></option>
+    <option value="North Macedonia"></option>
+    <option value="Northern Ireland"></option>
+    <option value="Northern Mariana Islands"></option>
+    <option value="Norway"></option>
+    <option value="Oman"></option>
+    <option value="Pakistan"></option>
+    <option value="Palau"></option>
+    <option value="Palestine, State of"></option>
+    <option value="Panama"></option>
+    <option value="Papua New Guinea"></option>
+    <option value="Paraguay"></option>
+    <option value="Peru"></option>
+    <option value="Philippines"></option>
+    <option value="Pitcairn"></option>
+    <option value="Poland"></option>
+    <option value="Portugal"></option>
+    <option value="Puerto Rico"></option>
+    <option value="Qatar"></option>
+    <option value="Réunion"></option>
+    <option value="Romania"></option>
+    <option value="Russian Federation"></option>
+    <option value="Rwanda"></option>
+    <option value="Saint Helena, Ascension and Tristan da Cunha"></option>
+    <option value="Saint Kitts and Nevis"></option>
+    <option value="Saint Lucia"></option>
+    <option value="Saint Martin (French part)"></option>
+    <option value="Saint Pierre and Miquelon"></option>
+    <option value="Saint Vincent and the Grenadines"></option>
+    <option value="Samoa"></option>
+    <option value="San Marino"></option>
+    <option value="Sao Tome and Principe"></option>
+    <option value="Saudi Arabia"></option>
+    <option value="Scotland"></option>
+    <option value="Senegal"></option>
+    <option value="Serbia"></option>
+    <option value="Seychelles"></option>
+    <option value="Sierra Leone"></option>
+    <option value="Singapore"></option>
+    <option value="Sint Maarten (Dutch part)"></option>
+    <option value="Slovakia"></option>
+    <option value="Slovenia"></option>
+    <option value="Solomon Islands"></option>
+    <option value="Somalia"></option>
+    <option value="South Africa"></option>
+    <option value="South Georgia and the South Sandwich Islands"></option>
+    <option value="South Sudan"></option>
+    <option value="Spain"></option>
+    <option value="Sri Lanka"></option>
+    <option value="Sudan"></option>
+    <option value="Suriname"></option>
+    <option value="Svalbard and Jan Mayen"></option>
+    <option value="Sweden"></option>
+    <option value="Switzerland"></option>
+    <option value="Syrian Arab Republic"></option>
+    <option value="Taiwan, Province of China"></option>
+    <option value="Tajikistan"></option>
+    <option value="Tanzania, United Republic of"></option>
+    <option value="Thailand"></option>
+    <option value="Tibet"></option>
+    <option value="Timor-Leste"></option>
+    <option value="Togo"></option>
+    <option value="Tokelau"></option>
+    <option value="Tonga"></option>
+    <option value="Trinidad and Tobago"></option>
+    <option value="Tunisia"></option>
+    <option value="Turkey"></option>
+    <option value="Turkmenistan"></option>
+    <option value="Turks and Caicos Islands"></option>
+    <option value="Tuvalu"></option>
+    <option value="Uganda"></option>
+    <option value="Ukraine"></option>
+    <option value="United Arab Emirates"></option>
+    <option value="United Kingdom"></option>
+    <option value="United States"></option>
+    <option value="United States Minor Outlying Islands"></option>
+    <option value="Uruguay"></option>
+    <option value="Uzbekistan"></option>
+    <option value="Vanuatu"></option>
+    <option value="Venezuela, Bolivarian Republic of"></option>
+    <option value="Viet Nam"></option>
+    <option value="Virgin Islands, British"></option>
+    <option value="Virgin Islands, U.S."></option>
+    <option value="Wales"></option>
+    <option value="Wallis and Futuna"></option>
+    <option value="Western Sahara"></option>
+    <option value="Yemen"></option>
+    <option value="Zambia"></option>
+    <option value="Zimbabwew"></option>
+  </datalist>
+  <datalist id="occupationSuggestions">
+    <option value="Accountant"></option>
+    <option value="Actor - Entertainer"></option>
+    <option value="Actuary"></option>
+    <option value="Acupuncturist"></option>
+    <option value="Administrator"></option>
+    <option value="Adult Education Organiser"></option>
+    <option value="Advertising Agent"></option>
+    <option value="Agent"></option>
+    <option value="Agricultural Labourer"></option>
+    <option value="Agriculturalist"></option>
+    <option value="Air Hostess Or Steward"></option>
+    <option value="Aircraft Pilot, Navigator"></option>
+    <option value="Analyst"></option>
+    <option value="Announcer"></option>
+    <option value="Arcade Owner"></option>
+    <option value="Archaeologist"></option>
+    <option value="Architect"></option>
+    <option value="Army Officer"></option>
+    <option value="Artist"></option>
+    <option value="Artist/Sculptor"></option>
+    <option value="Assembler Of Vehicle, Etc"></option>
+    <option value="Assistant Bank Manager"></option>
+    <option value="Assistant Manager"></option>
+    <option value="Assistant Matron"></option>
+    <option value="Astronomer"></option>
+    <option value="Auctioneer/Valuer"></option>
+    <option value="Audiometrician"></option>
+    <option value="Auditor"></option>
+    <option value="Author, Journalist Or Editor"></option>
+    <option value="Bacteriologist/Pathologist"></option>
+    <option value="Bank Official"></option>
+    <option value="Bar Attendant"></option>
+    <option value="Bar Or Public House Manager"></option>
+    <option value="Barber/Hairdresser"></option>
+    <option value="Barrister"></option>
+    <option value="Beautician"></option>
+    <option value="Berthing Master"></option>
+    <option value="Bicycle Repairs"></option>
+    <option value="Biologist"></option>
+    <option value="Blacksmith Or Metal Worker"></option>
+    <option value="Bleacher, Dyer Or Finisher"></option>
+    <option value="Blind Installer"></option>
+    <option value="Boat Builder"></option>
+    <option value="Book Binder"></option>
+    <option value="Book Keeper"></option>
+    <option value="Bookmaker"></option>
+    <option value="Bookseller"></option>
+    <option value="Boot/Shoe Maker"></option>
+    <option value="Bricklayer"></option>
+    <option value="Broadcasting Operator"></option>
+    <option value="Budget Clerk"></option>
+    <option value="Builder-Contractor"></option>
+    <option value="Building Contractor"></option>
+    <option value="Building Inspector"></option>
+    <option value="Bus Conductor"></option>
+    <option value="Business Executive"></option>
+    <option value="Butcher"></option>
+    <option value="Cabinet Maker"></option>
+    <option value="Camera Man"></option>
+    <option value="Canteen Or Related Worker"></option>
+    <option value="Car Park Attendant"></option>
+    <option value="Car Salesman"></option>
+    <option value="Cardiologist"></option>
+    <option value="Career Guidance"></option>
+    <option value="Carer"></option>
+    <option value="Caretaker"></option>
+    <option value="Carpenter Or Joiner"></option>
+    <option value="Cashier"></option>
+    <option value="Caterer"></option>
+    <option value="Cattle Tester/Milk Inspector"></option>
+    <option value="Chairman"></option>
+    <option value="Chandler"></option>
+    <option value="Charity Development Worker"></option>
+    <option value="Chartered Accountant"></option>
+    <option value="Chartered Company Secretary"></option>
+    <option value="Cheese-Maker"></option>
+    <option value="Chef"></option>
+    <option value="Chemist"></option>
+    <option value="Chief Commercial Officer"></option>
+    <option value="Chief Executive Officer"></option>
+    <option value="Chief Financial Officer"></option>
+    <option value="Chief Operating Officer"></option>
+    <option value="Childcare Worker"></option>
+    <option value="Chiropodist"></option>
+    <option value="Cinema Manager"></option>
+    <option value="Civil Engineer"></option>
+    <option value="Civil Servant"></option>
+    <option value="Clergy"></option>
+    <option value="Clerical Officer"></option>
+    <option value="Clerk Of Works"></option>
+    <option value="Clothing Manufacturer"></option>
+    <option value="Coach (Training)"></option>
+    <option value="College Bursar"></option>
+    <option value="Commission Agent"></option>
+    <option value="Commissioned Officer"></option>
+    <option value="Community Development Worker"></option>
+    <option value="Company Chairman"></option>
+    <option value="Company Director"></option>
+    <option value="Company Formation Agent"></option>
+    <option value="Company Secretary"></option>
+    <option value="Compositor/Monotype Operator"></option>
+    <option value="Computer Operator"></option>
+    <option value="Computer Programmer"></option>
+    <option value="Computer Systems Manager"></option>
+    <option value="Concrete Products Manufacturer"></option>
+    <option value="Conductor"></option>
+    <option value="Confectioner"></option>
+    <option value="Consultant"></option>
+    <option value="Contract Cleaning"></option>
+    <option value="Cook"></option>
+    <option value="Co-Operative Worker"></option>
+    <option value="Councillor"></option>
+    <option value="Counsellor"></option>
+    <option value="County Council Worker"></option>
+    <option value="County Development Office"></option>
+    <option value="Courier"></option>
+    <option value="Craftsman"></option>
+    <option value="Crane/Hoist/Rigger Operator"></option>
+    <option value="Creamery Manager"></option>
+    <option value="Cultural Attache"></option>
+    <option value="Curtain Manufacturer"></option>
+    <option value="Cutter"></option>
+    <option value="Dancer"></option>
+    <option value="Data Processor"></option>
+    <option value="Dealer"></option>
+    <option value="Dealer In Agricultural Machinery"></option>
+    <option value="Dental Nurse"></option>
+    <option value="Dental Practicioner"></option>
+    <option value="Dental/Orthodontic"></option>
+    <option value="Deputy Principal"></option>
+    <option value="Designer"></option>
+    <option value="Dietician"></option>
+    <option value="Director"></option>
+    <option value="Director General"></option>
+    <option value="Director Manufacturing"></option>
+    <option value="Display Contractor"></option>
+    <option value="Diver"></option>
+    <option value="Dock Labourers"></option>
+    <option value="Docker"></option>
+    <option value="Doctor"></option>
+    <option value="Domestic Servant"></option>
+    <option value="Draughtsperson"></option>
+    <option value="Driver"></option>
+    <option value="Earthmove/Construction/Machine Operator"></option>
+    <option value="Economist"></option>
+    <option value="Editor"></option>
+    <option value="Education Officer"></option>
+    <option value="Egg Wholesaler"></option>
+    <option value="Electrical Fitters"></option>
+    <option value="Electrical Services"></option>
+    <option value="Electrician"></option>
+    <option value="Employment Advisor"></option>
+    <option value="Engineer"></option>
+    <option value="Engraver"></option>
+    <option value="Entrepreneur"></option>
+    <option value="Environmentalist"></option>
+    <option value="Estate Agent"></option>
+    <option value="Fabricator"></option>
+    <option value="Facilitator"></option>
+    <option value="Factory Manager"></option>
+    <option value="Factory Worker"></option>
+    <option value="Farm Managers"></option>
+    <option value="Farmer"></option>
+    <option value="Fashion Buyer"></option>
+    <option value="Field Officer"></option>
+    <option value="Film &amp; Art Producer"></option>
+    <option value="Film Maker"></option>
+    <option value="Financial Consultant"></option>
+    <option value="Financial Controller"></option>
+    <option value="Fire Officer"></option>
+    <option value="Fish Farm Manager"></option>
+    <option value="Fisherman"></option>
+    <option value="Fishery Board Agent/Inspector"></option>
+    <option value="Fitness Consultant"></option>
+    <option value="Fitness Therapist"></option>
+    <option value="Fitter"></option>
+    <option value="Fitter Turner"></option>
+    <option value="Florist"></option>
+    <option value="Foreman/Supervisor/Manager"></option>
+    <option value="Forensic Officer"></option>
+    <option value="Forester/Skilled Forestry"></option>
+    <option value="Forestry Labourer"></option>
+    <option value="Forestry Officer"></option>
+    <option value="Forklift Rebuilder"></option>
+    <option value="Formations Manager"></option>
+    <option value="Freight Forwarder"></option>
+    <option value="Fruit Merchant"></option>
+    <option value="Furniture Manufacturer"></option>
+    <option value="Furniture Retailer"></option>
+    <option value="Furrier"></option>
+    <option value="Garage Proprietor"></option>
+    <option value="Garda Sergeant"></option>
+    <option value="Garda Siochana"></option>
+    <option value="Gardener - Skilled"></option>
+    <option value="Gas And Chemical Worker"></option>
+    <option value="Gas Operator"></option>
+    <option value="General Manager"></option>
+    <option value="General Operative"></option>
+    <option value="Gerontologist"></option>
+    <option value="Glass Cutter"></option>
+    <option value="Glass Or Ceramic Worker"></option>
+    <option value="Glass Silverer"></option>
+    <option value="Glazier"></option>
+    <option value="Goldsmith/Silversmith Etc"></option>
+    <option value="Golfer"></option>
+    <option value="Government Executive Officer"></option>
+    <option value="Graphics Designer"></option>
+    <option value="Grocer"></option>
+    <option value="Groundsman"></option>
+    <option value="Hairdresser"></option>
+    <option value="Harbour Master"></option>
+    <option value="Hardware Assistant"></option>
+    <option value="Haulier"></option>
+    <option value="Health Education Co-Ordinator"></option>
+    <option value="Health Ins./Cardiographer"></option>
+    <option value="Heating Engineer"></option>
+    <option value="Historian"></option>
+    <option value="Home-Maker"></option>
+    <option value="Horticulturist"></option>
+    <option value="Hospital Worker"></option>
+    <option value="Hotelier"></option>
+    <option value="Human Resources"></option>
+    <option value="Importer"></option>
+    <option value="Industrial Chemist"></option>
+    <option value="Industrial Designers"></option>
+    <option value="Inspector"></option>
+    <option value="Instructor"></option>
+    <option value="Insurance Agent"></option>
+    <option value="Insurance Clerk"></option>
+    <option value="Interior Decorator"></option>
+    <option value="Interpreter"></option>
+    <option value="Inventor"></option>
+    <option value="Investigatory Executive"></option>
+    <option value="Investment Consultant"></option>
+    <option value="It Consultant"></option>
+    <option value="It Developer"></option>
+    <option value="It Technician"></option>
+    <option value="Jewellery Designer"></option>
+    <option value="Journalist"></option>
+    <option value="Judge"></option>
+    <option value="Judo Instructor"></option>
+    <option value="Knitters/ Machine Operator"></option>
+    <option value="Labourer"></option>
+    <option value="Laundry/Dry Cleaning"></option>
+    <option value="Law Clerk"></option>
+    <option value="Lawyer"></option>
+    <option value="Leather Worker"></option>
+    <option value="Lecturer"></option>
+    <option value="Legal Executive"></option>
+    <option value="Legislative/Government Official"></option>
+    <option value="Liaison Officer"></option>
+    <option value="Librarian"></option>
+    <option value="Lighthouse Keeper"></option>
+    <option value="Linesman Or Cable Jointer"></option>
+    <option value="Lithographer"></option>
+    <option value="Livestock (Non-Farm) Work"></option>
+    <option value="Livestock Dealer"></option>
+    <option value="Locksmith"></option>
+    <option value="M.E.P."></option>
+    <option value="Machine Tool Setter/Operator"></option>
+    <option value="Maintenance Planner"></option>
+    <option value="Maker Of Beverage"></option>
+    <option value="Maker Of Food"></option>
+    <option value="Maker Of Paper"></option>
+    <option value="Maker Of Sugar/Confection"></option>
+    <option value="Maker Of Tobacco Product"></option>
+    <option value="Management Consultant"></option>
+    <option value="Manager"></option>
+    <option value="Manager Hotel/Restaurant"></option>
+    <option value="Manager Or Company Secretary"></option>
+    <option value="Manager Wholesale/Retail"></option>
+    <option value="Manageress"></option>
+    <option value="Managing Director"></option>
+    <option value="Manual Worker"></option>
+    <option value="Manufacturer"></option>
+    <option value="Market Gardener/Nursery Manager"></option>
+    <option value="Marketing Manager"></option>
+    <option value="Master Mariner"></option>
+    <option value="Mathematician/Statistician"></option>
+    <option value="Matron/Supervisor Of School"></option>
+    <option value="Meat Curer/Canner/Preserver"></option>
+    <option value="Medical Consultant"></option>
+    <option value="Medical Doctor"></option>
+    <option value="Medical Laboratory Technician"></option>
+    <option value="Medical Practitioner"></option>
+    <option value="Merchant"></option>
+    <option value="Messenger"></option>
+    <option value="Metal Coater/Plater"></option>
+    <option value="Metal Fabricator"></option>
+    <option value="Metal Furniture Workers"></option>
+    <option value="Metal Goods Inspectors"></option>
+    <option value="Metalcaster/Moulder/Setter"></option>
+    <option value="Milk Process/Maker Dairy"></option>
+    <option value="Mill Worker : Semi-Skilled"></option>
+    <option value="Mill Worker : Skilled"></option>
+    <option value="Mine And Quarry Worker"></option>
+    <option value="Mining Executive"></option>
+    <option value="Motor Mechanic"></option>
+    <option value="Music Shop Proprietor"></option>
+    <option value="Musician"></option>
+    <option value="Naturopath"></option>
+    <option value="Naval Officer"></option>
+    <option value="Neurologist"></option>
+    <option value="None"></option>
+    <option value="Nonmetallic Mineral Products"></option>
+    <option value="Nun"></option>
+    <option value="Nurse"></option>
+    <option value="Nutritionist"></option>
+    <option value="Obstetrician"></option>
+    <option value="Oceanographer"></option>
+    <option value="Office Manager"></option>
+    <option value="Oil Distributor"></option>
+    <option value="Operator"></option>
+    <option value="Optician/Therapist/Etc."></option>
+    <option value="Orthopaedic Technician"></option>
+    <option value="Osteopath"></option>
+    <option value="Other Clothing Workers"></option>
+    <option value="Other Ranks - Military"></option>
+    <option value="Packer Or Bottler"></option>
+    <option value="Paediatrician"></option>
+    <option value="Painter Or Decorator"></option>
+    <option value="Panel Beater"></option>
+    <option value="Paper Products"></option>
+    <option value="Parlimentary Assistant"></option>
+    <option value="Pathologist"></option>
+    <option value="Pathologist, Veterinary"></option>
+    <option value="Pattern Cutter"></option>
+    <option value="Personnel Officer"></option>
+    <option value="Pest Controller"></option>
+    <option value="Pharmacists Or Dispensers"></option>
+    <option value="Photo Engraver"></option>
+    <option value="Photographer"></option>
+    <option value="Photographer/Camera Operator"></option>
+    <option value="Physical Education"></option>
+    <option value="Physician"></option>
+    <option value="Physiotherapist"></option>
+    <option value="Picture Framer"></option>
+    <option value="Pilot"></option>
+    <option value="Plant Operator"></option>
+    <option value="Plasterer"></option>
+    <option value="Plumber"></option>
+    <option value="Plumber Or Gas Fitter"></option>
+    <option value="Politican"></option>
+    <option value="Porter"></option>
+    <option value="Porter Transport Sector"></option>
+    <option value="Postman/Post Office Sorter"></option>
+    <option value="Postmaster"></option>
+    <option value="Potter"></option>
+    <option value="Precision Inst./Watch/Clock Manufacture"></option>
+    <option value="Principal Tutor"></option>
+    <option value="Printer"></option>
+    <option value="Printing Press Operator"></option>
+    <option value="Probation Officer"></option>
+    <option value="Process Operator"></option>
+    <option value="Producer"></option>
+    <option value="Production Assistant"></option>
+    <option value="Production Engineer"></option>
+    <option value="Production Manager"></option>
+    <option value="Production Worker"></option>
+    <option value="Professional Worker"></option>
+    <option value="Project Leader"></option>
+    <option value="Proprietor"></option>
+    <option value="Proprietor In Wholesale/Retail"></option>
+    <option value="Proprietor Of Filling Station"></option>
+    <option value="Prosthetist"></option>
+    <option value="Psychologist"></option>
+    <option value="Public Relations Consultant"></option>
+    <option value="Public Representative"></option>
+    <option value="Publican"></option>
+    <option value="Publican/Wine Merchant/Off Licence"></option>
+    <option value="Publishing Representative"></option>
+    <option value="Purchasing Officer"></option>
+    <option value="Quantity Surveyor"></option>
+    <option value="Racehorse Trainer"></option>
+    <option value="Radio, Television Repairs"></option>
+    <option value="Railway Engine Driver"></option>
+    <option value="Receptionist"></option>
+    <option value="Record Producer"></option>
+    <option value="Recruitment Officer"></option>
+    <option value="Refrigeration Engineer"></option>
+    <option value="Refuellers, Oilers"></option>
+    <option value="Refuse Collector"></option>
+    <option value="Registrar"></option>
+    <option value="Religious Occupation"></option>
+    <option value="Rent Collector"></option>
+    <option value="Repair Man"></option>
+    <option value="Restauranteur"></option>
+    <option value="Retailer"></option>
+    <option value="Retailer Of Veterinary Products"></option>
+    <option value="Retired"></option>
+    <option value="Revenue Collector"></option>
+    <option value="Roundsman"></option>
+    <option value="Rubber/Rubber Products"></option>
+    <option value="Safety Equipment Officer"></option>
+    <option value="Sailor"></option>
+    <option value="Sales Executive"></option>
+    <option value="Sales Manager"></option>
+    <option value="Sand &amp; Gravel Merchants"></option>
+    <option value="Scientific Officer"></option>
+    <option value="Scientist"></option>
+    <option value="Scientist, Other Life"></option>
+    <option value="Scientist, Physical Science"></option>
+    <option value="Screen Maker"></option>
+    <option value="Sculptor"></option>
+    <option value="Secretary Administrator"></option>
+    <option value="Security Consultant"></option>
+    <option value="Security Engineer"></option>
+    <option value="Security Officer"></option>
+    <option value="Self Employed"></option>
+    <option value="Senior Counsel"></option>
+    <option value="Senior Staff Officer"></option>
+    <option value="Service Engineer"></option>
+    <option value="Service Manager"></option>
+    <option value="Service Workers"></option>
+    <option value="Sewers Embroiderers Machine Worker"></option>
+    <option value="Sheet Metal Worker"></option>
+    <option value="Shift Attendant"></option>
+    <option value="Shipping Clerk"></option>
+    <option value="Ship'S Officer"></option>
+    <option value="Shipwright"></option>
+    <option value="Shop Assistant"></option>
+    <option value="Shopkeeper"></option>
+    <option value="Sign Writer"></option>
+    <option value="Signalman/Levelcrossing Keeper"></option>
+    <option value="Singer"></option>
+    <option value="Social Worker"></option>
+    <option value="Software Consultant"></option>
+    <option value="Software Developer"></option>
+    <option value="Solicitor"></option>
+    <option value="Sound Engineer"></option>
+    <option value="Spinning, Weaving, Knitting"></option>
+    <option value="Sportsman Or Related Work"></option>
+    <option value="Stationery Engine Operator"></option>
+    <option value="Statistician"></option>
+    <option value="Stevedore"></option>
+    <option value="Stock Controller"></option>
+    <option value="Stockbroker"></option>
+    <option value="Stonemason"></option>
+    <option value="Store Manager"></option>
+    <option value="Street Vendor/Hawker Etc."></option>
+    <option value="Structural Metal/Metalplate Worker"></option>
+    <option value="Stud Owner"></option>
+    <option value="Student"></option>
+    <option value="Supervisor"></option>
+    <option value="Supplier"></option>
+    <option value="Surgeon, Veterinary"></option>
+    <option value="Surveyor Chartered"></option>
+    <option value="Surveyor, Valuation"></option>
+    <option value="Swimming Pool Manager"></option>
+    <option value="Systems Analyst"></option>
+    <option value="Tailor Or Dressmaker"></option>
+    <option value="Tanner/Fellmonger/Pelt Dresser"></option>
+    <option value="Tax Consultant"></option>
+    <option value="Taxi Driver"></option>
+    <option value="Teacher"></option>
+    <option value="Technical Consultant"></option>
+    <option value="Technical Inspector"></option>
+    <option value="Technical Or Related Work"></option>
+    <option value="Technican, Life Sciences"></option>
+    <option value="Technician"></option>
+    <option value="Technician, Physical Science"></option>
+    <option value="Technician, Telecommunications"></option>
+    <option value="Technician/Electrical Engineer"></option>
+    <option value="Technologist"></option>
+    <option value="Telephone Installer, Repairs"></option>
+    <option value="Telephone Technician"></option>
+    <option value="Telephone/Telegraph/Radio"></option>
+    <option value="Telephonist"></option>
+    <option value="Therapist"></option>
+    <option value="Ticket Checker/Inspector (Rail)"></option>
+    <option value="Tiler"></option>
+    <option value="Timber Preservation Advisor"></option>
+    <option value="Toolmaker"></option>
+    <option value="Tourist Official"></option>
+    <option value="Town And Country Homes Planning"></option>
+    <option value="Town Planner"></option>
+    <option value="Trade Union Officials"></option>
+    <option value="Trade Union Organiser"></option>
+    <option value="Trader"></option>
+    <option value="Tradesman"></option>
+    <option value="Trainer"></option>
+    <option value="Training Officer"></option>
+    <option value="Transport"></option>
+    <option value="Transport Controller"></option>
+    <option value="Travel Agent"></option>
+    <option value="Turf Accountant"></option>
+    <option value="Turf Worker"></option>
+    <option value="Typesetter"></option>
+    <option value="Typist"></option>
+    <option value="Undertaker"></option>
+    <option value="Unemployed"></option>
+    <option value="University Professor/Lecturer"></option>
+    <option value="Unknown"></option>
+    <option value="Upholsterer"></option>
+    <option value="Urologist"></option>
+    <option value="Veterinary Surgeon"></option>
+    <option value="Vice President"></option>
+    <option value="Victualler"></option>
+    <option value="Waiter"></option>
+    <option value="Waitress"></option>
+    <option value="Warehouse Control"></option>
+    <option value="Watchman Or Related Worker"></option>
+    <option value="Weaver"></option>
+    <option value="Welder Or Cutter"></option>
+    <option value="Welfare Officer"></option>
+    <option value="Wholesaler"></option>
+    <option value="Window Cleaner"></option>
+    <option value="Window Installer"></option>
+    <option value="Windscreen Fitter"></option>
+    <option value="Wood Preparation Worker"></option>
+    <option value="Woodworking Machinist"></option>
+    <option value="Working Prop. In Catering"></option>
+    <option value="Writer"></option>
+    <option value="Youth Service"></option>
+  </datalist>
+<!-- /suggestion lists -->
+
+  <script>
+    const form = document.getElementById('companyForm');
+    const storageKey = 'companyIncorporationOrderForm.v1';
+    const autoaddressAutocompleteEndpoint = 'https://api.autoaddress.ie/2.0/autocomplete';
+    const autoaddressKey = 'CA10C961-B319-1D55-A8D1-22DEB89A61D2';
+    const ppsCheckChars = 'WABCDEFGHIJKLMNOPQRSTUV';
+    const ppsPattern = /^(\d{7})([A-W])([A-IW])?$/;
+    const eircodePattern = /^[AC-FHKNPRTV-Y]\d{2}[0-9AC-FHKNPRTV-Y]{4}$/;
+    const suggestionDelay = 250;
+    const addressSuggestionState = new WeakMap();
+    let jsonpCounter = 0;
+
+    function getFormData() {
+      const data = {};
+      const elements = form.querySelectorAll('input, textarea, select');
+      elements.forEach((el) => {
+        if (!el.name) return;
+        if (el.type === 'checkbox') {
+          data[el.name] = el.checked;
+        } else if (el.type === 'radio') {
+          if (el.checked) data[el.name] = el.value;
+        } else if (el.type === 'file') {
+          data[el.name] = Array.from(el.files).map((file) => ({
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            lastModified: file.lastModified
+          }));
+        } else {
+          data[el.name] = el.value;
+        }
+      });
+      return data;
+    }
+
+    function applyFormData(data) {
+      const elements = form.querySelectorAll('input, textarea, select');
+      elements.forEach((el) => {
+        if (!el.name || !(el.name in data)) return;
+        if (el.type === 'checkbox') {
+          el.checked = Boolean(data[el.name]);
+        } else if (el.type === 'radio') {
+          el.checked = data[el.name] === el.value;
+        } else if (el.type !== 'file') {
+          el.value = data[el.name] || '';
+        } else {
+          return;
+        }
+      });
+    }
+
+    function saveForm() {
+      localStorage.setItem(storageKey, JSON.stringify(getFormData()));
+    }
+
+    function loadForm() {
+      try {
+        const raw = localStorage.getItem(storageKey);
+        if (raw) applyFormData(JSON.parse(raw));
+      } catch (err) {
+        console.warn('Could not load saved form data.', err);
+      }
+    }
+
+    function clearForm() {
+      if (!confirm('Clear the form and remove saved browser data?')) return;
+      localStorage.removeItem(storageKey);
+      form.reset();
+      resetValidationState();
+      form.querySelectorAll('[data-eircode-input], [data-address-input]').forEach((input) => clearSuggestions(input));
+    }
+
+    function exportData() {
+      const blob = new Blob([JSON.stringify(getFormData(), null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'company-incorporation-order-form-data.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function normalizePps(value) {
+      return value.trim().replace(/[\s-]/g, '').toUpperCase();
+    }
+
+    function getPpsSecondLetterValue(letter) {
+      if (!letter || letter === 'W') return 0;
+      return letter.charCodeAt(0) - 'A'.charCodeAt(0) + 1;
+    }
+
+    function calculatePpsCheckLetter(pps) {
+      let total = 0;
+      for (let index = 0; index < 7; index += 1) {
+        total += Number(pps[index]) * (8 - index);
+      }
+      total += getPpsSecondLetterValue(pps[8]) * 9;
+      return ppsCheckChars[total % 23];
+    }
+
+    function isValidPps(value) {
+      const pps = normalizePps(value);
+      const match = pps.match(ppsPattern);
+      if (!match) return false;
+      return pps[7] === calculatePpsCheckLetter(pps);
+    }
+
+    function normalizeEircode(value) {
+      return value.trim().replace(/[\s-]/g, '').toUpperCase();
+    }
+
+    function formatEircode(value) {
+      const normalized = normalizeEircode(value);
+      return normalized.length === 7 ? `${normalized.slice(0, 3)} ${normalized.slice(3)}` : value.trim().toUpperCase();
+    }
+
+    function setFieldValidity(input, isValid) {
+      input.removeAttribute('aria-invalid');
+      input.setCustomValidity('');
+      input.classList.toggle('validation-invalid', !isValid);
+      if (!isValid) {
+        input.setAttribute('aria-invalid', 'true');
+      }
+    }
+
+    function validatePpsInput(input) {
+      const normalized = normalizePps(input.value);
+      if (!normalized) {
+        setFieldValidity(input, true);
+        return true;
+      }
+
+      input.value = normalized;
+      if (isValidPps(normalized)) {
+        setFieldValidity(input, true);
+        return true;
+      }
+
+      setFieldValidity(input, false);
+      return false;
+    }
+
+    function validateEircodeInput(input) {
+      const normalized = normalizeEircode(input.value);
+      if (!normalized) {
+        setFieldValidity(input, true);
+        return true;
+      }
+
+      if (normalized.length === 7 && !eircodePattern.test(normalized)) {
+        setFieldValidity(input, false);
+        return false;
+      }
+
+      if (eircodePattern.test(normalized)) {
+        input.value = formatEircode(normalized);
+      }
+      setFieldValidity(input, true);
+      return true;
+    }
+
+    function buildAutoaddressParams(address) {
+      return {
+        key: autoaddressKey,
+        address,
+        vanityMode: 'false',
+        addressProfileName: 'Demo5LineV2',
+        language: 'EN',
+        limit: '-1'
+      };
+    }
+
+    function urlWithParams(endpoint, params) {
+      const url = new URL(endpoint);
+      Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, value));
+      return url;
+    }
+
+    async function requestAutoaddress(endpoint, params) {
+      const url = urlWithParams(endpoint, params);
+      try {
+        const response = await fetch(url.toString(), { method: 'GET', mode: 'cors' });
+        if (!response.ok) throw new Error();
+        return await response.json();
+      } catch (err) {
+        return requestAutoaddressJsonp(endpoint, params, 'callback').catch(() => requestAutoaddressJsonp(endpoint, params, 'call-back'));
+      }
+    }
+
+    function requestAutoaddressJsonp(endpoint, params, callbackParam) {
+      return new Promise((resolve, reject) => {
+        const callbackName = `autoaddressCallback_${Date.now()}_${jsonpCounter++}`;
+        const script = document.createElement('script');
+        const url = urlWithParams(endpoint, params);
+        let settled = false;
+
+        url.searchParams.set(callbackParam, callbackName);
+
+        function cleanup() {
+          settled = true;
+          delete window[callbackName];
+          script.remove();
+          clearTimeout(timeoutId);
+        }
+
+        const timeoutId = setTimeout(() => {
+          if (settled) return;
+          cleanup();
+          reject(new Error());
+        }, 7000);
+
+        window[callbackName] = (data) => {
+          cleanup();
+          resolve(data);
+        };
+
+        script.onerror = () => {
+          if (settled) return;
+          cleanup();
+          reject(new Error());
+        };
+
+        script.src = url.toString();
+        document.head.appendChild(script);
+      });
+    }
+
+    function getNextLink(data) {
+      const option = Array.isArray(data.options) ? data.options[0] : null;
+      const links = option && Array.isArray(option.links) ? option.links : [];
+      return links.find((link) => link.rel === 'next' && link.href);
+    }
+
+    async function requestAutoaddressUrl(href) {
+      const url = new URL(href);
+      const params = Object.fromEntries(url.searchParams.entries());
+      return requestAutoaddress(`${url.origin}${url.pathname}`, params);
+    }
+
+    function getAddressLines(data) {
+      const fields = [data.reformattedAddress, data.vanityAddress, data.postalAddress];
+      const lines = fields.find((field) => Array.isArray(field) && field.some(Boolean));
+      return lines ? lines.filter(Boolean) : [];
+    }
+
+    function getPairedAddressField(input) {
+      if (input.dataset.addressTarget) return form.elements[input.dataset.addressTarget] || null;
+      return input.dataset.addressInput !== undefined ? input : null;
+    }
+
+    function getPairedEircodeField(input) {
+      if (input.dataset.eircodeTarget) return form.elements[input.dataset.eircodeTarget] || null;
+      return input.dataset.eircodeInput !== undefined ? input : null;
+    }
+
+    function extractPostcodeFromOption(option) {
+      const nextLink = getNextLink({ options: [option] });
+      if (!nextLink) return '';
+      try {
+        const url = new URL(nextLink.href);
+        return normalizeEircode(url.searchParams.get('__reserved.Postcode') || '');
+      } catch (err) {
+        return '';
+      }
+    }
+
+    function getSuggestionLabel(option) {
+      const postcode = extractPostcodeFromOption(option);
+      const parts = [option.displayName, postcode ? formatEircode(postcode) : ''].filter(Boolean);
+      return parts.join(', ');
+    }
+
+    function fillAddressFromAutoaddress(input, data) {
+      const target = getPairedAddressField(input);
+      const lines = getAddressLines(data);
+      if (!target || !lines.length) return;
+      const postcode = normalizeEircode(data && data.postcode ? data.postcode : '');
+      const addressParts = [...lines];
+      if (postcode && !addressParts.some((line) => normalizeEircode(line).includes(postcode))) {
+        addressParts.push(formatEircode(postcode));
+      }
+      target.value = addressParts.join(', ');
+    }
+
+    function fillEircodeFromAutoaddress(input, data) {
+      const target = getPairedEircodeField(input);
+      const postcode = normalizeEircode(data && data.postcode ? data.postcode : '');
+      if (!target || !postcode) return;
+      target.value = formatEircode(postcode);
+      setFieldValidity(target, true);
+    }
+
+    function renderAddressSuggestions(input) {
+      const state = addressSuggestionState.get(input);
+      if (!state) return;
+
+      state.panel.replaceChildren();
+      state.options.forEach((option) => {
+        if (!option.displayName) return;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = getSuggestionLabel(option);
+        button.addEventListener('mousedown', (event) => event.preventDefault());
+        button.addEventListener('click', () => selectAddressSuggestion(input, option));
+        state.panel.appendChild(button);
+      });
+      state.panel.classList.toggle('open', state.panel.children.length > 0);
+    }
+
+    async function loadAddressSuggestions(input, query) {
+      const state = addressSuggestionState.get(input);
+      if (!state) return;
+      const requestId = state.requestId + 1;
+      state.requestId = requestId;
+
+      try {
+        const data = await requestAutoaddress(autoaddressAutocompleteEndpoint, buildAutoaddressParams(query));
+        if (state.requestId !== requestId) return;
+
+        state.options = Array.isArray(data.options) ? data.options : [];
+        renderAddressSuggestions(input);
+      } catch (err) {
+        if (state.requestId === requestId) {
+          clearSuggestions(input);
+        }
+      }
+    }
+
+    function clearSuggestions(input) {
+      const state = addressSuggestionState.get(input);
+      if (!state) return;
+      state.options = [];
+      state.panel.replaceChildren();
+      state.panel.classList.remove('open');
+    }
+
+    function findSelectedSuggestion(input) {
+      const state = addressSuggestionState.get(input);
+      if (!state) return null;
+      return state.options.find((option) => getSuggestionLabel(option) === input.value) || null;
+    }
+
+    async function selectAddressSuggestion(input, option) {
+      const nextLink = getNextLink({ options: [option] });
+      if (!nextLink) return;
+
+      const state = addressSuggestionState.get(input);
+      if (state) state.isSelecting = true;
+
+      try {
+        const data = await requestAutoaddressUrl(nextLink.href);
+        fillEircodeFromAutoaddress(input, data);
+        fillAddressFromAutoaddress(input, data);
+        clearSuggestions(input);
+        saveForm();
+      } catch (err) {
+        clearSuggestions(input);
+      } finally {
+        if (state) state.isSelecting = false;
+      }
+    }
+
+    function resetValidationState() {
+      form.querySelectorAll('[data-pps-input], [data-eircode-input]').forEach((input) => setFieldValidity(input, true));
+    }
+
+    function initEnhancements() {
+      form.querySelectorAll('[data-pps-input]').forEach((input) => {
+        input.addEventListener('input', () => validatePpsInput(input));
+        input.addEventListener('blur', () => validatePpsInput(input));
+      });
+
+      form.querySelectorAll('[data-eircode-input], [data-address-input]').forEach((input) => {
+        const anchor = document.createElement('div');
+        const panel = document.createElement('div');
+        anchor.className = 'suggestion-anchor';
+        panel.className = 'address-suggestions';
+        input.insertAdjacentElement('beforebegin', anchor);
+        anchor.appendChild(input);
+        anchor.appendChild(panel);
+
+        addressSuggestionState.set(input, {
+          panel,
+          options: [],
+          requestId: 0,
+          timer: null,
+          isSelecting: false
+        });
+
+        input.addEventListener('input', () => {
+          const state = addressSuggestionState.get(input);
+          if (!state || state.isSelecting) return;
+
+          setFieldValidity(input, true);
+          const selected = findSelectedSuggestion(input);
+          if (selected) {
+            selectAddressSuggestion(input, selected);
+            return;
+          }
+
+          clearTimeout(state.timer);
+          const query = input.value.trim();
+          if (query.length < 3) {
+            clearSuggestions(input);
+            return;
+          }
+
+          state.timer = setTimeout(() => loadAddressSuggestions(input, query), suggestionDelay);
+        });
+
+        input.addEventListener('blur', () => {
+          clearTimeout(addressSuggestionState.get(input).timer);
+          if (input.dataset.eircodeInput !== undefined && input.value) validateEircodeInput(input);
+          setTimeout(() => clearSuggestions(input), 120);
+        });
+      });
+    }
+
+    function refreshValidationStates() {
+      form.querySelectorAll('[data-pps-input]').forEach((input) => {
+        if (input.value) validatePpsInput(input);
+      });
+      form.querySelectorAll('[data-eircode-input]').forEach((input) => {
+        if (input.value) validateEircodeInput(input);
+      });
+    }
+
+    form.addEventListener('input', saveForm);
+    form.addEventListener('change', saveForm);
+    initEnhancements();
+    loadForm();
+    refreshValidationStates();
+  </script>
+</body>
+</html>
