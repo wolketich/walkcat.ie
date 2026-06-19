@@ -275,7 +275,7 @@
       background: #fafafa;
     }
 
-    input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="number"], textarea, select {
+    input[type="text"], input[type="email"], input[type="tel"], input[type="number"], textarea, select {
       width: 100%;
       height: 100%;
       min-height: 18px;
@@ -314,6 +314,39 @@
     .validation-invalid {
       background: #fff3f3 !important;
       box-shadow: inset 0 0 0 1px var(--red) !important;
+    }
+
+    .date-field {
+      display: grid;
+      grid-template-columns: minmax(24px, .7fr) auto minmax(24px, .7fr) auto minmax(42px, 1.35fr);
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      min-height: 18px;
+      background: var(--field);
+    }
+
+    .date-field input[type="text"] {
+      min-width: 0;
+      padding: 2px 2px;
+      background: transparent;
+      text-align: center;
+    }
+
+    .date-field input[type="text"]:focus {
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .date-field span {
+      padding: 0 2px;
+      color: #555;
+      line-height: 1;
+    }
+
+    .date-field:focus-within {
+      background: var(--field-focus);
+      box-shadow: inset 0 0 0 1px #c8a700;
     }
 
     .suggestion-anchor {
@@ -631,7 +664,7 @@
             <td colspan="5"><input type="text" name="director1_eircode" data-eircode-input data-address-target="director1_address" autocomplete="postal-code"></td>
           </tr>
           <tr>
-            <th class="label-inline">Date of Birth:</th><td><input type="date" min="iso-date" max="iso-date" name="director1_dob"></td>
+            <th class="label-inline">Date of Birth:</th><td><div class="date-field" data-date-field><input type="text" data-date-day data-date-part placeholder="DD" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Day"><span>/</span><input type="text" data-date-month data-date-part placeholder="MM" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Month"><span>/</span><input type="text" data-date-year data-date-part placeholder="YYYY" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="Year"><input type="hidden" name="director1_dob" data-date-value></div></td>
             <th class="label-inline">Nationality:</th><td><input type="text" name="director1_nationality" list="nationalitySuggestions"></td>
             <th class="label-inline">Occupation:</th><td><input type="text" name="director1_occupation" list="occupationSuggestions"></td>
           </tr>
@@ -665,7 +698,7 @@
             <td colspan="5"><input type="text" name="director2_eircode" data-eircode-input data-address-target="director2_address" autocomplete="postal-code"></td>
           </tr>
           <tr>
-            <th class="label-inline">Date of Birth:</th><td><input type="date" name="director2_dob"></td>
+            <th class="label-inline">Date of Birth:</th><td><div class="date-field" data-date-field><input type="text" data-date-day data-date-part placeholder="DD" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Day"><span>/</span><input type="text" data-date-month data-date-part placeholder="MM" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Month"><span>/</span><input type="text" data-date-year data-date-part placeholder="YYYY" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="Year"><input type="hidden" name="director2_dob" data-date-value></div></td>
             <th class="label-inline">Nationality:</th><td><input type="text" name="director2_nationality" list="nationalitySuggestions"></td>
             <th class="label-inline">Occupation:</th><td><input type="text" name="director2_occupation" list="occupationSuggestions"></td>
           </tr>
@@ -695,7 +728,7 @@
           <th>Eircode:</th>
           <td colspan="3"><input type="text" name="secretary_eircode" data-eircode-input data-address-target="secretary_address" autocomplete="postal-code"></td>
         </tr>
-        <tr><th>Secretary’s Date of Birth:</th><td><input type="date" name="secretary_dob"></td><th class="label-inline">Secretary’s Nationality:</th><td><input type="text" name="secretary_nationality" list="nationalitySuggestions"></td></tr>
+        <tr><th>Secretary’s Date of Birth:</th><td><div class="date-field" data-date-field><input type="text" data-date-day data-date-part placeholder="DD" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Day"><span>/</span><input type="text" data-date-month data-date-part placeholder="MM" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Month"><span>/</span><input type="text" data-date-year data-date-part placeholder="YYYY" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="Year"><input type="hidden" name="secretary_dob" data-date-value></div></td><th class="label-inline">Secretary’s Nationality:</th><td><input type="text" name="secretary_nationality" list="nationalitySuggestions"></td></tr>
       </table>
 
       <div class="share-capital">
@@ -757,7 +790,7 @@
             <td colspan="5"><input type="text" name="director3_eircode" data-eircode-input data-address-target="director3_address" autocomplete="postal-code"></td>
           </tr>
           <tr>
-            <th class="label-inline">Date of Birth:</th><td><input type="date" name="director3_dob"></td>
+            <th class="label-inline">Date of Birth:</th><td><div class="date-field" data-date-field><input type="text" data-date-day data-date-part placeholder="DD" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Day"><span>/</span><input type="text" data-date-month data-date-part placeholder="MM" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Month"><span>/</span><input type="text" data-date-year data-date-part placeholder="YYYY" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="Year"><input type="hidden" name="director3_dob" data-date-value></div></td>
             <th class="label-inline">Nationality:</th><td><input type="text" name="director3_nationality" list="nationalitySuggestions"></td>
             <th class="label-inline">Occupation:</th><td><input type="text" name="director3_occupation" list="occupationSuggestions"></td>
           </tr>
@@ -791,7 +824,7 @@
             <td colspan="5"><input type="text" name="director4_eircode" data-eircode-input data-address-target="director4_address" autocomplete="postal-code"></td>
           </tr>
           <tr>
-            <th class="label-inline">Date of Birth:</th><td><input type="date" name="director4_dob"></td>
+            <th class="label-inline">Date of Birth:</th><td><div class="date-field" data-date-field><input type="text" data-date-day data-date-part placeholder="DD" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Day"><span>/</span><input type="text" data-date-month data-date-part placeholder="MM" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Month"><span>/</span><input type="text" data-date-year data-date-part placeholder="YYYY" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="Year"><input type="hidden" name="director4_dob" data-date-value></div></td>
             <th class="label-inline">Nationality:</th><td><input type="text" name="director4_nationality" list="nationalitySuggestions"></td>
             <th class="label-inline">Occupation:</th><td><input type="text" name="director4_occupation" list="occupationSuggestions"></td>
           </tr>
@@ -825,7 +858,7 @@
             <td colspan="5"><input type="text" name="director5_eircode" data-eircode-input data-address-target="director5_address" autocomplete="postal-code"></td>
           </tr>
           <tr>
-            <th class="label-inline">Date of Birth:</th><td><input type="date" name="director5_dob"></td>
+            <th class="label-inline">Date of Birth:</th><td><div class="date-field" data-date-field><input type="text" data-date-day data-date-part placeholder="DD" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Day"><span>/</span><input type="text" data-date-month data-date-part placeholder="MM" inputmode="numeric" maxlength="2" autocomplete="off" aria-label="Month"><span>/</span><input type="text" data-date-year data-date-part placeholder="YYYY" inputmode="numeric" maxlength="4" autocomplete="off" aria-label="Year"><input type="hidden" name="director5_dob" data-date-value></div></td>
             <th class="label-inline">Nationality:</th><td><input type="text" name="director5_nationality" list="nationalitySuggestions"></td>
             <th class="label-inline">Occupation:</th><td><input type="text" name="director5_occupation" list="occupationSuggestions"></td>
           </tr>
@@ -1651,6 +1684,9 @@
     const ppsCheckChars = 'WABCDEFGHIJKLMNOPQRSTUV';
     const ppsPattern = /^(\d{7})([A-W])([A-IW])?$/;
     const eircodePattern = /^[AC-FHKNPRTV-Y]\d{2}[0-9AC-FHKNPRTV-Y]{4}$/;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    const dateMinYear = 1900;
+    const dateMaxYear = new Date().getFullYear();
     const suggestionDelay = 250;
     const addressSuggestionState = new WeakMap();
     let jsonpCounter = 0;
@@ -1701,7 +1737,10 @@
     function loadForm() {
       try {
         const raw = localStorage.getItem(storageKey);
-        if (raw) applyFormData(JSON.parse(raw));
+        if (raw) {
+          applyFormData(JSON.parse(raw));
+          normalizeDateInputsFromValues();
+        }
       } catch (err) {
         console.warn('Could not load saved form data.', err);
       }
@@ -1711,6 +1750,7 @@
       if (!confirm('Clear the form and remove saved browser data?')) return;
       localStorage.removeItem(storageKey);
       form.reset();
+      normalizeDateInputsFromValues();
       resetValidationState();
       form.querySelectorAll('[data-eircode-input], [data-address-input]').forEach((input) => clearSuggestions(input));
     }
@@ -1761,12 +1801,13 @@
       return normalized.length === 7 ? `${normalized.slice(0, 3)} ${normalized.slice(3)}` : value.trim().toUpperCase();
     }
 
-    function setFieldValidity(input, isValid) {
+    function setFieldValidity(input, isValid, message = 'Please enter a valid value.') {
       input.removeAttribute('aria-invalid');
       input.setCustomValidity('');
       input.classList.toggle('validation-invalid', !isValid);
       if (!isValid) {
         input.setAttribute('aria-invalid', 'true');
+        input.setCustomValidity(message);
       }
     }
 
@@ -1783,7 +1824,7 @@
         return true;
       }
 
-      setFieldValidity(input, false);
+      setFieldValidity(input, false, 'Enter a valid PPS number.');
       return false;
     }
 
@@ -1795,7 +1836,7 @@
       }
 
       if (normalized.length === 7 && !eircodePattern.test(normalized)) {
-        setFieldValidity(input, false);
+        setFieldValidity(input, false, 'Enter a valid eircode.');
         return false;
       }
 
@@ -1804,6 +1845,181 @@
       }
       setFieldValidity(input, true);
       return true;
+    }
+
+    function validateEmailInput(input, shouldTrim = false) {
+      if (shouldTrim) input.value = input.value.trim();
+      const value = input.value.trim();
+      if (!value) {
+        setFieldValidity(input, true);
+        return true;
+      }
+
+      const isValid = emailPattern.test(value);
+      setFieldValidity(input, isValid, 'Enter a valid email address.');
+      return isValid;
+    }
+
+    function padDatePart(value) {
+      return String(value).padStart(2, '0');
+    }
+
+    function parseDateValue(value) {
+      const trimmed = String(value || '').trim();
+      const isoMatch = trimmed.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+      if (isoMatch) {
+        return `${padDatePart(isoMatch[3])}/${padDatePart(isoMatch[2])}/${isoMatch[1]}`;
+      }
+
+      const displayMatch = trimmed.match(/^(\d{1,2})\s*[/. -]\s*(\d{1,2})\s*[/. -]\s*(\d{4})$/);
+      if (displayMatch) {
+        return `${padDatePart(displayMatch[1])}/${padDatePart(displayMatch[2])}/${displayMatch[3]}`;
+      }
+
+      const compactValue = trimmed.replace(/\D/g, '');
+      if (compactValue.length === 8) {
+        return `${compactValue.slice(0, 2)}/${compactValue.slice(2, 4)}/${compactValue.slice(4)}`;
+      }
+
+      return trimmed;
+    }
+
+    function getDatePartsFromValue(value) {
+      const formatted = parseDateValue(value);
+      const match = formatted.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+      return match
+        ? { day: match[1], month: match[2], year: match[3] }
+        : { day: '', month: '', year: '' };
+    }
+
+    function getDateFieldParts(field) {
+      return {
+        day: field.querySelector('[data-date-day]').value,
+        month: field.querySelector('[data-date-month]').value,
+        year: field.querySelector('[data-date-year]').value
+      };
+    }
+
+    function setDateFieldParts(field, parts) {
+      field.querySelector('[data-date-day]').value = parts.day || '';
+      field.querySelector('[data-date-month]').value = parts.month || '';
+      field.querySelector('[data-date-year]').value = parts.year || '';
+    }
+
+    function setDateFieldValidity(field, isValid) {
+      field.classList.toggle('validation-invalid', !isValid);
+      field.querySelectorAll('[data-date-part]').forEach((input) => {
+        input.removeAttribute('aria-invalid');
+        input.setCustomValidity('');
+        if (!isValid) {
+          input.setAttribute('aria-invalid', 'true');
+          input.setCustomValidity('Enter a valid date as DD/MM/YYYY.');
+        }
+      });
+    }
+
+    function updateDateValue(field) {
+      const hiddenInput = field.querySelector('[data-date-value]');
+      const { day, month, year } = getDateFieldParts(field);
+      hiddenInput.value = day && month && year ? `${padDatePart(day)}/${padDatePart(month)}/${year}` : '';
+    }
+
+    function normalizeDateField(field) {
+      const parts = getDateFieldParts(field);
+      if (parts.day.length === 1) parts.day = padDatePart(parts.day);
+      if (parts.month.length === 1) parts.month = padDatePart(parts.month);
+      setDateFieldParts(field, parts);
+      updateDateValue(field);
+    }
+
+    function validateDateField(field, shouldNormalize = false) {
+      if (shouldNormalize) normalizeDateField(field);
+      updateDateValue(field);
+
+      const { day, month, year } = getDateFieldParts(field);
+      if (!day && !month && !year) {
+        setDateFieldValidity(field, true);
+        return true;
+      }
+
+      if (day.length < 2 || month.length < 2 || year.length < 4) {
+        setDateFieldValidity(field, true);
+        return true;
+      }
+
+      const dayNumber = Number(day);
+      const monthNumber = Number(month);
+      const yearNumber = Number(year);
+      const date = new Date(yearNumber, monthNumber - 1, dayNumber);
+      const isValid = yearNumber >= dateMinYear &&
+        yearNumber <= dateMaxYear &&
+        date.getFullYear() === yearNumber &&
+        date.getMonth() === monthNumber - 1 &&
+        date.getDate() === dayNumber;
+
+      setDateFieldValidity(field, isValid);
+      return isValid;
+    }
+
+    function syncDateFieldFromValue(field) {
+      const hiddenInput = field.querySelector('[data-date-value]');
+      setDateFieldParts(field, getDatePartsFromValue(hiddenInput.value));
+      updateDateValue(field);
+      validateDateField(field);
+    }
+
+    function normalizeDateInputsFromValues() {
+      form.querySelectorAll('[data-date-field]').forEach((field) => syncDateFieldFromValue(field));
+    }
+
+    function sanitizeDatePartInput(input) {
+      input.value = input.value.replace(/\D/g, '').slice(0, Number(input.maxLength) || 4);
+    }
+
+    function focusNextDatePart(input) {
+      const nextInput = input.nextElementSibling && input.nextElementSibling.nextElementSibling;
+      if (nextInput && nextInput.matches('[data-date-part]')) nextInput.focus();
+    }
+
+    function focusPreviousDatePart(input) {
+      const previousInput = input.previousElementSibling && input.previousElementSibling.previousElementSibling;
+      if (previousInput && previousInput.matches('[data-date-part]')) previousInput.focus();
+    }
+
+    function handleDatePaste(field, event) {
+      const text = (event.clipboardData || window.clipboardData).getData('text');
+      const parts = getDatePartsFromValue(text);
+      if (!parts.day || !parts.month || !parts.year) return;
+
+      event.preventDefault();
+      setDateFieldParts(field, parts);
+      updateDateValue(field);
+      validateDateField(field);
+      field.querySelector('[data-date-year]').focus();
+      saveForm();
+    }
+
+    function initDateFields() {
+      form.querySelectorAll('[data-date-field]').forEach((field) => {
+        field.querySelectorAll('[data-date-part]').forEach((input) => {
+          input.addEventListener('input', () => {
+            sanitizeDatePartInput(input);
+            if (input.value.length >= Number(input.maxLength)) focusNextDatePart(input);
+            validateDateField(field);
+          });
+
+          input.addEventListener('keydown', (event) => {
+            if (event.key === 'Backspace' && !input.value) focusPreviousDatePart(input);
+          });
+
+          input.addEventListener('blur', () => {
+            validateDateField(field, true);
+            saveForm();
+          });
+
+          input.addEventListener('paste', (event) => handleDatePaste(field, event));
+        });
+      });
     }
 
     function buildAutoaddressParams(address) {
@@ -2008,13 +2224,22 @@
     }
 
     function resetValidationState() {
-      form.querySelectorAll('[data-pps-input], [data-eircode-input]').forEach((input) => setFieldValidity(input, true));
+      form.querySelectorAll('[data-pps-input], [data-eircode-input], input[type="email"]').forEach((input) => setFieldValidity(input, true));
+      form.querySelectorAll('[data-date-field]').forEach((field) => setDateFieldValidity(field, true));
     }
 
     function initEnhancements() {
+      initDateFields();
+
       form.querySelectorAll('[data-pps-input]').forEach((input) => {
         input.addEventListener('input', () => validatePpsInput(input));
         input.addEventListener('blur', () => validatePpsInput(input));
+      });
+
+      form.querySelectorAll('input[type="email"]').forEach((input) => {
+        input.setAttribute('inputmode', 'email');
+        input.addEventListener('input', () => validateEmailInput(input));
+        input.addEventListener('blur', () => validateEmailInput(input, true));
       });
 
       form.querySelectorAll('[data-eircode-input], [data-address-input]').forEach((input) => {
@@ -2070,6 +2295,10 @@
       form.querySelectorAll('[data-eircode-input]').forEach((input) => {
         if (input.value) validateEircodeInput(input);
       });
+      form.querySelectorAll('input[type="email"]').forEach((input) => {
+        if (input.value) validateEmailInput(input, true);
+      });
+      form.querySelectorAll('[data-date-field]').forEach((field) => validateDateField(field, true));
     }
 
     form.addEventListener('input', saveForm);
