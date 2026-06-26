@@ -1,1 +1,692 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Генератор карточек Plants и Accessories</title>
+  <style>
+    *{box-sizing:border-box}
+    :root{
+      --cream:#f9fcf6;
+      --dark:#2f2f2f;
+      --green:#04773b;
+      --green-soft:#e8f3e3;
+      --line:#dce7d6;
+      --muted:#66725f;
+      --white:#fff;
+      --danger:#a40018;
+      --shadow:0 18px 50px rgba(47,47,47,.1);
+    }
+    body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#f9fcf6,#eef7ea);color:var(--dark)}
+    button,input,textarea,select{font:inherit}
+    button{border:0;cursor:pointer}
+    .wrap{width:min(1480px,calc(100% - 28px));margin:22px auto 28px}
+    .top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:16px;padding:20px 22px;background:rgba(255,255,255,.88);border:1px solid rgba(4,119,59,.14);border-radius:24px;box-shadow:var(--shadow);backdrop-filter:blur(14px)}
+    h1{margin:0 0 10px;font-size:clamp(26px,4vw,42px);line-height:1.05;letter-spacing:-.03em}
+    .steps{margin:0;padding-left:18px;color:var(--muted);font-size:14px;line-height:1.55}
+    .top-actions,.tools{display:flex;gap:9px;flex-wrap:wrap}
+    .btn{min-height:42px;padding:0 16px;border-radius:999px;background:var(--dark);color:var(--cream);font-weight:700;transition:.18s}
+    .btn:hover{background:var(--green);transform:translateY(-1px)}
+    .btn.light{background:#f4faf1;color:var(--dark);border:1px solid var(--line)}
+    .btn.light:hover{background:#e6f2df;color:var(--green)}
+    .btn.red{background:#fff2f3;color:var(--danger);border:1px solid #efc8cc}
+    .btn.red:hover{background:var(--danger);color:#fff}
+    .grid{display:grid;grid-template-columns:minmax(380px,500px) 1fr;gap:16px;align-items:start}
+    .panel{background:rgba(255,255,255,.9);border:1px solid rgba(4,119,59,.13);border-radius:24px;box-shadow:var(--shadow);overflow:hidden;backdrop-filter:blur(14px)}
+    .head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+    .head h2{margin:0;font-size:17px}
+    .tag{display:inline-flex;align-items:center;min-height:30px;padding:0 12px;border-radius:999px;background:var(--green-soft);color:var(--green);font-size:13px;font-weight:700;white-space:nowrap}
+    .body{padding:16px}
+    .edit-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+    .tab-btn{height:44px;border-radius:999px;background:#f5faf2;color:var(--dark);border:1px solid var(--line);font-weight:700}
+    .tab-btn.active{background:var(--green);color:var(--cream);border-color:var(--green)}
+    .settings{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0}
+    .check{display:flex;align-items:center;gap:9px;min-height:42px;padding:0 12px;border:1px solid var(--line);border-radius:14px;background:#fbfdf9;color:var(--muted);font-size:14px;font-weight:700}
+    .check input{width:18px;height:18px;accent-color:var(--green)}
+    .row-flags{display:flex;gap:8px;flex-wrap:wrap}
+    .hintline{margin:10px 0 0;color:var(--muted);font-size:13px;line-height:1.45}
+    .row-check{min-height:34px;padding:0 10px;border-radius:12px;font-size:12px}
+    .row-check input{width:16px;height:16px}
+    .cards{display:flex;flex-direction:column;gap:10px;max-height:720px;overflow:auto;padding-right:4px}
+    .card-row{display:grid;grid-template-columns:74px 1fr;gap:12px;padding:12px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 24px rgba(47,47,47,.04)}
+    .thumb{width:74px;height:74px;border-radius:15px;overflow:hidden;background:#edf2e9;border:1px solid var(--line);display:grid;place-items:center;color:var(--muted);font-size:11px;text-align:center;padding:5px}
+    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .fields{display:grid;gap:8px}
+    label.small{display:block;margin:0 0 5px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.03em;font-weight:700}
+    input,textarea,select{width:100%;min-height:40px;border:1px solid var(--line);border-radius:12px;padding:9px 11px;background:#fff;color:var(--dark);outline:none}
+    textarea{resize:vertical}
+    input:focus,textarea:focus,select:focus{border-color:rgba(4,119,59,.6);box-shadow:0 0 0 4px rgba(4,119,59,.08)}
+    .field-grid{display:grid;grid-template-columns:1fr;gap:8px}
+    .row-actions{display:flex;gap:6px;flex-wrap:wrap}
+    .mini{min-height:29px;padding:0 9px;border-radius:999px;background:#f5faf2;border:1px solid var(--line);font-size:12px;font-weight:700;color:var(--dark)}
+    .mini:hover{color:var(--green);border-color:rgba(4,119,59,.45)}
+    .mini.remove:hover{color:var(--danger);border-color:#efc8cc;background:#fff2f3}
+    .bulk{display:none;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:16px;background:#fbfdf9}
+    .bulk.show{display:block}
+    .bulk textarea{min-height:118px}
+    .right{display:grid;gap:16px}
+    .mock{background:var(--cream);border:1px solid #e2eadc;border-radius:22px;padding:22px;overflow:hidden}
+    .page-tabs{width:min(490px,100%);height:56px;margin:0 auto 30px;border:1px solid rgba(47,47,47,.4);border-radius:999px;position:relative;overflow:hidden;background:rgba(255,255,255,.2)}
+    .pill{position:absolute;top:6px;width:calc(50% - 12px);height:calc(100% - 12px);border-radius:999px;background:var(--green);transition:.25s}
+    .pill.plants{left:6px}
+    .pill.accessories{left:50%}
+    .tabs-row{position:relative;z-index:1;display:flex;height:100%}
+    .tabs-row span{flex:1;display:flex;align-items:center;justify-content:center;font-size:14px;color:rgba(47,47,47,.67);text-align:center;padding:0 8px}
+    .tabs-row span.active{color:var(--cream);font-weight:700}
+    .mock-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:22px}
+    .mock-title{margin:0;font-size:clamp(32px,4.5vw,50px);font-weight:400;line-height:1.15}
+    .arrows{display:flex;gap:12px}
+    .arrow{width:44px;height:44px;border-radius:50%;background:var(--dark);color:#fff;display:grid;place-items:center;font-size:22px}
+    .preview{display:flex;gap:30px;overflow-x:auto;overflow-y:hidden;padding:4px 2px 14px;scroll-snap-type:x proximity}
+    .pt-card{position:relative;border-radius:16px;overflow:hidden;flex:0 0 270px;width:270px;height:270px;scroll-snap-align:start;background:#dfe8d9;transition:transform .25s}
+    .pt-card:hover{transform:translateY(-4px) scale(1.02)}
+    .pt-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.78);display:block}
+    .pt-card::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent,transparent,rgba(0,0,0,.15));pointer-events:none}
+    .pt-card-top{position:absolute;top:18px;left:18px;right:18px;z-index:4;pointer-events:none}
+    .pt-card-label{display:block;width:100%;background:rgba(249,252,246,.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:500;color:var(--dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .pt-card-caption{display:block;position:absolute;left:14px;right:14px;bottom:14px;z-index:3;background:rgba(249,252,246,.82);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:14px;padding:14px 16px;font-size:15px;line-height:1.5;color:var(--dark);font-weight:400}
+    .empty{border:1px dashed #b7c8ae;border-radius:18px;background:#fff;color:var(--muted);padding:32px;text-align:center;width:100%}
+    .codebox{padding:16px}
+    .code-head{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;margin-bottom:10px}
+    textarea.code{min-height:340px;resize:vertical;background:#101510;color:#e9f3e4;border-radius:16px;border:1px solid #1f2a1f;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .toast{position:fixed;right:20px;bottom:20px;background:var(--dark);color:var(--cream);border-radius:999px;padding:12px 16px;font-weight:700;box-shadow:0 14px 30px rgba(47,47,47,.18);opacity:0;transform:translateY(8px);pointer-events:none;transition:.18s;z-index:20}
+    .toast.show{opacity:1;transform:translateY(0)}
+    @media(max-width:1050px){.grid{grid-template-columns:1fr}.cards{max-height:none}.arrows{display:none}}
+    @media(max-width:650px){.wrap{width:calc(100% - 16px);margin:8px auto}.top{border-radius:18px;flex-direction:column}.panel,.mock{border-radius:18px}.card-row{grid-template-columns:1fr}.thumb{width:100%;height:150px}.pt-card{flex-basis:82vw;width:82vw;height:82vw}.mock{padding:16px}.settings{grid-template-columns:1fr}.code-head{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="top">
+      <div>
+        <h1>Генератор карточек</h1>
+        <ol class="steps">
+          <li>Выберите Plants или Accessories.</li>
+          <li>Нажмите «Добавить карточку».</li>
+          <li>Вставьте название, картинку и описание.</li>
+          <li>Отметьте название и описание для всех или отдельно в карточке.</li>
+          <li>Скопируйте код и замените старые блоки на сайте.</li>
+        </ol>
+      </div>
+      <div class="top-actions">
+        <button class="btn" id="copyTop" type="button">Скопировать код</button>
+        <button class="btn light" id="download" type="button">Скачать код</button>
+      </div>
+    </section>
 
+    <div class="grid">
+      <section class="panel">
+        <div class="head">
+          <h2>Редактировать</h2>
+          <span class="tag" id="count">0 карточек</span>
+        </div>
+        <div class="body">
+          <div class="edit-tabs">
+            <button class="tab-btn active" id="tabPlants" type="button">Plants</button>
+            <button class="tab-btn" id="tabAccessories" type="button">Accessories</button>
+          </div>
+
+          <div class="tools">
+            <button class="btn" id="add" type="button">Добавить карточку</button>
+            <button class="btn light" id="add13" type="button">Добавить 13</button>
+            <button class="btn light" id="bulkBtn" type="button">Вставить списком</button>
+            <button class="btn red" id="resetTab" type="button">Сбросить вкладку</button>
+          </div>
+
+          <div class="settings">
+            <label class="check">
+              <input id="showLabel" type="checkbox">
+              Показывать названия везде
+            </label>
+            <label class="check">
+              <input id="showCaption" type="checkbox">
+              Показывать описания везде
+            </label>
+          </div>
+          <div class="hintline">Если галочка стоит в самой карточке, она покажет название или описание даже если общая галочка выключена.</div>
+
+          <div class="bulk" id="bulkBox">
+            <label class="small" for="bulkInput">Формат: Название | ссылка | описание</label>
+            <textarea id="bulkInput" placeholder="Elm | https://static.tildacdn.net/example.png | Короткое описание"></textarea>
+            <div class="tools" style="margin:10px 0 0">
+              <button class="btn" id="bulkAdd" type="button">Добавить список</button>
+            </div>
+          </div>
+
+          <div class="cards" id="cards"></div>
+        </div>
+      </section>
+
+      <div class="right">
+        <section class="panel">
+          <div class="head">
+            <h2>Предпросмотр</h2>
+            <span class="tag" id="previewTag">Plants</span>
+          </div>
+          <div class="body">
+            <div class="mock">
+              <div class="page-tabs">
+                <div class="pill plants" id="previewPill"></div>
+                <div class="tabs-row">
+                  <span id="previewPlants" class="active">Plant Selection</span>
+                  <span id="previewAccessories">Memorial Accessories</span>
+                </div>
+              </div>
+              <div class="mock-head">
+                <h2 class="mock-title" id="previewTitle">Plants &amp; Trees</h2>
+                <div class="arrows"><div class="arrow">‹</div><div class="arrow">›</div></div>
+              </div>
+              <div class="preview" id="preview"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="head">
+            <h2>Готовый код</h2>
+            <span class="tag">Скопировать и заменить</span>
+          </div>
+          <div class="codebox">
+            <div class="code-head">
+              <div>
+                <label class="small" for="outputMode">Что копировать</label>
+                <select id="outputMode">
+                  <option value="both">Plants + Accessories</option>
+                  <option value="current">Только выбранная вкладка</option>
+                </select>
+              </div>
+              <div class="tools">
+                <button class="btn" id="copy" type="button">Скопировать</button>
+                <button class="btn light" id="select" type="button">Выделить</button>
+              </div>
+            </div>
+            <textarea class="code" id="output" readonly></textarea>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast" id="toast">Готово</div>
+
+  <script>
+    const starterData = {
+  "plants": [
+    {
+      "name": "Elm",
+      "url": "https://static.tildacdn.net/tild3962-6132-4335-b463-373735616462/tree_card_1.png",
+      "caption": "Known for its broad canopy and graceful, enduring presence."
+    },
+    {
+      "name": "Alder",
+      "url": "https://static.tildacdn.net/tild6333-3762-4262-a633-663161346533/tree_card.png",
+      "caption": "Valued for its adaptability and ability to thrive in diverse conditions."
+    },
+    {
+      "name": "Ash",
+      "url": "https://static.tildacdn.net/tild3033-3864-4832-a139-373165626630/tree_card-1.png",
+      "caption": "Admired for its elegant form and remarkable longevity."
+    },
+    {
+      "name": "Aspen",
+      "url": "https://static.tildacdn.net/tild3966-3466-4563-b462-393763356665/tree_card-2.png",
+      "caption": "Known for its shimmering leaves and gentle movement in the breeze."
+    },
+    {
+      "name": "Downy Birch",
+      "url": "https://static.tildacdn.net/tild3639-3937-4031-a636-646132326438/tree_card-3.png",
+      "caption": "Recognised for its bright bark and delicate, airy beauty."
+    },
+    {
+      "name": "Oak",
+      "url": "https://static.tildacdn.net/tild3633-6239-4262-b763-346561666232/tree_card-4.png",
+      "caption": "Known for its strength, longevity, and deeply rooted character."
+    },
+    {
+      "name": "Scots Pine",
+      "url": "https://static.tildacdn.net/tild3162-3962-4533-b437-376364623130/tree_card-5.png",
+      "caption": "An evergreen tree valued for its resilience throughout the seasons."
+    },
+    {
+      "name": "Willow",
+      "url": "https://static.tildacdn.net/tild6337-3762-4130-b132-366664666331/tree_card-6.png",
+      "caption": "Known for its flowing branches and calm, graceful appearance."
+    },
+    {
+      "name": "Yew",
+      "url": "https://static.tildacdn.net/tild3830-6535-4134-b538-643237653036/tree_card.png",
+      "caption": "Admired for its timeless form and exceptional longevity."
+    }
+  ],
+  "accessories": [
+    {
+      "name": "Option 1",
+      "url": "https://static.tildacdn.net/tild6463-3035-4361-b430-646362303135/tree_card_1.png",
+      "caption": ""
+    },
+    {
+      "name": "Engraved Plaque",
+      "url": "https://static.tildacdn.net/tild3533-3531-4063-b338-613238383762/tree_card-1.png",
+      "caption": ""
+    },
+    {
+      "name": "Memorial Lantern",
+      "url": "https://static.tildacdn.net/tild3765-3839-4338-a637-643036313764/tree_card-2.png",
+      "caption": ""
+    },
+    {
+      "name": "Wildflower Seeds",
+      "url": "https://static.tildacdn.net/tild3433-3434-4830-a238-363832636438/tree_card-3.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 5",
+      "url": "https://static.tildacdn.net/tild3433-3732-4565-b064-343731656334/tree_card-4.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 6",
+      "url": "https://static.tildacdn.net/tild3732-3039-4132-b062-336363633432/tree_card-5.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 7",
+      "url": "https://static.tildacdn.net/tild3939-6337-4333-a137-316535626465/tree_card-6.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 8",
+      "url": "https://static.tildacdn.net/tild3532-6636-4763-b863-633432333434/tree_card_1.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 9",
+      "url": "https://static.tildacdn.net/tild3837-3037-4764-a234-333135636666/tree_card-8.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 10",
+      "url": "https://static.tildacdn.net/tild6463-3035-4361-b430-646362303135/tree_card_1.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 11",
+      "url": "https://static.tildacdn.net/tild3533-3531-4063-b338-613238383762/tree_card-1.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 12",
+      "url": "https://static.tildacdn.net/tild3765-3839-4338-a637-643036313764/tree_card-2.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 13",
+      "url": "https://static.tildacdn.net/tild3433-3434-4830-a238-363832636438/tree_card-3.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 14",
+      "url": "https://static.tildacdn.net/tild3433-3732-4565-b064-343731656334/tree_card-4.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 15",
+      "url": "https://static.tildacdn.net/tild3732-3039-4132-b062-336363633432/tree_card-5.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 16",
+      "url": "https://static.tildacdn.net/tild3939-6337-4333-a137-316535626465/tree_card-6.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 17",
+      "url": "https://static.tildacdn.net/tild3532-6636-4763-b863-633432333434/tree_card_1.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 18",
+      "url": "https://static.tildacdn.net/tild3837-3037-4764-a234-333135636666/tree_card-8.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 19",
+      "url": "https://static.tildacdn.net/tild6463-3035-4361-b430-646362303135/tree_card_1.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 20",
+      "url": "https://static.tildacdn.net/tild3533-3531-4063-b338-613238383762/tree_card-1.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 21",
+      "url": "https://static.tildacdn.net/tild3765-3839-4338-a637-643036313764/tree_card-2.png",
+      "caption": ""
+    },
+    {
+      "name": "Accessory option 22",
+      "url": "https://static.tildacdn.net/tild3433-3434-4830-a238-363832636438/tree_card-3.png",
+      "caption": ""
+    }
+  ]
+};
+
+    let activeTab = 'plants';
+    let data = JSON.parse(JSON.stringify(starterData));
+    let config = {
+      plants: { showLabel: true, showCaption: true },
+      accessories: { showLabel: false, showCaption: false }
+    };
+
+    const els = {
+      cards: document.getElementById('cards'),
+      preview: document.getElementById('preview'),
+      output: document.getElementById('output'),
+      count: document.getElementById('count'),
+      toast: document.getElementById('toast'),
+      showLabel: document.getElementById('showLabel'),
+      showCaption: document.getElementById('showCaption'),
+      tabPlants: document.getElementById('tabPlants'),
+      tabAccessories: document.getElementById('tabAccessories'),
+      bulkBox: document.getElementById('bulkBox'),
+      bulkInput: document.getElementById('bulkInput'),
+      outputMode: document.getElementById('outputMode'),
+      previewPill: document.getElementById('previewPill'),
+      previewPlants: document.getElementById('previewPlants'),
+      previewAccessories: document.getElementById('previewAccessories'),
+      previewTitle: document.getElementById('previewTitle'),
+      previewTag: document.getElementById('previewTag')
+    };
+
+    function escapeHtml(value) {
+      return String(value || '')
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    function cleanCard(card) {
+      return {
+        name: String(card.name || '').trim(),
+        url: String(card.url || '').trim(),
+        caption: String(card.caption || '').trim(),
+        showLabelOverride: !!card.showLabelOverride,
+        showCaptionOverride: !!card.showCaptionOverride
+      };
+    }
+
+    function getCurrentCards() {
+      return data[activeTab] || [];
+    }
+
+    function notify(text) {
+      els.toast.textContent = text || 'Готово';
+      els.toast.classList.add('show');
+      setTimeout(() => els.toast.classList.remove('show'), 1600);
+    }
+
+    function setActiveTab(tab) {
+      activeTab = tab;
+      els.tabPlants.classList.toggle('active', tab === 'plants');
+      els.tabAccessories.classList.toggle('active', tab === 'accessories');
+      els.showLabel.checked = !!config[tab].showLabel;
+      els.showCaption.checked = !!config[tab].showCaption;
+      renderAll();
+    }
+
+    function addCard(name = '', url = '', caption = '', showLabelOverride = false, showCaptionOverride = false) {
+      data[activeTab].push({ name, url, caption, showLabelOverride, showCaptionOverride });
+      renderAll();
+    }
+
+    function addBlankCards(amount) {
+      for (let i = 0; i < amount; i++) {
+        addCard('', '', '');
+      }
+    }
+
+    function updateCard(index, field, value) {
+      if (!data[activeTab][index]) return;
+      data[activeTab][index][field] = value;
+      renderPreview();
+      renderOutput();
+      updateCount();
+      updateThumb(index);
+    }
+
+    function updateThumb(index) {
+      const row = els.cards.querySelector('[data-index="' + index + '"]');
+      if (!row) return;
+      const holder = row.querySelector('.thumb');
+      const card = data[activeTab][index];
+      holder.innerHTML = card.url ? '<img src="' + escapeHtml(card.url) + '" alt="">' : 'Нет картинки';
+    }
+
+    function moveCard(index, direction) {
+      const next = index + direction;
+      if (next < 0 || next >= data[activeTab].length) return;
+      const list = data[activeTab];
+      const item = list.splice(index, 1)[0];
+      list.splice(next, 0, item);
+      renderAll();
+    }
+
+    function duplicateCard(index) {
+      const card = data[activeTab][index];
+      if (!card) return;
+      data[activeTab].splice(index + 1, 0, { ...card });
+      renderAll();
+    }
+
+    function removeCard(index) {
+      data[activeTab].splice(index, 1);
+      renderAll();
+    }
+
+    function resetCurrentTab() {
+      data[activeTab] = JSON.parse(JSON.stringify(starterData[activeTab] || []));
+      renderAll();
+      notify('Вкладка сброшена');
+    }
+
+    function addBulk() {
+      const lines = els.bulkInput.value.split('\n');
+      let added = 0;
+      lines.forEach(line => {
+        const parts = line.split('|').map(part => part.trim());
+        if (parts[0] && parts[1]) {
+          data[activeTab].push({ name: parts[0], url: parts[1], caption: parts[2] || '', showLabelOverride: false, showCaptionOverride: false });
+          added++;
+        }
+      });
+      els.bulkInput.value = '';
+      renderAll();
+      notify(added ? 'Добавлено: ' + added : 'Ничего не добавлено');
+    }
+
+    function updateCount() {
+      const total = getCurrentCards().length;
+      const ready = getCurrentCards().filter(card => cleanCard(card).name && cleanCard(card).url).length;
+      els.count.textContent = ready + ' из ' + total + ' готово';
+    }
+
+    function renderEditor() {
+      els.cards.innerHTML = '';
+      const cards = getCurrentCards();
+
+      cards.forEach((card, index) => {
+        const safe = cleanCard(card);
+        const row = document.createElement('div');
+        row.className = 'card-row';
+        row.dataset.index = index;
+        row.innerHTML = `
+          <div class="thumb">${safe.url ? '<img src="' + escapeHtml(safe.url) + '" alt="">' : 'Нет картинки'}</div>
+          <div class="fields">
+            <div class="field-grid">
+              <div>
+                <label class="small">Название</label>
+                <input class="name-input" type="text" value="${escapeHtml(safe.name)}" placeholder="Elm">
+              </div>
+              <div>
+                <label class="small">Ссылка на картинку</label>
+                <input class="url-input" type="text" value="${escapeHtml(safe.url)}" placeholder="https://static.tildacdn.net/example.png">
+              </div>
+              <div>
+                <label class="small">Описание</label>
+                <input class="caption-input" type="text" value="${escapeHtml(safe.caption)}" placeholder="Короткое описание">
+              </div>
+              <div class="row-flags">
+                <label class="check row-check">
+                  <input class="card-label-check" type="checkbox" ${safe.showLabelOverride ? 'checked' : ''}>
+                  Название на этой карточке
+                </label>
+                <label class="check row-check">
+                  <input class="card-caption-check" type="checkbox" ${safe.showCaptionOverride ? 'checked' : ''}>
+                  Описание на этой карточке
+                </label>
+              </div>
+            </div>
+            <div class="row-actions">
+              <button class="mini up" type="button">Вверх</button>
+              <button class="mini down" type="button">Вниз</button>
+              <button class="mini copy" type="button">Копия</button>
+              <button class="mini remove" type="button">Удалить</button>
+            </div>
+          </div>
+        `;
+
+        row.querySelector('.name-input').addEventListener('input', e => updateCard(index, 'name', e.target.value));
+        row.querySelector('.url-input').addEventListener('input', e => updateCard(index, 'url', e.target.value));
+        row.querySelector('.caption-input').addEventListener('input', e => updateCard(index, 'caption', e.target.value));
+        row.querySelector('.card-label-check').addEventListener('change', e => updateCard(index, 'showLabelOverride', e.target.checked));
+        row.querySelector('.card-caption-check').addEventListener('change', e => updateCard(index, 'showCaptionOverride', e.target.checked));
+        row.querySelector('.up').addEventListener('click', () => moveCard(index, -1));
+        row.querySelector('.down').addEventListener('click', () => moveCard(index, 1));
+        row.querySelector('.copy').addEventListener('click', () => duplicateCard(index));
+        row.querySelector('.remove').addEventListener('click', () => removeCard(index));
+
+        els.cards.appendChild(row);
+      });
+    }
+
+    function renderPreview() {
+      const cards = getCurrentCards().map(cleanCard).filter(card => card.name || card.url || card.caption);
+      const options = config[activeTab];
+
+      els.previewTag.textContent = activeTab === 'plants' ? 'Plants' : 'Accessories';
+      els.previewTitle.innerHTML = activeTab === 'plants' ? 'Plants &amp; Trees' : 'Memorial Accessories';
+      els.previewPill.className = 'pill ' + activeTab;
+      els.previewPlants.classList.toggle('active', activeTab === 'plants');
+      els.previewAccessories.classList.toggle('active', activeTab === 'accessories');
+
+      if (!cards.length) {
+        els.preview.innerHTML = '<div class="empty">Добавьте карточку слева.</div>';
+        return;
+      }
+
+      els.preview.innerHTML = cards.map(card => `
+        <div class="pt-card">
+          ${card.url ? '<img src="' + escapeHtml(card.url) + '" alt="' + escapeHtml(card.name) + '">' : ''}
+          ${(options.showLabel || card.showLabelOverride) && card.name ? '<div class="pt-card-top"><span class="pt-card-label">' + escapeHtml(card.name) + '</span></div>' : ''}
+          ${(options.showCaption || card.showCaptionOverride) && card.caption ? '<div class="pt-card-caption">' + escapeHtml(card.caption) + '</div>' : ''}
+        </div>
+      `).join('');
+    }
+
+    function buildCardHtml(card, options) {
+      const safe = cleanCard(card);
+      if (!safe.name && !safe.url) return '';
+
+      let html = '  <div class="pt-card" data-name="' + escapeHtml(safe.name) + '" style="width: 270px; height: 270px;">\n';
+      html += '    <img src="' + escapeHtml(safe.url) + '" alt="' + escapeHtml(safe.name) + '">\n';
+
+      if ((options.showLabel || safe.showLabelOverride) && safe.name) {
+        html += '    <div class="pt-card-top"><span class="pt-card-label">' + escapeHtml(safe.name) + '</span><div class="pt-card-icon"></div></div>\n';
+      }
+
+      if ((options.showCaption || safe.showCaptionOverride) && safe.caption) {
+        html += '    <div class="pt-card-caption">' + escapeHtml(safe.caption) + '</div>\n';
+      }
+
+      html += '  </div>\n';
+      return html;
+    }
+
+    function buildGroupHtml(tab) {
+      const hiddenClass = tab === 'plants' ? ' pt-hidden' : '';
+      const cards = (data[tab] || []).map(cleanCard).filter(card => card.name && card.url);
+      let html = '<div class="pt-card-group' + hiddenClass + '" data-tab="' + tab + '">\n';
+      cards.forEach(card => {
+        html += buildCardHtml(card, config[tab]) + '\n';
+      });
+      html += '</div>';
+      return html;
+    }
+
+    function renderOutput() {
+      if (els.outputMode.value === 'current') {
+        els.output.value = buildGroupHtml(activeTab);
+      } else {
+        els.output.value = buildGroupHtml('plants') + '\n\n' + buildGroupHtml('accessories');
+      }
+    }
+
+    function renderAll() {
+      els.showLabel.checked = !!config[activeTab].showLabel;
+      els.showCaption.checked = !!config[activeTab].showCaption;
+      renderEditor();
+      renderPreview();
+      renderOutput();
+      updateCount();
+    }
+
+    function copyOutput() {
+      renderOutput();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(els.output.value).then(() => notify('Код скопирован')).catch(() => fallbackCopy());
+      } else {
+        fallbackCopy();
+      }
+    }
+
+    function fallbackCopy() {
+      els.output.focus();
+      els.output.select();
+      document.execCommand('copy');
+      notify('Код скопирован');
+    }
+
+    function downloadOutput() {
+      renderOutput();
+      const blob = new Blob([els.output.value], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = els.outputMode.value === 'current' ? activeTab + '-cards.html' : 'plants-accessories-cards.html';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    document.getElementById('add').addEventListener('click', () => addCard('', '', ''));
+    document.getElementById('add13').addEventListener('click', () => addBlankCards(13));
+    document.getElementById('bulkBtn').addEventListener('click', () => els.bulkBox.classList.toggle('show'));
+    document.getElementById('bulkAdd').addEventListener('click', addBulk);
+    document.getElementById('resetTab').addEventListener('click', resetCurrentTab);
+    document.getElementById('copy').addEventListener('click', copyOutput);
+    document.getElementById('copyTop').addEventListener('click', copyOutput);
+    document.getElementById('download').addEventListener('click', downloadOutput);
+    document.getElementById('select').addEventListener('click', () => { els.output.focus(); els.output.select(); });
+    els.outputMode.addEventListener('change', renderOutput);
+    els.showLabel.addEventListener('change', () => { config[activeTab].showLabel = els.showLabel.checked; renderAll(); });
+    els.showCaption.addEventListener('change', () => { config[activeTab].showCaption = els.showCaption.checked; renderAll(); });
+    els.tabPlants.addEventListener('click', () => setActiveTab('plants'));
+    els.tabAccessories.addEventListener('click', () => setActiveTab('accessories'));
+
+    renderAll();
+  </script>
+</body>
+</html>
