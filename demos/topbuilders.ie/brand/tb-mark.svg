@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 104" role="img" aria-labelledby="title">
+  <title id="title">Top Builders TB roofline mark</title>
+  <path fill="none" stroke="#D85A2A" stroke-width="7" stroke-linecap="square" stroke-linejoin="miter" d="M8 34 60 5l52 29"/>
+  <path fill="#171814" d="M13 39h60v15H50v45H31V54H13z"/>
+  <path fill="#D85A2A" d="M31 54h15v45L31 99z"/>
+  <path fill="none" stroke="#171814" stroke-width="13" stroke-linecap="square" stroke-linejoin="round" d="M61 45v52m0-52h17c14 0 22 5 22 14s-8 15-22 15H61m0 0h19c15 0 24 5 24 14 0 7-6 10-13 11H61"/>
+</svg>

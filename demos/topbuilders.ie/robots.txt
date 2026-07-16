@@ -1,0 +1,7 @@
+User-Agent: *
+Allow: /
+Disallow: /api/
+
+Host: https://www.topbuilders.ie
+Sitemap: https://www.topbuilders.ie/sitemap.xml
+Sitemap: https://www.topbuilders.ie/image-sitemap.xml

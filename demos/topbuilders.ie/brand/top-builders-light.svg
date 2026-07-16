@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 112" role="img" aria-labelledby="title">
+  <title id="title">Top Builders — Built to the highest standard</title>
+  <g transform="translate(2 4)">
+    <path fill="none" stroke="#D85A2A" stroke-width="7" stroke-linecap="square" stroke-linejoin="miter" d="M8 34 60 5l52 29"/>
+    <path fill="#FFFDF8" d="M13 39h60v15H50v45H31V54H13z"/>
+    <path fill="#D85A2A" d="M31 54h15v45L31 99z"/>
+    <path fill="none" stroke="#FFFDF8" stroke-width="13" stroke-linecap="square" stroke-linejoin="round" d="M61 45v52m0-52h17c14 0 22 5 22 14s-8 15-22 15H61m0 0h19c15 0 24 5 24 14 0 7-6 10-13 11H61"/>
+  </g>
+  <text x="146" y="62" fill="#D85A2A" font-family="Archivo, Arial, sans-serif" font-size="47" font-weight="700" letter-spacing="1">TOP</text>
+  <text x="252" y="62" fill="#FFFDF8" font-family="Archivo, Arial, sans-serif" font-size="47" font-weight="700" letter-spacing="1">BUILDERS</text>
+  <path stroke="#D85A2A" stroke-width="2" d="M147 83h48m305 0h48"/>
+  <text x="210" y="88" fill="#FFFDF8" font-family="Archivo, Arial, sans-serif" font-size="13" font-weight="600" letter-spacing="4">BUILT TO THE HIGHEST STANDARD</text>
+</svg>
