@@ -1,0 +1,18 @@
+{
+  "name": "KENO MOTORS Quick Service Card",
+  "short_name": "KENO Quick Card",
+  "description": "Fast, limited-scope service cards for minor vehicle work.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f3ec",
+  "theme_color": "#0b2038",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
