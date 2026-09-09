@@ -66,24 +66,8 @@ button { font: inherit; }
   backdrop-filter: blur(16px) saturate(1.2);
 }
 .identity {
-  display: flex;
-  align-items: center;
-  gap: 12px;
   color: inherit;
   text-decoration: none;
-}
-.identity-mark {
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  color: #fff;
-  background: linear-gradient(145deg, #376c9d, #244b71);
-  border-radius: 10px 4px 10px 4px;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: -.02em;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16);
 }
 .identity strong,
 .identity small { display: block; }
