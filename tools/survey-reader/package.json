@@ -1,0 +1,10 @@
+{
+  "name": "expert-windows-survey-reader",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Standalone static mobile reader for shared survey routes",
+  "scripts": {
+    "check": "node --check app.js && node --check route-codec.mjs && node --test test/*.test.js"
+  }
+}

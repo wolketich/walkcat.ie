@@ -1,0 +1,9 @@
+{
+  "name": "Expert Windows Survey Route",
+  "short_name": "Survey Route",
+  "description": "Mobile survey itinerary reader for Expert Windows.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#edf1ef",
+  "theme_color": "#102c3a"
+}
