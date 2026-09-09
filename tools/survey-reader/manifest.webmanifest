@@ -4,6 +4,6 @@
   "description": "Mobile survey itinerary reader for Expert Windows.",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#edf1ef",
-  "theme_color": "#102c3a"
+  "background_color": "#f5f7f9",
+  "theme_color": "#f3f6f9"
 }

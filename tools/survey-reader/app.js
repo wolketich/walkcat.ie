@@ -163,7 +163,7 @@ function render() {
     <section class="progress-card" aria-label="Route progress"><div><strong>${completedCount} / ${route.stops.length}</strong><span>surveys completed</span></div><div class="progress-track" aria-hidden="true"><i style="width:${progress}%"></i></div></section>
     ${nextStopCard()}
     ${timeline()}
-    <footer class="route-footer"><span>EW · FIELD OPERATIONS</span><p>${route.generatedAt ? `Route generated ${escapeHtml(generatedLabel(route.generatedAt))}` : "Saved route"}</p>${completedCount ? '<button id="resetProgress" type="button">Reset completed surveys</button>' : ""}</footer>`;
+    <footer class="route-footer"><span>Expert Windows · Field operations</span><p>${route.generatedAt ? `Route generated ${escapeHtml(generatedLabel(route.generatedAt))}` : "Saved route"}</p>${completedCount ? '<button id="resetProgress" type="button">Reset completed surveys</button>' : ""}</footer>`;
 
   readerApp.querySelectorAll("[data-complete-stop]").forEach((button) => button.addEventListener("click", () => {
     const order = Number(button.dataset.completeStop);
