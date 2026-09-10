@@ -2,9 +2,9 @@
 
 A standalone, dependency-free static reader for mobile survey itineraries. It is designed to be deployed at:
 
-`https://wolketich.github.io/survey-reader/`
+`https://walkcat.net/tools/survey-reader/`
 
-The planner converts a calculated route to compressed JSON, encodes it as Base64URL, and places it in the `#route=` URL fragment. The reader decodes everything locally. It has no server, database, API key, login, expiry, or tracking.
+The planner compresses and AES-encrypts each calculated route, then stores only the ciphertext in an unlisted Pastebin entry for one month. Shared URLs use `/tools/survey-reader/{paste-id}#key=…`; the reader downloads the paste and decrypts it locally. Legacy `#route=` links remain supported.
 
 ## Local preview
 
@@ -24,9 +24,9 @@ All paths are relative, so the app works under the `/survey-reader/` project pat
 
 ## Data and privacy
 
-The shared link contains the complete public itinerary: customer names, phone numbers, Eircodes, notes, times and availability blocks. Base64URL is transport encoding, not encryption. Anyone with the full link can read and forward the route.
+The Pastebin entry does not contain readable customer data. The random AES key stays in the URL fragment, which browsers do not send to Pastebin or the website server. Anyone with the complete link can still read and forward the route, so it must be shared only with the intended surveyor.
 
-The fragment is decoded in the browser and is not sent to GitHub Pages as part of the normal HTTP request. Navigation and phone buttons open the phone's external maps and calling applications.
+Navigation and phone buttons open the phone's external maps and calling applications.
 
 Completed surveys are saved only in that browser's local storage. They do not update the office planner.
 

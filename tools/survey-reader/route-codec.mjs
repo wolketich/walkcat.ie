@@ -20,6 +20,11 @@ export function createRoutePayload({ plan, result, generatedAt = new Date().toIS
     throw new Error("A feasible calculated route is required.");
   }
 
+  const jobsById = new Map((plan.jobs || []).map((job) => [
+    text(job.clientId || job.id),
+    job
+  ]));
+
   const payload = {
     v: 1,
     kind: PAYLOAD_KIND,
@@ -31,24 +36,29 @@ export function createRoutePayload({ plan, result, generatedAt = new Date().toIS
       location: text(plan.startLocation),
       departure: text(plan.dayStart)
     },
-    stops: result.schedule.map((stop, index) => ({
-      order: index + 1,
-      name: text(stop.name || `Survey ${index + 1}`),
-      location: text(stop.eircode),
-      phone: text(stop.phone),
-      availability: text(stop.availability),
-      eta: text(stop.eta),
-      window: text(stop.window),
-      windowStart: text(stop.windowStart),
-      windowEnd: text(stop.windowEnd),
-      appointmentType: stop.appointmentType === "exact" ? "exact" : "window",
-      exactTime: text(stop.exactTime),
-      surveyEnd: text(stop.surveyEnd),
-      durationMinutes: number(stop.durationMinutes),
-      driveMinutes: number(stop.legMinutes),
-      driveKm: number(stop.legKm),
-      notes: text(stop.notes)
-    })),
+    stops: result.schedule.map((stop, index) => {
+      const job = jobsById.get(text(stop.jobId));
+      return {
+        order: index + 1,
+        name: text(stop.name || `Survey ${index + 1}`),
+        houseNumber: text(job ? job.houseNumber : stop.houseNumber),
+        address: text(job ? job.address : stop.address),
+        location: text(stop.eircode),
+        phone: text(stop.phone),
+        availability: text(stop.availability),
+        eta: text(stop.eta),
+        window: text(stop.window),
+        windowStart: text(stop.windowStart),
+        windowEnd: text(stop.windowEnd),
+        appointmentType: stop.appointmentType === "exact" ? "exact" : "window",
+        exactTime: text(stop.exactTime),
+        surveyEnd: text(stop.surveyEnd),
+        durationMinutes: number(stop.durationMinutes),
+        driveMinutes: number(stop.legMinutes),
+        driveKm: number(stop.legKm),
+        notes: text(job ? job.notes : stop.notes)
+      };
+    }),
     unavailable: [...(plan.unavailability || [])]
       .sort((left, right) => text(left.start).localeCompare(text(right.start)))
       .map((block) => ({ label: text(block.label || "Unavailable"), start: text(block.start), end: text(block.end) })),

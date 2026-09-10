@@ -13,7 +13,13 @@ function fixture() {
       dayStart: "07:00",
       finishMode: "last_survey",
       unavailability: [{ id: "private-id", label: "Lunch", start: "12:30", end: "13:00" }],
-      jobs: [{ clientId: "not-public", mondayItemId: "123" }]
+      jobs: [{
+        clientId: "not-public",
+        mondayItemId: "123",
+        houseNumber: "17",
+        address: "Orchard View, Lucan, Co. Dublin",
+        notes: "Latest note from the planner"
+      }]
     },
     result: {
       status: "feasible",
@@ -36,7 +42,7 @@ function fixture() {
         durationMinutes: 30,
         legMinutes: 30,
         legKm: 18.4,
-        notes: "Ring the bell marked O’Brien"
+        notes: "Stale route note"
       }]
     }
   };
@@ -47,6 +53,9 @@ test("creates a shareable route without planner or Monday IDs", () => {
   assert.equal(payload.stops[0].phone, "087 123 4567");
   assert.equal(payload.stops[0].availability, "08:00-12:00");
   assert.equal(payload.stops[0].window, "08:00–09:00");
+  assert.equal(payload.stops[0].houseNumber, "17");
+  assert.equal(payload.stops[0].address, "Orchard View, Lucan, Co. Dublin");
+  assert.equal(payload.stops[0].notes, "Latest note from the planner");
   assert.equal(payload.unavailable[0].label, "Lunch");
   const serialized = JSON.stringify(payload);
   assert.doesNotMatch(serialized, /mondayItemId|clientId|not-public|private-id/);

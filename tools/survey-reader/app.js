@@ -18,8 +18,14 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function routeFromHash() {
-  return new URLSearchParams(location.hash.slice(1)).get("route") || "";
+function routeReference() {
+  const hash = new URLSearchParams(location.hash.slice(1));
+  const pathMatch = location.pathname.match(/\/tools\/survey-reader\/([A-Za-z0-9]+)\/?$/u);
+  return {
+    route: hash.get("route") || "",
+    pasteId: pathMatch?.[1] || new URLSearchParams(location.search).get("paste") || "",
+    key: hash.get("key") || ""
+  };
 }
 
 function dateLabel(value) {
@@ -95,6 +101,41 @@ function loadCompleted() {
 
 function saveCompleted() {
   localStorage.setItem(completionKey, JSON.stringify([...completed]));
+}
+
+async function loadPastedRoute(pasteId, encodedKey) {
+  if (!/^[A-Za-z0-9]+$/u.test(pasteId) || !encodedKey) throw new Error("This shared route link is incomplete.");
+  const response = await fetch(`https://pastebin.com/raw/${encodeURIComponent(pasteId)}`, {
+    cache: "no-store",
+    signal: AbortSignal.timeout(15_000)
+  });
+  if (!response.ok) throw new Error("The shared route could not be downloaded. It may have expired.");
+  let envelope;
+  try {
+    envelope = JSON.parse(await response.text());
+  } catch {
+    throw new Error("The shared route is not in the expected format.");
+  }
+  if (envelope?.v !== 1 || envelope?.kind !== "encrypted-survey-route" || !envelope.iv || !envelope.ciphertext) {
+    throw new Error("The shared route is not in the expected format.");
+  }
+  try {
+    const key = await crypto.subtle.importKey("raw", base64UrlToBytes(encodedKey), { name: "AES-GCM" }, false, ["decrypt"]);
+    const plaintext = await crypto.subtle.decrypt(
+      { name: "AES-GCM", iv: base64UrlToBytes(envelope.iv) },
+      key,
+      base64UrlToBytes(envelope.ciphertext)
+    );
+    return new TextDecoder().decode(plaintext);
+  } catch {
+    throw new Error("This route could not be decrypted. Check that the complete link was copied.");
+  }
+}
+
+function base64UrlToBytes(value) {
+  const base64 = String(value).replaceAll("-", "+").replaceAll("_", "/").padEnd(Math.ceil(String(value).length / 4) * 4, "=");
+  const binary = atob(base64);
+  return Uint8Array.from(binary, (character) => character.charCodeAt(0));
 }
 
 function actionLinks(stop, { prominent = false } = {}) {
@@ -277,15 +318,19 @@ function showError(title, message) {
 }
 
 async function initialise() {
-  routeToken = routeFromHash();
-  if (!routeToken) return showError("No route in this link", "Open the complete link sent by the office.");
+  const reference = routeReference();
+  if (!reference.route && !reference.pasteId) return showError("No route in this link", "Open the complete link sent by the office.");
   try {
+    routeToken = reference.route || await loadPastedRoute(reference.pasteId, reference.key);
     route = await decodeRoutePayload(routeToken);
     completionKey = completedStorageKey(routeToken);
     loadCompleted();
     loadingState.hidden = true;
     readerApp.hidden = false;
     document.title = `${dateLabel(route.date)} · Sasha’s route`;
+    if (reference.pasteId && location.search) {
+      history.replaceState({}, "", `/tools/survey-reader/${reference.pasteId}${location.hash}`);
+    }
     render();
   } catch (error) {
     showError("This route won’t open", error.message);
