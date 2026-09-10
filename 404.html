@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="en-IE">
 <head>
+  <script>
+    (() => {
+      const match = location.pathname.match(/^\/tools\/survey-reader\/([A-Za-z0-9]+)\/?$/);
+      if (match) location.replace(`/tools/survey-reader/?paste=${encodeURIComponent(match[1])}${location.hash}`);
+    })();
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Page Not Found | Walkcat</title>

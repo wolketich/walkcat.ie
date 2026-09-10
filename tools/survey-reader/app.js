@@ -50,7 +50,12 @@ function googleDestination(locationValue) {
 function stopDestination(stop) {
   const houseNumber = String(stop?.houseNumber || "").trim();
   let address = String(stop?.address || "").trim();
-  if (houseNumber && !address.toLocaleLowerCase("en-IE").startsWith(houseNumber.toLocaleLowerCase("en-IE"))) {
+  const lowerAddress = address.toLocaleLowerCase("en-IE");
+  const lowerHouseNumber = houseNumber.toLocaleLowerCase("en-IE");
+  const addressIncludesHouseNumber = lowerAddress === lowerHouseNumber
+    || lowerAddress.startsWith(`${lowerHouseNumber} `)
+    || lowerAddress.startsWith(`${lowerHouseNumber},`);
+  if (houseNumber && !addressIncludesHouseNumber) {
     address = `${houseNumber} ${address}`.trim();
   }
   const eircode = String(stop?.location || "").trim();
@@ -119,9 +124,10 @@ async function loadPastedRoute(pasteId, encodedKey) {
   if (envelope?.v !== 1 || envelope?.kind !== "encrypted-survey-route" || !envelope.iv || !envelope.ciphertext) {
     throw new Error("The shared route is not in the expected format.");
   }
+  if (!globalThis.crypto?.subtle) throw new Error("This browser cannot securely open the route.");
   try {
-    const key = await crypto.subtle.importKey("raw", base64UrlToBytes(encodedKey), { name: "AES-GCM" }, false, ["decrypt"]);
-    const plaintext = await crypto.subtle.decrypt(
+    const key = await globalThis.crypto.subtle.importKey("raw", base64UrlToBytes(encodedKey), { name: "AES-GCM" }, false, ["decrypt"]);
+    const plaintext = await globalThis.crypto.subtle.decrypt(
       { name: "AES-GCM", iv: base64UrlToBytes(envelope.iv) },
       key,
       base64UrlToBytes(envelope.ciphertext)
