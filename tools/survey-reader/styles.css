@@ -180,16 +180,33 @@ button { font: inherit; }
 .progress-track { height: 8px; overflow: hidden; background: var(--blue-soft); border-radius: 99px; }
 .progress-track i { display: block; height: 100%; background: var(--ok); border-radius: inherit; transition: width 300ms ease; }
 
+.next-deck { margin-bottom: 16px; }
+.next-track {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 0 14px 4px;
+  scroll-padding-inline: 14px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x pan-y;
+}
+.next-track::-webkit-scrollbar { display: none; }
 .next-card {
   position: relative;
+  flex: 0 0 calc(100% - 28px);
   overflow: hidden;
-  margin: 0 14px 16px;
+  margin: 0;
   padding: 20px;
   color: #fff;
   background: linear-gradient(160deg, var(--blue) 0%, var(--brand) 72%);
   border: 1px solid #244b71;
   border-radius: var(--radius);
   box-shadow: 0 18px 42px rgba(20, 40, 59, .18);
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
 }
 .next-card::before {
   content: "";
@@ -247,11 +264,63 @@ button { font: inherit; }
   letter-spacing: .08em;
   text-transform: uppercase;
 }
+.next-done-button {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 9px;
+  color: #fff;
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid rgba(255, 255, 255, .45);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.next-card.is-done::after {
+  content: "COMPLETED";
+  position: absolute;
+  top: 22px;
+  right: -32px;
+  width: 130px;
+  padding: 5px 0;
+  color: #145c52;
+  background: #d5efe9;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-align: center;
+  transform: rotate(38deg);
+}
+.carousel-controls {
+  display: grid;
+  grid-template-columns: 38px 1fr 38px;
+  align-items: center;
+  gap: 8px;
+  margin: 7px 14px 0;
+}
+.carousel-controls span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+}
+.carousel-controls button {
+  width: 38px;
+  height: 34px;
+  color: var(--brand);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  font-size: 17px;
+  cursor: pointer;
+}
+.carousel-controls button:disabled { opacity: .35; cursor: default; }
 .complete-card {
   min-height: 240px;
   display: grid;
   align-content: center;
   justify-items: center;
+  margin: 0 14px 16px;
   text-align: center;
   background: linear-gradient(160deg, #1d7a6c 0%, #145c52 78%);
   border-color: #145c52;
@@ -499,6 +568,44 @@ button { font: inherit; }
   cursor: pointer;
 }
 
+.completion-dialog {
+  width: min(420px, calc(100vw - 28px));
+  padding: 0;
+  color: var(--ink);
+  background: var(--surface);
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 28px 80px rgba(20, 40, 59, .28);
+}
+.completion-dialog::backdrop { background: rgba(13, 31, 47, .58); backdrop-filter: blur(3px); }
+.completion-dialog form { padding: 24px; text-align: center; }
+.confirmation-mark {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 15px;
+  color: #fff;
+  background: var(--ok);
+  border-radius: 50%;
+  font-size: 21px;
+  font-weight: 800;
+}
+.completion-dialog h2 { margin: 7px 0 0; color: var(--ink-strong); font-size: 22px; letter-spacing: -.025em; }
+.completion-dialog p { margin: 10px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.confirmation-actions { display: grid; grid-template-columns: 1fr 1.25fr; gap: 9px; margin-top: 22px; }
+.confirmation-actions button {
+  min-height: 44px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.confirmation-actions .confirm-completion { color: #fff; background: var(--ok); border-color: var(--ok); }
+
 .empty-route {
   min-height: calc(100vh - 64px);
   display: grid;
@@ -553,8 +660,11 @@ button { font: inherit; }
     box-shadow: var(--shadow);
   }
   .route-masthead { grid-template-columns: 1fr auto; align-items: end; margin-inline: 22px; }
-  .progress-card,
-  .next-card { margin-inline: 22px; }
+  .progress-card { margin-inline: 22px; }
+  .next-track { padding-inline: 22px; scroll-padding-inline: 22px; }
+  .next-card { flex-basis: calc(100% - 44px); }
+  .carousel-controls { margin-inline: 22px; }
+  .complete-card { margin-inline: 22px; }
   .day-section { padding-inline: 22px; }
   .rail-dot { box-shadow: 0 0 0 4px var(--bg); }
 }
@@ -575,7 +685,8 @@ button { font: inherit; }
 @media print {
   body { padding: 0; background: #fff; }
   .site-header,
-  .next-card,
+  .next-deck,
+  .complete-card,
   .progress-card,
   .stop-links,
   .done-button,

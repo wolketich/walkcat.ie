@@ -6,6 +6,8 @@ let route = null;
 let routeToken = "";
 let completionKey = "";
 let completed = new Set();
+let carouselOrder = null;
+let pendingCompletionOrder = null;
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -39,8 +41,20 @@ function googleDestination(locationValue) {
   return url.toString();
 }
 
+function stopDestination(stop) {
+  const houseNumber = String(stop?.houseNumber || "").trim();
+  let address = String(stop?.address || "").trim();
+  if (houseNumber && !address.toLocaleLowerCase("en-IE").startsWith(houseNumber.toLocaleLowerCase("en-IE"))) {
+    address = `${houseNumber} ${address}`.trim();
+  }
+  const eircode = String(stop?.location || "").trim();
+  const compactAddress = address.replace(/\s/g, "").toLocaleLowerCase("en-IE");
+  const compactEircode = eircode.replace(/\s/g, "").toLocaleLowerCase("en-IE");
+  return [address, compactEircode && !compactAddress.includes(compactEircode) ? eircode : ""].filter(Boolean).join(", ") || eircode;
+}
+
 function googleFullRoute() {
-  const points = [route.start.location, ...route.stops.map((stop) => stop.location)];
+  const points = [route.start.location, ...route.stops.map(stopDestination)];
   if (route.finish?.location) points.push(route.finish.location);
   const origin = points.shift();
   const destination = points.pop() || origin;
@@ -85,14 +99,27 @@ function saveCompleted() {
 
 function actionLinks(stop, { prominent = false } = {}) {
   return `<div class="stop-links ${prominent ? "prominent" : ""}">
-    <a class="action navigate" href="${escapeHtml(googleDestination(stop.location))}" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> Navigate</a>
+    <a class="action navigate" href="${escapeHtml(googleDestination(stopDestination(stop)))}" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> Navigate</a>
     ${stop.phone ? `<a class="action call" href="${escapeHtml(phoneHref(stop.phone))}"><span aria-hidden="true">☎</span> Call</a>` : ""}
   </div>`;
 }
 
-function nextStopCard() {
-  const next = route.stops.find((stop) => !completed.has(Number(stop.order)));
-  if (!next) {
+function surveyCarouselCard(stop) {
+  const isDone = completed.has(Number(stop.order));
+  return `<article class="next-card ${isDone ? "is-done" : ""}" data-carousel-stop="${escapeHtml(stop.order)}">
+    <div class="next-kicker"><span>${isDone ? "COMPLETED" : "NEXT SURVEY"}</span><span>${escapeHtml(stop.order)} OF ${route.stops.length}</span></div>
+    <div class="next-time"><span>ETA</span><strong>${escapeHtml(stop.eta)}</strong></div>
+    <h1>${escapeHtml(stop.name)}</h1>
+    <p class="next-location">${escapeHtml(stopDestination(stop))}</p>
+    <div class="next-facts"><span>${escapeHtml(windowLabel(stop))}</span><span>${escapeHtml(stop.durationMinutes)} min survey</span><span>${escapeHtml(stop.driveMinutes)} min drive</span></div>
+    ${stop.notes ? `<p class="next-notes"><strong>Survey note</strong>${escapeHtml(stop.notes)}</p>` : ""}
+    ${actionLinks(stop, { prominent: true })}
+    <button class="next-done-button" type="button" data-complete-stop="${escapeHtml(stop.order)}">${isDone ? "Completed ✓" : "Mark done"}</button>
+  </article>`;
+}
+
+function surveyCarousel() {
+  if (route.stops.every((stop) => completed.has(Number(stop.order)))) {
     return `<section class="next-card complete-card">
       <span class="eyebrow">ROUTE COMPLETE</span>
       <div class="complete-tick" aria-hidden="true">✓</div>
@@ -100,14 +127,13 @@ function nextStopCard() {
       <p>Every survey on this route is marked complete.</p>
     </section>`;
   }
-  return `<section class="next-card">
-    <div class="next-kicker"><span>NEXT SURVEY</span><span>${escapeHtml(next.order)} OF ${route.stops.length}</span></div>
-    <div class="next-time"><span>ETA</span><strong>${escapeHtml(next.eta)}</strong></div>
-    <h1>${escapeHtml(next.name)}</h1>
-    <p class="next-location">${escapeHtml(next.location)}</p>
-    <div class="next-facts"><span>${escapeHtml(windowLabel(next))}</span><span>${escapeHtml(next.durationMinutes)} min survey</span><span>${escapeHtml(next.driveMinutes)} min drive</span></div>
-    ${next.notes ? `<p class="next-notes"><strong>Survey note</strong>${escapeHtml(next.notes)}</p>` : ""}
-    ${actionLinks(next, { prominent: true })}
+  return `<section class="next-deck" aria-label="Survey cards">
+    <div class="next-track" id="nextTrack">${route.stops.map(surveyCarouselCard).join("")}</div>
+    <div class="carousel-controls">
+      <button type="button" id="previousSurvey" aria-label="Previous survey">←</button>
+      <span id="carouselStatus" aria-live="polite">Swipe to browse</span>
+      <button type="button" id="nextSurvey" aria-label="Next survey">→</button>
+    </div>
   </section>`;
 }
 
@@ -117,7 +143,7 @@ function stopCard(stop) {
     <div class="rail"><time>${escapeHtml(stop.eta)}</time><span class="rail-dot">${escapeHtml(stop.order)}</span></div>
     <div class="stop-card">
       <header><div><span class="stop-type">SURVEY ${escapeHtml(stop.order)}</span><h2>${escapeHtml(stop.name)}</h2></div><button class="done-button" type="button" data-complete-stop="${escapeHtml(stop.order)}" aria-pressed="${isDone}">${isDone ? "Completed ✓" : "Mark done"}</button></header>
-      <a class="location-link" href="${escapeHtml(googleDestination(stop.location))}" target="_blank" rel="noopener">${escapeHtml(stop.location)} <span aria-hidden="true">↗</span></a>
+      <a class="location-link" href="${escapeHtml(googleDestination(stopDestination(stop)))}" target="_blank" rel="noopener">${escapeHtml(stopDestination(stop))} <span aria-hidden="true">↗</span></a>
       <div class="appointment-band"><strong>${escapeHtml(stop.eta)}</strong><span>${escapeHtml(windowLabel(stop))}<br>Finish around ${escapeHtml(stop.surveyEnd)}</span></div>
       <dl class="stop-facts"><div><dt>From previous</dt><dd>${escapeHtml(stop.driveMinutes)} min · ${escapeHtml(stop.driveKm)} km</dd></div><div><dt>Survey time</dt><dd>${escapeHtml(stop.durationMinutes)} minutes</dd></div>${stop.phone ? `<div><dt>Phone</dt><dd><a href="${escapeHtml(phoneHref(stop.phone))}">${escapeHtml(stop.phone)}</a></dd></div>` : ""}${stop.availability ? `<div><dt>Customer availability</dt><dd>${escapeHtml(stop.availability)}</dd></div>` : ""}</dl>
       ${stop.notes ? `<div class="survey-note"><span>NOTES</span><p>${escapeHtml(stop.notes)}</p></div>` : ""}
@@ -139,8 +165,7 @@ function timeline() {
     ...(route.unavailable || []).map((block) => ({ type: "block", time: block.start, value: block }))
   ].sort((left, right) => left.time.localeCompare(right.time) || (left.type === "block" ? -1 : 1));
 
-  return `<section class="day-section" aria-labelledby="dayPlanTitle">
-    <div class="section-heading"><div><span class="eyebrow">FULL ITINERARY</span><h2 id="dayPlanTitle">The day, in order</h2></div><span>${route.stops.length} surveys</span></div>
+  return `<section class="day-section" aria-label="Survey schedule">
     <div class="timeline">
       <article class="timeline-item start-item">
         <div class="rail"><time>${escapeHtml(route.start.departure)}</time><span class="rail-dot">S</span></div>
@@ -161,24 +186,88 @@ function render() {
       <a class="full-route-link" href="${escapeHtml(googleFullRoute())}" target="_blank" rel="noopener">Open full route <span aria-hidden="true">↗</span></a>
     </section>
     <section class="progress-card" aria-label="Route progress"><div><strong>${completedCount} / ${route.stops.length}</strong><span>surveys completed</span></div><div class="progress-track" aria-hidden="true"><i style="width:${progress}%"></i></div></section>
-    ${nextStopCard()}
+    ${surveyCarousel()}
     ${timeline()}
-    <footer class="route-footer"><span>Expert Windows · Field operations</span><p>${route.generatedAt ? `Route generated ${escapeHtml(generatedLabel(route.generatedAt))}` : "Saved route"}</p>${completedCount ? '<button id="resetProgress" type="button">Reset completed surveys</button>' : ""}</footer>`;
+    <footer class="route-footer"><span>Expert Windows · Field operations</span><p>${route.generatedAt ? `Route generated ${escapeHtml(generatedLabel(route.generatedAt))}` : "Saved route"}</p>${completedCount ? '<button id="resetProgress" type="button">Reset completed surveys</button>' : ""}</footer>
+    <dialog class="completion-dialog" id="completionDialog" aria-labelledby="completionTitle">
+      <form method="dialog">
+        <span class="confirmation-mark" aria-hidden="true">✓</span>
+        <span class="eyebrow">PLEASE CONFIRM</span>
+        <h2 id="completionTitle"></h2>
+        <p id="completionMessage"></p>
+        <div class="confirmation-actions"><button value="cancel">Cancel</button><button class="confirm-completion" id="confirmCompletion" type="button"></button></div>
+      </form>
+    </dialog>`;
 
-  readerApp.querySelectorAll("[data-complete-stop]").forEach((button) => button.addEventListener("click", () => {
-    const order = Number(button.dataset.completeStop);
-    if (completed.has(order)) completed.delete(order);
-    else completed.add(order);
-    saveCompleted();
-    render();
-    document.getElementById(`stop-${order}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
-  }));
+  readerApp.querySelectorAll("[data-complete-stop]").forEach((button) => button.addEventListener("click", () => openCompletionDialog(Number(button.dataset.completeStop))));
+  document.getElementById("confirmCompletion")?.addEventListener("click", confirmCompletion);
   document.getElementById("resetProgress")?.addEventListener("click", () => {
     completed.clear();
     saveCompleted();
     render();
     scrollTo({ top: 0, behavior: "smooth" });
   });
+  setupCarousel();
+}
+
+function openCompletionDialog(order) {
+  const stop = route.stops.find((item) => Number(item.order) === order);
+  const dialog = document.getElementById("completionDialog");
+  if (!stop || !dialog) return;
+  pendingCompletionOrder = order;
+  const isDone = completed.has(order);
+  document.getElementById("completionTitle").textContent = isDone ? "Reopen this survey?" : "Mark this survey done?";
+  document.getElementById("completionMessage").textContent = `${stop.name} · ${stopDestination(stop)}`;
+  document.getElementById("confirmCompletion").textContent = isDone ? "Mark not done" : "Yes, mark done";
+  dialog.showModal();
+}
+
+function confirmCompletion() {
+  const order = pendingCompletionOrder;
+  if (!Number.isFinite(order)) return;
+  if (completed.has(order)) {
+    completed.delete(order);
+    carouselOrder = order;
+  } else {
+    completed.add(order);
+    carouselOrder = route.stops.find((stop) => !completed.has(Number(stop.order)))?.order || null;
+  }
+  pendingCompletionOrder = null;
+  saveCompleted();
+  document.getElementById("completionDialog")?.close();
+  render();
+}
+
+function setupCarousel() {
+  const track = document.getElementById("nextTrack");
+  if (!track) return;
+  const cards = [...track.querySelectorAll("[data-carousel-stop]")];
+  let activeIndex = Math.max(0, cards.findIndex((card) => Number(card.dataset.carouselStop) === Number(carouselOrder || route.stops.find((stop) => !completed.has(Number(stop.order)))?.order)));
+  const updateControls = () => {
+    carouselOrder = Number(cards[activeIndex]?.dataset.carouselStop || 0) || null;
+    const status = document.getElementById("carouselStatus");
+    if (status) status.textContent = `Swipe to browse · ${activeIndex + 1} of ${cards.length}`;
+    const previous = document.getElementById("previousSurvey");
+    const next = document.getElementById("nextSurvey");
+    if (previous) previous.disabled = activeIndex === 0;
+    if (next) next.disabled = activeIndex === cards.length - 1;
+  };
+  const moveTo = (index, behavior = "smooth") => {
+    activeIndex = Math.max(0, Math.min(cards.length - 1, index));
+    track.scrollTo({ left: cards[activeIndex].offsetLeft - track.offsetLeft, behavior });
+    updateControls();
+  };
+  let scrollTimer;
+  track.addEventListener("scroll", () => {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      activeIndex = cards.reduce((closest, card, index) => Math.abs(card.offsetLeft - track.scrollLeft) < Math.abs(cards[closest].offsetLeft - track.scrollLeft) ? index : closest, 0);
+      updateControls();
+    }, 80);
+  }, { passive: true });
+  document.getElementById("previousSurvey")?.addEventListener("click", () => moveTo(activeIndex - 1));
+  document.getElementById("nextSurvey")?.addEventListener("click", () => moveTo(activeIndex + 1));
+  requestAnimationFrame(() => moveTo(activeIndex, "auto"));
 }
 
 function showError(title, message) {
