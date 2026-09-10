@@ -23,7 +23,7 @@ function routeReference() {
   const pathMatch = location.pathname.match(/\/tools\/survey-reader\/([A-Za-z0-9]+)\/?$/u);
   return {
     route: hash.get("route") || "",
-    pasteId: pathMatch?.[1] || new URLSearchParams(location.search).get("paste") || "",
+    routeId: pathMatch?.[1] || new URLSearchParams(location.search).get("route") || new URLSearchParams(location.search).get("paste") || "",
     key: hash.get("key") || ""
   };
 }
@@ -108,9 +108,11 @@ function saveCompleted() {
   localStorage.setItem(completionKey, JSON.stringify([...completed]));
 }
 
-async function loadPastedRoute(pasteId, encodedKey) {
-  if (!/^[A-Za-z0-9]+$/u.test(pasteId) || !encodedKey) throw new Error("This shared route link is incomplete.");
-  const response = await fetch(`https://pastebin.com/raw/${encodeURIComponent(pasteId)}`, {
+async function loadSharedRoute(routeId, encodedKey) {
+  if (!/^[a-f0-9]{32}$/u.test(routeId) || !encodedKey) throw new Error("This shared route link is incomplete.");
+  const endpoint = new URL("https://modularhousing.ie/survey-route-api/");
+  endpoint.searchParams.set("id", routeId);
+  const response = await fetch(endpoint, {
     cache: "no-store",
     signal: AbortSignal.timeout(15_000)
   });
@@ -229,7 +231,7 @@ function render() {
   const progress = route.stops.length ? Math.round(completedCount / route.stops.length * 100) : 100;
   readerApp.innerHTML = `
     <section class="route-masthead">
-      <div><span class="eyebrow">SASHA’S ROUTE</span><h1>${escapeHtml(dateLabel(route.date))}</h1><p>Start ${escapeHtml(route.start.departure)} · finish around ${escapeHtml(route.totals.finishTime || "—")}</p></div>
+      <div><span class="eyebrow">SURVEY ROUTE</span><h1>${escapeHtml(dateLabel(route.date))}</h1><p>Start ${escapeHtml(route.start.departure)} · finish around ${escapeHtml(route.totals.finishTime || "—")}</p></div>
       <a class="full-route-link" href="${escapeHtml(googleFullRoute())}" target="_blank" rel="noopener">Open full route <span aria-hidden="true">↗</span></a>
     </section>
     <section class="progress-card" aria-label="Route progress"><div><strong>${completedCount} / ${route.stops.length}</strong><span>surveys completed</span></div><div class="progress-track" aria-hidden="true"><i style="width:${progress}%"></i></div></section>
@@ -325,17 +327,17 @@ function showError(title, message) {
 
 async function initialise() {
   const reference = routeReference();
-  if (!reference.route && !reference.pasteId) return showError("No route in this link", "Open the complete link sent by the office.");
+  if (!reference.route && !reference.routeId) return showError("No route in this link", "Open the complete link sent by the office.");
   try {
-    routeToken = reference.route || await loadPastedRoute(reference.pasteId, reference.key);
+    routeToken = reference.route || await loadSharedRoute(reference.routeId, reference.key);
     route = await decodeRoutePayload(routeToken);
     completionKey = completedStorageKey(routeToken);
     loadCompleted();
     loadingState.hidden = true;
     readerApp.hidden = false;
-    document.title = `${dateLabel(route.date)} · Sasha’s route`;
-    if (reference.pasteId && location.search) {
-      history.replaceState({}, "", `/tools/survey-reader/${reference.pasteId}${location.hash}`);
+    document.title = `${dateLabel(route.date)} · Survey Route`;
+    if (reference.routeId && location.search) {
+      history.replaceState({}, "", `/tools/survey-reader/${reference.routeId}${location.hash}`);
     }
     render();
   } catch (error) {

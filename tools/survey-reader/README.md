@@ -4,7 +4,7 @@ A standalone, dependency-free static reader for mobile survey itineraries. It is
 
 `https://walkcat.net/tools/survey-reader/`
 
-The planner compresses and AES-encrypts each calculated route, then stores only the ciphertext in an unlisted Pastebin entry for one month. Shared URLs use `/tools/survey-reader/{paste-id}#key=…`; the reader downloads the paste and decrypts it locally. Legacy `#route=` links remain supported.
+The planner compresses and AES-encrypts each calculated route, then stores only the ciphertext in the self-hosted route gateway for 30 days. Shared URLs use `/tools/survey-reader/{route-id}#key=…`; the reader downloads the encrypted route and decrypts it locally. Legacy `#route=` links remain supported.
 
 ## Local preview
 
@@ -24,7 +24,7 @@ All paths are relative, so the app works under the `/survey-reader/` project pat
 
 ## Data and privacy
 
-The Pastebin entry does not contain readable customer data. The random AES key stays in the URL fragment, which browsers do not send to Pastebin or the website server. Anyone with the complete link can still read and forward the route, so it must be shared only with the intended surveyor.
+The gateway does not receive readable customer data. The random AES key stays in the URL fragment, which browsers do not send to the gateway or the website server. Anyone with the complete link can still read and forward the route, so it must be shared only with the intended surveyor.
 
 Navigation and phone buttons open the phone's external maps and calling applications.
 

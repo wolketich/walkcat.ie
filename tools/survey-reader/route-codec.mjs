@@ -29,7 +29,7 @@ export function createRoutePayload({ plan, result, generatedAt = new Date().toIS
     v: 1,
     kind: PAYLOAD_KIND,
     date: text(plan.date),
-    surveyor: "Sasha",
+    surveyor: "",
     generatedAt: text(generatedAt),
     start: {
       label: text(plan.startLabel || "Starting point"),

@@ -4,7 +4,7 @@
   <script>
     (() => {
       const match = location.pathname.match(/^\/tools\/survey-reader\/([A-Za-z0-9]+)\/?$/);
-      if (match) location.replace(`/tools/survey-reader/?paste=${encodeURIComponent(match[1])}${location.hash}`);
+      if (match) location.replace(`/tools/survey-reader/?route=${encodeURIComponent(match[1])}${location.hash}`);
     })();
   </script>
   <meta charset="UTF-8" />
