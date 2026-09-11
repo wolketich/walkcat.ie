@@ -1,4 +1,5 @@
 import { decodeRoutePayload } from "./route-codec.mjs";
+import { googleDestinationUrl as googleDestination, googleRouteUrl } from "./route-links.mjs";
 
 const loadingState = document.getElementById("loadingState");
 const readerApp = document.getElementById("readerApp");
@@ -39,14 +40,6 @@ function generatedLabel(value) {
   return new Intl.DateTimeFormat("en-IE", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(date);
 }
 
-function googleDestination(locationValue) {
-  const url = new URL("https://www.google.com/maps/dir/");
-  url.searchParams.set("api", "1");
-  url.searchParams.set("destination", locationValue);
-  url.searchParams.set("travelmode", "driving");
-  return url.toString();
-}
-
 function stopDestination(stop) {
   const houseNumber = String(stop?.houseNumber || "").trim();
   let address = String(stop?.address || "").trim();
@@ -65,17 +58,11 @@ function stopDestination(stop) {
 }
 
 function googleFullRoute() {
-  const points = [route.start.location, ...route.stops.map(stopDestination)];
-  if (route.finish?.location) points.push(route.finish.location);
-  const origin = points.shift();
-  const destination = points.pop() || origin;
-  const url = new URL("https://www.google.com/maps/dir/");
-  url.searchParams.set("api", "1");
-  url.searchParams.set("origin", origin);
-  url.searchParams.set("destination", destination);
-  url.searchParams.set("travelmode", "driving");
-  if (points.length) url.searchParams.set("waypoints", points.join("|"));
-  return url.toString();
+  return googleRouteUrl({
+    origin: route.start.location,
+    stops: route.stops.map((stop) => stop.location),
+    destination: route.finish?.location || ""
+  });
 }
 
 function phoneHref(phone) {
@@ -147,10 +134,13 @@ function base64UrlToBytes(value) {
 }
 
 function actionLinks(stop, { prominent = false } = {}) {
-  return `<div class="stop-links ${prominent ? "prominent" : ""}">
-    <a class="action navigate" href="${escapeHtml(googleDestination(stopDestination(stop)))}" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> Navigate</a>
-    ${stop.phone ? `<a class="action call" href="${escapeHtml(phoneHref(stop.phone))}"><span aria-hidden="true">☎</span> Call</a>` : ""}
-  </div>`;
+  const navigationUrl = googleDestination(stop.location);
+  const actions = [
+    navigationUrl ? `<a class="action navigate" href="${escapeHtml(navigationUrl)}" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> Navigate</a>` : "",
+    stop.phone ? `<a class="action call" href="${escapeHtml(phoneHref(stop.phone))}"><span aria-hidden="true">☎</span> Call</a>` : ""
+  ].filter(Boolean);
+  if (!actions.length) return "";
+  return `<div class="stop-links ${prominent ? "prominent" : ""} ${actions.length === 1 ? "single" : ""}">${actions.join("")}</div>`;
 }
 
 function surveyCarouselCard(stop) {
@@ -160,7 +150,7 @@ function surveyCarouselCard(stop) {
     <div class="next-time"><span>ETA</span><strong>${escapeHtml(stop.eta)}</strong></div>
     <h1>${escapeHtml(stop.name)}</h1>
     <p class="next-location">${escapeHtml(stopDestination(stop))}</p>
-    <div class="next-facts"><span>${escapeHtml(windowLabel(stop))}</span><span>${escapeHtml(stop.durationMinutes)} min survey</span><span>${escapeHtml(stop.driveMinutes)} min drive</span></div>
+    <div class="next-facts">${Number(stop.order) === 1 && route.start.departure !== (route.start.shiftStart || route.start.departure) ? `<span>Depart at ${escapeHtml(route.start.departure)}</span>` : ""}<span>${escapeHtml(windowLabel(stop))}</span><span>${escapeHtml(stop.durationMinutes)} min survey</span><span>${escapeHtml(stop.driveMinutes)} min drive</span></div>
     ${stop.notes ? `<p class="next-notes"><strong>Survey note</strong>${escapeHtml(stop.notes)}</p>` : ""}
     ${actionLinks(stop, { prominent: true })}
     <button class="next-done-button" type="button" data-complete-stop="${escapeHtml(stop.order)}">${isDone ? "Completed ✓" : "Mark done"}</button>
@@ -188,11 +178,12 @@ function surveyCarousel() {
 
 function stopCard(stop) {
   const isDone = completed.has(Number(stop.order));
+  const navigationUrl = googleDestination(stop.location);
   return `<article class="timeline-item survey ${isDone ? "is-done" : ""}" id="stop-${escapeHtml(stop.order)}">
     <div class="rail"><time>${escapeHtml(stop.eta)}</time><span class="rail-dot">${escapeHtml(stop.order)}</span></div>
     <div class="stop-card">
       <header><div><span class="stop-type">SURVEY ${escapeHtml(stop.order)}</span><h2>${escapeHtml(stop.name)}</h2></div><button class="done-button" type="button" data-complete-stop="${escapeHtml(stop.order)}" aria-pressed="${isDone}">${isDone ? "Completed ✓" : "Mark done"}</button></header>
-      <a class="location-link" href="${escapeHtml(googleDestination(stopDestination(stop)))}" target="_blank" rel="noopener">${escapeHtml(stopDestination(stop))} <span aria-hidden="true">↗</span></a>
+      ${navigationUrl ? `<a class="location-link" href="${escapeHtml(navigationUrl)}" target="_blank" rel="noopener">${escapeHtml(stopDestination(stop))} <span aria-hidden="true">↗</span></a>` : `<p class="location-text">${escapeHtml(stopDestination(stop))}</p>`}
       <div class="appointment-band"><strong>${escapeHtml(stop.eta)}</strong><span>${escapeHtml(windowLabel(stop))}<br>Finish around ${escapeHtml(stop.surveyEnd)}</span></div>
       <dl class="stop-facts"><div><dt>From previous</dt><dd>${escapeHtml(stop.driveMinutes)} min · ${escapeHtml(stop.driveKm)} km</dd></div><div><dt>Survey time</dt><dd>${escapeHtml(stop.durationMinutes)} minutes</dd></div>${stop.phone ? `<div><dt>Phone</dt><dd><a href="${escapeHtml(phoneHref(stop.phone))}">${escapeHtml(stop.phone)}</a></dd></div>` : ""}${stop.availability ? `<div><dt>Customer availability</dt><dd>${escapeHtml(stop.availability)}</dd></div>` : ""}</dl>
       ${stop.notes ? `<div class="survey-note"><span>NOTES</span><p>${escapeHtml(stop.notes)}</p></div>` : ""}
@@ -209,19 +200,27 @@ function blockCard(block) {
 }
 
 function timeline() {
+  const shiftStart = route.start.shiftStart || route.start.departure;
+  const delayedDeparture = route.stops[0] && route.start.departure !== shiftStart;
+  const first = route.stops[0];
+  const startUrl = googleDestination(route.start.location);
+  const firstUrl = first ? googleDestination(first.location) : "";
+  const finishUrl = route.finish ? googleDestination(route.finish.location) : "";
   const events = [
     ...route.stops.map((stop) => ({ type: "stop", time: stop.eta, value: stop })),
     ...(route.unavailable || []).map((block) => ({ type: "block", time: block.start, value: block }))
   ].sort((left, right) => left.time.localeCompare(right.time) || (left.type === "block" ? -1 : 1));
 
-  return `<section class="day-section" aria-label="Survey schedule">
+  return `<section class="day-section" aria-labelledby="dayPlanTitle">
+    <div class="section-heading"><div><span class="eyebrow">SURVEY ROUTE</span><h2 id="dayPlanTitle">Schedule</h2></div><span>${route.stops.length} surveys</span></div>
     <div class="timeline">
       <article class="timeline-item start-item">
-        <div class="rail"><time>${escapeHtml(route.start.departure)}</time><span class="rail-dot">S</span></div>
-        <div class="start-card"><span>START HERE</span><strong>${escapeHtml(route.start.label)}</strong><p>${escapeHtml(route.start.location)} · earliest departure</p><a href="${escapeHtml(googleDestination(route.start.location))}" target="_blank" rel="noopener">Open start point ↗</a></div>
+        <div class="rail"><time>${escapeHtml(shiftStart)}</time><span class="rail-dot">S</span></div>
+        <div class="start-card"><span>${delayedDeparture ? "SHIFT START" : "SHIFT START & DEPART"}</span><strong>${escapeHtml(route.start.label)}</strong><p>${escapeHtml(route.start.location)} · ready for the survey day</p>${startUrl ? `<a href="${escapeHtml(startUrl)}" target="_blank" rel="noopener">Open start point ↗</a>` : ""}</div>
       </article>
+      ${delayedDeparture ? `<article class="timeline-item departure-item"><div class="rail"><time>${escapeHtml(route.start.departure)}</time><span class="rail-dot">D</span></div><div class="departure-card"><span>DEPART FOR SURVEY 1</span><strong>Leave at ${escapeHtml(route.start.departure)}</strong><p>Be at ${escapeHtml(first.name)} for ${escapeHtml(first.eta)} · ${escapeHtml(first.driveMinutes)} min drive · ${escapeHtml(first.location)}</p>${firstUrl ? `<a href="${escapeHtml(firstUrl)}" target="_blank" rel="noopener">Open Survey 1 directions ↗</a>` : ""}</div></article>` : ""}
       ${events.map((event) => event.type === "stop" ? stopCard(event.value) : blockCard(event.value)).join("")}
-      ${route.finish ? `<article class="timeline-item finish-item"><div class="rail"><time>${escapeHtml(route.finish.eta)}</time><span class="rail-dot">F</span></div><div class="finish-card"><span>FINISH</span><strong>${escapeHtml(route.finish.label)}</strong><p>${escapeHtml(route.finish.location)}${route.finish.requiredBy ? ` · required by ${escapeHtml(route.finish.requiredBy)}` : ""}</p><a href="${escapeHtml(googleDestination(route.finish.location))}" target="_blank" rel="noopener">Navigate ↗</a></div></article>` : ""}
+      ${route.finish ? `<article class="timeline-item finish-item"><div class="rail"><time>${escapeHtml(route.finish.eta)}</time><span class="rail-dot">F</span></div><div class="finish-card"><span>FINISH</span><strong>${escapeHtml(route.finish.label)}</strong><p>${escapeHtml(route.finish.location)}${route.finish.requiredBy ? ` · required by ${escapeHtml(route.finish.requiredBy)}` : ""}</p>${finishUrl ? `<a href="${escapeHtml(finishUrl)}" target="_blank" rel="noopener">Navigate ↗</a>` : ""}</div></article>` : ""}
     </div>
   </section>`;
 }
@@ -229,10 +228,11 @@ function timeline() {
 function render() {
   const completedCount = route.stops.filter((stop) => completed.has(Number(stop.order))).length;
   const progress = route.stops.length ? Math.round(completedCount / route.stops.length * 100) : 100;
+  const fullRouteUrl = googleFullRoute();
   readerApp.innerHTML = `
     <section class="route-masthead">
-      <div><span class="eyebrow">SURVEY ROUTE</span><h1>${escapeHtml(dateLabel(route.date))}</h1><p>Start ${escapeHtml(route.start.departure)} · finish around ${escapeHtml(route.totals.finishTime || "—")}</p></div>
-      <a class="full-route-link" href="${escapeHtml(googleFullRoute())}" target="_blank" rel="noopener">Open full route <span aria-hidden="true">↗</span></a>
+      <div><span class="eyebrow">SURVEY ROUTE</span><h1>${escapeHtml(dateLabel(route.date))}</h1><p>Shift ${escapeHtml(route.start.shiftStart || route.start.departure)} · depart ${escapeHtml(route.start.departure)} · finish around ${escapeHtml(route.totals.finishTime || "—")}</p></div>
+      ${fullRouteUrl ? `<a class="full-route-link" href="${escapeHtml(fullRouteUrl)}" target="_blank" rel="noopener">Open full route <span aria-hidden="true">↗</span></a>` : '<span class="route-link-unavailable">Full route needs Eircodes</span>'}
     </section>
     <section class="progress-card" aria-label="Route progress"><div><strong>${completedCount} / ${route.stops.length}</strong><span>surveys completed</span></div><div class="progress-track" aria-hidden="true"><i style="width:${progress}%"></i></div></section>
     ${surveyCarousel()}

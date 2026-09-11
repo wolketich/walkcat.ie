@@ -34,7 +34,8 @@ export function createRoutePayload({ plan, result, generatedAt = new Date().toIS
     start: {
       label: text(plan.startLabel || "Starting point"),
       location: text(plan.startLocation),
-      departure: text(plan.dayStart)
+      shiftStart: text(plan.dayStart),
+      departure: text(result.departureTime || plan.dayStart)
     },
     stops: result.schedule.map((stop, index) => {
       const job = jobsById.get(text(stop.jobId));
@@ -50,7 +51,7 @@ export function createRoutePayload({ plan, result, generatedAt = new Date().toIS
         window: text(stop.window),
         windowStart: text(stop.windowStart),
         windowEnd: text(stop.windowEnd),
-        appointmentType: stop.appointmentType === "exact" ? "exact" : "window",
+        appointmentType: ["exact", "window"].includes(stop.appointmentType) ? stop.appointmentType : "none",
         exactTime: text(stop.exactTime),
         surveyEnd: text(stop.surveyEnd),
         durationMinutes: number(stop.durationMinutes),
@@ -122,6 +123,8 @@ export function validateRoutePayload(payload) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(text(payload.date)) || !payload.start || !Array.isArray(payload.stops)) {
     throw new Error("This route link is incomplete.");
   }
+  payload.start.shiftStart ||= payload.start.departure;
+  payload.start.departure ||= payload.start.shiftStart;
   if (payload.stops.length > 20 || !payload.stops.every((stop) => stop && typeof stop === "object" && text(stop.name) && text(stop.eta))) {
     throw new Error("This route link is incomplete.");
   }

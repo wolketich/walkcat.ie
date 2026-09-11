@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f3f6f9">
-  <meta name="description" content="Private installation crew route.">
-  <title>Installation Route</title>
+  <meta name="description" content="Private Expert Windows installation crew route.">
+  <title>Installation Route · Expert Windows</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
@@ -13,18 +13,33 @@
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <header class="site-header"><div><span>FIELD OPERATIONS</span><strong>Installation route</strong></div><span class="sync-state" id="syncState">Opening…</span></header>
-  <main id="routeContent"><section class="loading" id="loading"><i></i><strong>Opening crew route…</strong><span>The encrypted plan is being unlocked on this device.</span></section></main>
+  <a class="skip-link" href="#routeContent">Skip to route</a>
+  <header class="site-header">
+    <div class="identity" aria-label="Expert Windows installation route reader">
+      <span><strong>Installation route</strong><small>Expert Windows · Field operations</small></span>
+    </div>
+    <span class="sync-state reader-label" id="syncState" aria-live="polite">Opening…</span>
+  </header>
 
-  <dialog id="doneDialog">
+  <main id="routeContent">
+    <section class="loading-state" aria-live="polite">
+      <span class="loading-pulse" aria-hidden="true"></span>
+      <strong>Opening Installation Route…</strong>
+    </section>
+  </main>
+
+  <dialog class="completion-dialog" id="doneDialog" aria-labelledby="doneTitle">
     <form method="dialog">
-      <span class="eyebrow">CONFIRM COMPLETION</span>
-      <h2>Mark this job done?</h2>
+      <span class="confirmation-mark" aria-hidden="true">✓</span>
+      <span class="eyebrow">PLEASE CONFIRM</span>
+      <h2 id="doneTitle">Mark this job done?</h2>
       <p id="doneJobName"></p>
-      <small>This will update dispatch and Monday. Check the job is genuinely finished before confirming.</small>
-      <footer><button value="cancel">Go back</button><button class="confirm" id="confirmDone" type="button">Yes, mark done</button></footer>
+      <small>This updates dispatch and Monday. Confirm only when the job is genuinely finished.</small>
+      <div class="confirmation-actions"><button value="cancel">Cancel</button><button class="confirm-completion" id="confirmDone" type="button">Yes, mark done</button></div>
     </form>
   </dialog>
+
+  <noscript><p class="fatal-message">JavaScript is required to read this route.</p></noscript>
   <script type="module" src="./app.js"></script>
 </body>
 </html>

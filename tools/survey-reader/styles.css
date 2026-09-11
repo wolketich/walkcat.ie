@@ -18,7 +18,7 @@
   --warn-soft: #fff4d9;
   --shadow: 0 1px 2px rgba(20, 40, 59, .045), 0 12px 32px rgba(20, 40, 59, .055);
   --radius: 12px;
-  --font: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font: Manrope, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -160,6 +160,7 @@ button { font: inherit; }
   border-color: var(--brand2);
   transform: translateY(-1px);
 }
+.route-link-unavailable { align-self: end; color: var(--muted); font-size: 11px; font-weight: 650; }
 
 .progress-card {
   display: grid;
@@ -342,6 +343,7 @@ button { font: inherit; }
 }
 
 .stop-links { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 15px; }
+.stop-links.single { grid-template-columns: 1fr; }
 .stop-links.prominent { margin-top: 17px; }
 .action {
   min-height: 42px;
@@ -428,6 +430,7 @@ button { font: inherit; }
 }
 .stop-card,
 .start-card,
+.departure-card,
 .finish-card,
 .block-card {
   min-width: 0;
@@ -441,6 +444,7 @@ button { font: inherit; }
 .stop-card header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
 .stop-type,
 .start-card > span,
+.departure-card > span,
 .finish-card > span,
 .block-card > span {
   color: var(--brand2);
@@ -477,6 +481,7 @@ button { font: inherit; }
   text-decoration: none;
 }
 .location-link:hover { text-decoration: underline; }
+.location-text { margin: 8px 0 0; color: var(--muted); font-size: 12px; font-weight: 600; }
 .appointment-band {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -511,6 +516,7 @@ button { font: inherit; }
 .start-card { background: var(--blue-soft); border-color: #cfdeea; }
 .start-card > span { color: var(--blue-dark); }
 .start-card strong,
+.departure-card strong,
 .finish-card strong,
 .block-card strong {
   display: block;
@@ -521,9 +527,11 @@ button { font: inherit; }
   letter-spacing: -.02em;
 }
 .start-card p,
+.departure-card p,
 .finish-card p,
 .block-card p { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
 .start-card a,
+.departure-card a,
 .finish-card a {
   display: inline-block;
   margin-top: 9px;
@@ -533,6 +541,10 @@ button { font: inherit; }
   text-decoration: none;
 }
 .start-item .rail-dot { border-color: var(--ink-strong); border-radius: 3px; }
+.departure-card { background: var(--ok-soft); border-color: #c4e1d8; }
+.departure-card > span,
+.departure-card a { color: var(--ok); }
+.departure-item .rail-dot { border-color: var(--ok); border-radius: 3px; }
 .finish-card { background: var(--ok-soft); border-color: #c4e1d8; }
 .finish-card > span { color: var(--ok); }
 .finish-item .rail-dot { border-color: var(--ok); }
@@ -707,6 +719,7 @@ button { font: inherit; }
   .day-section { padding: 15px; background: #fff; }
   .stop-card,
   .start-card,
+  .departure-card,
   .finish-card,
   .block-card { break-inside: avoid; box-shadow: none; }
 }
