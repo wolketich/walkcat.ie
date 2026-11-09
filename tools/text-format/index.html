@@ -1,98 +1,171 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Reply to Janet: copy with bold and blank lines</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Reply Formatter</title>
 <style>
-  body { margin: 0; padding: 32px 18px; background: #f4f5f7; color: #20252b; font: 16px/1.5 Arial, Helvetica, sans-serif; }
-  main { max-width: 720px; margin: auto; }
-  .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0 0 16px; }
-  button { border: 0; border-radius: 6px; padding: 12px 16px; color: #fff; background: #195fa7; font: 600 15px Arial, sans-serif; cursor: pointer; }
-  #fallback { background: #59636d; }
-  #status { font-size: 14px; }
-  #message { background: #fff; border: 1px solid #d6dce3; border-radius: 8px; padding: 22px 26px; line-height: 1.5; }
-  #message .line { min-height: 1.5em; }
-  #message .blank { min-height: 1.5em; }
-  p { font-size: 14px; color: #535c66; }
+:root{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#17212d;background:#f4f6f8;font-synthesis:none}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh}
+main{max-width:1200px;margin:auto;padding:42px 24px 48px}
+header{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:26px}
+h1{margin:0;font-size:24px;font-weight:700;letter-spacing:-.7px}
+.toolbar{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap}
+button{font:600 13px/1.3 inherit;appearance:none;border:1px solid #d5dbe3;border-radius:9px;background:white;color:#17212d;padding:11px 15px;cursor:pointer;transition:background .15s,border-color .15s;white-space:nowrap}
+button:hover{background:#edf1f6}
+button:focus-visible,textarea:focus-visible{outline:3px solid #7caeff;outline-offset:2px}
+button.primary{background:#1a65db;color:#fff;border-color:#1a65db}
+button.primary:hover{background:#1355c0}
+button:disabled{cursor:default;opacity:.43}
+button:disabled:hover{background:inherit}
+button.primary:disabled:hover{background:#1a65db}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:stretch}
+.panel{min-width:0;background:#fff;border:1px solid #dee4ec;border-radius:13px;overflow:hidden;box-shadow:0 6px 24px rgba(27,45,65,.035)}
+.panel-heading{height:52px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e5eaf0;padding:0 20px;font-size:13px;letter-spacing:.01em;font-weight:650;color:#536174}
+textarea{width:100%;height:510px;display:block;resize:vertical;padding:22px;border:0;outline:0;background:transparent;color:#202c39;font:15px/1.65 ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+textarea:focus-visible{outline:none}
+.preview{height:510px;overflow:auto;padding:22px;color:#202c39;font-size:15px;line-height:1.65;white-space:normal;overflow-wrap:anywhere;user-select:text}
+.preview .para{margin:0 0 1em;min-height:1.65em}
+.preview .para:last-child{margin-bottom:0}
+.preview b{font-weight:700}
+.preview:empty:after{content:""}
+.status{min-width:0;font-size:13px;font-weight:600;color:#277647;white-space:nowrap}
+@media(max-width:850px){main{padding:22px 15px}header{flex-wrap:wrap;gap:17px}h1{font-size:21px}.panels{grid-template-columns:1fr}.panel textarea,.preview{height:290px}.toolbar{justify-content:flex-start}button{padding:10px 12px}}
 </style>
 </head>
 <body>
 <main>
-  <div class="actions">
-    <button id="copy">Copy with bold and spacing</button>
-    <button id="fallback" title="Alternative for editors that collapse empty paragraphs">Copy with hard line breaks</button>
-    <span id="status" aria-live="polite"></span>
+<header>
+  <h1>Reply Formatter</h1>
+  <div class="toolbar">
+    <button id="clear" type="button">Clear</button>
+    <button id="copyHard" type="button">Copy hard breaks</button>
+    <button id="copy" class="primary" type="button">Copy formatted</button>
+    <span id="status" class="status" role="status" aria-live="polite"></span>
   </div>
-  <div id="message">
-    <div class="line">Good morning Janet,</div><div class="blank">&nbsp;</div>
-    <div class="line">Absolutely, we'll arrange to come back and <b>touch up the mark on the front door</b>.</div><div class="blank">&nbsp;</div>
-    <div class="line">Regarding the old front door, I spoke with the lads, and they explained that it was no longer in a condition suitable for reuse. The threshold was completely deteriorated, and the door had lost its structural integrity, so they took it with them.</div><div class="blank">&nbsp;</div>
-    <div class="line">As for the bathroom window, I've checked with Sasha, and he had specified <b>clear glazing</b> on his survey sheet. Was there a change to the specification for that window at some stage?</div><div class="blank">&nbsp;</div>
-    <div class="line">Thanks, Vlad.</div>
-  </div>
-  <p>The blank lines are part of the copied text, not visual paragraph margins. If your editor removes them, try the second copy button.</p>
+</header>
+<div class="panels">
+  <section class="panel"><div class="panel-heading">INPUT</div><textarea id="source" aria-label="Input text" spellcheck="true" autofocus></textarea></section>
+  <section class="panel"><div class="panel-heading">PREVIEW</div><div id="preview" class="preview" aria-label="Formatted output"></div></section>
+</div>
 </main>
 <script>
-(() => {
-  const parts = [
-    'Good morning Janet,',
-    "Absolutely, we'll arrange to come back and <b>touch up the mark on the front door</b>.",
-    'Regarding the old front door, I spoke with the lads, and they explained that it was no longer in a condition suitable for reuse. The threshold was completely deteriorated, and the door had lost its structural integrity, so they took it with them.',
-    "As for the bathroom window, I've checked with Sasha, and he had specified <b>clear glazing</b> on his survey sheet. Was there a change to the specification for that window at some stage?",
-    'Thanks, Vlad.'
-  ];
-  const plaintext = [
-    'Good morning Janet,',
-    "Absolutely, we'll arrange to come back and touch up the mark on the front door.",
-    'Regarding the old front door, I spoke with the lads, and they explained that it was no longer in a condition suitable for reuse. The threshold was completely deteriorated, and the door had lost its structural integrity, so they took it with them.',
-    "As for the bathroom window, I've checked with Sasha, and he had specified clear glazing on his survey sheet. Was there a change to the specification for that window at some stage?",
-    'Thanks, Vlad.'
-  ].join('\n\n');
-  // Editors sometimes discard empty <p> tags or their CSS margins.
-  // Non-empty blank divs containing NBSP are less likely to be collapsed.
-  const blockHTML = '<div>' + parts.map(s => '<div>' + s + '</div>').join('<div>&nbsp;</div>') + '</div>';
-  // Alternate representation: explicit BR breaks with a non-empty spacer between each paragraph.
-  const breakHTML = '<div>' + parts.join('<br><span>&nbsp;</span><br>') + '</div>';
-  const status = document.getElementById('status');
-  async function copy(html) {
-    try {
-      if (navigator.clipboard && window.ClipboardItem) {
-        await navigator.clipboard.write([new ClipboardItem({
-          'text/html': new Blob([html], {type: 'text/html'}),
-          'text/plain': new Blob([plaintext], {type: 'text/plain'})
-        })]);
-        status.textContent = 'Copied. Paste into Zendesk or Telegram.';
-        return;
-      }
-    } catch (_) { /* Clipboard permission blocked: use copy event fallback. */ }
-    const temp = document.createElement('div');
-    temp.setAttribute('contenteditable', 'true');
-    temp.style.cssText = 'position:fixed;left:-10000px;top:0;';
-    temp.innerHTML = html;
-    document.body.appendChild(temp);
-    const selection = window.getSelection();
-    const range = document.createRange();
-    range.selectNodeContents(temp);
-    selection.removeAllRanges();
-    selection.addRange(range);
-    let copied = false;
-    function onCopy(event) {
-      if (!event.clipboardData) return;
-      event.clipboardData.setData('text/html', html);
-      event.clipboardData.setData('text/plain', plaintext);
-      event.preventDefault();
-      copied = true;
-    }
-    document.addEventListener('copy', onCopy);
-    try { document.execCommand('copy'); } catch (_) {}
-    document.removeEventListener('copy', onCopy);
-    selection.removeAllRanges();
-    temp.remove();
-    status.textContent = copied ? 'Copied. Paste into Zendesk or Telegram.' : 'Copy blocked. Select the displayed message manually.';
+(()=>{'use strict';
+const source=document.getElementById('source');
+const preview=document.getElementById('preview');
+const status=document.getElementById('status');
+const copyBtn=document.getElementById('copy');
+const copyHardBtn=document.getElementById('copyHard');
+const escapeHtml=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const normalize=s=>s.replace(/\r\n?/g,'\n').replace(/\u00a0/g,' ').replace(/[\t ]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').trim();
+
+function htmlToMarkdown(input){
+  const doc=new DOMParser().parseFromString(input,'text/html');
+  const block=new Set(['p','div','section','article','header','footer','aside','blockquote','h1','h2','h3','h4','h5','h6','li','tr']);
+  let result='';
+  function walk(node){
+    if(node.nodeType===3){result+=node.nodeValue||'';return}
+    if(node.nodeType!==1)return;
+    const tag=node.tagName.toLowerCase();
+    if(['script','style','noscript','svg','iframe','button'].includes(tag))return;
+    if(tag==='br'){result+='\n';return}
+    const weight=(node.getAttribute('style')||'').match(/font-weight\s*:\s*(bold|[6-9]00)/i);
+    const isBold=tag==='b'||tag==='strong'||Boolean(weight);
+    if(tag==='li'&&result&&!result.endsWith('\n'))result+='\n';
+    if(isBold)result+='**';
+    for(const child of node.childNodes)walk(child);
+    if(isBold)result+='**';
+    if(block.has(tag))result+='\n\n';
   }
-  document.getElementById('copy').addEventListener('click', () => copy(blockHTML));
-  document.getElementById('fallback').addEventListener('click', () => copy(breakHTML));
+  for(const child of doc.body.childNodes)walk(child);
+  return normalize(result);
+}
+function toSafeInline(s){
+  // The source may contain Markdown bold or literal <b> and <strong> tags.
+  let html=escapeHtml(s);
+  html=html.replace(/&lt;\s*(\/?)\s*(?:b|strong)\s*&gt;/gi,(_,closing)=>closing?'</b>':'<b>');
+  html=html.replace(/\*\*([^\n*]+(?:\*(?!\*)[^\n*]+)*)\*\*/g,'<b>$1</b>');
+  html=html.replace(/__([^\n_]+(?:_(?!_)[^\n_]+)*)__/g,'<b>$1</b>');
+  return html.replace(/\n/g,'<br>');
+}
+function parts(){
+ const text=normalize(source.value);
+ return text?text.split(/\n[ \t]*\n+/).map(toSafeInline):[];
+}
+function getPlainText(xs){
+ const e=document.createElement('div');
+ return xs.map(html=>{e.innerHTML=html.replace(/<br\s*\/?\s*>/gi,'\n');return e.textContent}).join('\n\n');
+}
+function sync(){
+ const xs=parts();
+ preview.innerHTML=xs.map(p=>'<div class="para">'+p+'</div>').join('');
+ const empty=xs.length===0;
+ copyBtn.disabled=empty;copyHardBtn.disabled=empty;
+ status.textContent='';
+}
+source.addEventListener('input',sync);
+source.addEventListener('paste',event=>{
+  const cb=event.clipboardData;
+  if(!cb)return;
+  const html=cb.getData('text/html');
+  if(!html)return;
+  const plain=cb.getData('text/plain');
+  // Respect source Markdown when the clipboard already supplies it.
+  const parsed=/(<\s*(b|strong)\b|font-weight\s*:\s*(bold|[6-9]00))/i.test(html)
+    ?htmlToMarkdown(html)
+    : (plain||htmlToMarkdown(html));
+  if(!parsed)return;
+  event.preventDefault();
+  const start=source.selectionStart,end=source.selectionEnd;
+  source.setRangeText(parsed,start,end,'end');
+  sync();
+});
+async function copy(hard){
+  const xs=parts();if(!xs.length)return;
+  const plain=getPlainText(xs);
+  // Non-empty spacer nodes survive paste into editors that discard CSS margins.
+  const html=hard
+     ?'<div>'+xs.join('<br><span>&nbsp;</span><br>')+'</div>'
+     :'<div>'+xs.map(x=>'<div>'+x+'</div>').join('<div>&nbsp;</div>')+'</div>';
+  let success=false;
+  try{
+    if(navigator.clipboard && window.ClipboardItem){
+      await navigator.clipboard.write([new ClipboardItem({
+        'text/html':new Blob([html],{type:'text/html'}),
+        'text/plain':new Blob([plain],{type:'text/plain'})
+      })]);
+      success=true;
+    }
+  }catch(_){/* Use legacy copy for local file contexts */}
+  if(!success){
+    const hidden=document.createElement('div');
+    hidden.setAttribute('contenteditable','true');
+    hidden.style.cssText='position:fixed;left:-99999px;top:0;width:1px;';
+    hidden.innerHTML=html;
+    document.body.appendChild(hidden);
+    const selection=window.getSelection();
+    const range=document.createRange();
+    range.selectNodeContents(hidden);
+    selection.removeAllRanges();selection.addRange(range);
+    const handler=e=>{
+      if(!e.clipboardData)return;
+      e.clipboardData.setData('text/html',html);
+      e.clipboardData.setData('text/plain',plain);
+      e.preventDefault();success=true;
+    };
+    document.addEventListener('copy',handler);
+    try{document.execCommand('copy')}catch(_){}
+    document.removeEventListener('copy',handler);
+    selection.removeAllRanges();hidden.remove();
+  }
+  status.textContent=success?'Copied':'Copy failed';
+}
+copyBtn.addEventListener('click',()=>copy(false));
+copyHardBtn.addEventListener('click',()=>copy(true));
+document.getElementById('clear').addEventListener('click',()=>{source.value='';sync();source.focus()});
+sync();
 })();
 </script>
 </body>
