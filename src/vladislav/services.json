@@ -1,0 +1,35 @@
+{
+  "name": "Vladislav Cernega",
+  "email": "hello@walkcat.ie",
+  "edition": "October 2026",
+  "vat": "Not VAT registered; no VAT added.",
+  "pricingNote": "All prices are starting prices. Your final scope and price are agreed before work begins.",
+  "terms": [
+    "Projects: 50% upfront and 50% before handover.",
+    "Two consolidated revision rounds are included for project deliverables.",
+    "Monthly services are paid in advance. Deliverables and the service period are agreed in your quote.",
+    "Hosting, domains, advertising spend and third-party subscriptions are charged separately.",
+    "Website copy receives light editing. Full copywriting, ecommerce, bespoke functionality, filming, printing and extra deliverables are quoted separately."
+  ],
+  "websites": [
+    {"id":"single-page", "name":"Single-page website", "price":750, "unit":"project", "tagline":"One clear place to start.", "description":"For a new business, a focused service or a campaign that needs its own home.", "scope":"One responsive page, up to 6 sections, enquiry links and basic SEO.", "features":["Up to 6 thoughtfully designed sections", "Responsive design for mobile and desktop", "Email, phone or WhatsApp enquiry links", "Basic on-page SEO and light copy editing"]},
+    {"id":"business", "name":"Business website", "price":1500, "unit":"project", "tagline":"Room to tell your story.", "description":"For an established business ready to present its services and make enquiries easier.", "scope":"Up to 5 pages, responsive design, a contact form and basic SEO.", "features":["Up to 5 individually designed pages", "Responsive design for mobile and desktop", "Contact form with agreed email delivery", "Basic on-page SEO and light copy editing"]},
+    {"id":"larger", "name":"Larger website", "price":2500, "unit":"project", "tagline":"Space for everything you do.", "description":"For a wider range of services, more detailed information or a growing portfolio.", "scope":"Up to 10 pages, responsive design, a contact form and basic SEO.", "features":["Up to 10 individually designed pages", "Responsive design for mobile and desktop", "Contact form with agreed email delivery", "Basic on-page SEO and light copy editing"]}
+  ],
+  "services": [
+    {"id":"care", "name":"Website care", "category":"Support", "price":75, "unit":"month", "scope":"Routine checks, applicable updates and up to 30 minutes of content edits each month."},
+    {"id":"seo-setup", "name":"SEO setup", "category":"Search & advertising", "price":350, "unit":"project", "scope":"An initial audit and on-page SEO setup for up to 5 pages."},
+    {"id":"local-seo", "name":"Local SEO", "category":"Search & advertising", "price":350, "unit":"month", "scope":"One business and location; up to 4 hours of optimisation and reporting each month."},
+    {"id":"google-ads", "name":"Google Ads", "category":"Search & advertising", "price":300, "setup":250, "unit":"month", "scope":"One account, up to 2 search campaigns, monthly optimisation and reporting. Ad spend is separate."},
+    {"id":"meta-ads", "name":"Meta Ads", "category":"Search & advertising", "price":250, "setup":200, "unit":"month", "scope":"One account, up to 2 campaigns using supplied creative. Ad spend is separate."},
+    {"id":"social", "name":"Social media", "category":"Content & design", "price":350, "unit":"month", "scope":"8 original static posts with captions and scheduling, adapted across 2 platforms. Not 16 original posts."},
+    {"id":"brand", "name":"Starter brand identity", "category":"Content & design", "price":450, "unit":"project", "scope":"One logo direction, a colour palette, typography and a short brand guide."},
+    {"id":"graphic", "name":"Graphic design", "category":"Content & design", "price":75, "unit":"design", "scope":"One single-sided flyer, business card design or social graphic. Printing is separate."},
+    {"id":"video", "name":"Short promotional video", "category":"Content & design", "price":150, "unit":"video", "scope":"One video up to 30 seconds, edited from supplied footage, in one format. Filming is separate."}
+  ],
+  "projects": [
+    {"name":"Velvet Bathrooms", "image":"velvet.webp", "category":"Interiors & renovation", "description":"An image-led website with bathroom services, project galleries and clear enquiry routes."},
+    {"name":"IM Builders", "image":"imbuilders.webp", "category":"Construction & trades", "description":"A service-focused website for house extensions and renovations, with project information and estimate enquiries."},
+    {"name":"MyBalloons", "image":"myballoons.webp", "category":"Gifting & occasions", "description":"A distinctive website bringing gift collections, occasion pages and custom-order enquiries together."}
+  ]
+}

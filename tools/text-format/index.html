@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reply to Janet: copy with bold and blank lines</title>
+<style>
+  body { margin: 0; padding: 32px 18px; background: #f4f5f7; color: #20252b; font: 16px/1.5 Arial, Helvetica, sans-serif; }
+  main { max-width: 720px; margin: auto; }
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0 0 16px; }
+  button { border: 0; border-radius: 6px; padding: 12px 16px; color: #fff; background: #195fa7; font: 600 15px Arial, sans-serif; cursor: pointer; }
+  #fallback { background: #59636d; }
+  #status { font-size: 14px; }
+  #message { background: #fff; border: 1px solid #d6dce3; border-radius: 8px; padding: 22px 26px; line-height: 1.5; }
+  #message .line { min-height: 1.5em; }
+  #message .blank { min-height: 1.5em; }
+  p { font-size: 14px; color: #535c66; }
+</style>
+</head>
+<body>
+<main>
+  <div class="actions">
+    <button id="copy">Copy with bold and spacing</button>
+    <button id="fallback" title="Alternative for editors that collapse empty paragraphs">Copy with hard line breaks</button>
+    <span id="status" aria-live="polite"></span>
+  </div>
+  <div id="message">
+    <div class="line">Good morning Janet,</div><div class="blank">&nbsp;</div>
+    <div class="line">Absolutely, we'll arrange to come back and <b>touch up the mark on the front door</b>.</div><div class="blank">&nbsp;</div>
+    <div class="line">Regarding the old front door, I spoke with the lads, and they explained that it was no longer in a condition suitable for reuse. The threshold was completely deteriorated, and the door had lost its structural integrity, so they took it with them.</div><div class="blank">&nbsp;</div>
+    <div class="line">As for the bathroom window, I've checked with Sasha, and he had specified <b>clear glazing</b> on his survey sheet. Was there a change to the specification for that window at some stage?</div><div class="blank">&nbsp;</div>
+    <div class="line">Thanks, Vlad.</div>
+  </div>
+  <p>The blank lines are part of the copied text, not visual paragraph margins. If your editor removes them, try the second copy button.</p>
+</main>
+<script>
+(() => {
+  const parts = [
+    'Good morning Janet,',
+    "Absolutely, we'll arrange to come back and <b>touch up the mark on the front door</b>.",
+    'Regarding the old front door, I spoke with the lads, and they explained that it was no longer in a condition suitable for reuse. The threshold was completely deteriorated, and the door had lost its structural integrity, so they took it with them.',
+    "As for the bathroom window, I've checked with Sasha, and he had specified <b>clear glazing</b> on his survey sheet. Was there a change to the specification for that window at some stage?",
+    'Thanks, Vlad.'
+  ];
+  const plaintext = [
+    'Good morning Janet,',
+    "Absolutely, we'll arrange to come back and touch up the mark on the front door.",
+    'Regarding the old front door, I spoke with the lads, and they explained that it was no longer in a condition suitable for reuse. The threshold was completely deteriorated, and the door had lost its structural integrity, so they took it with them.',
+    "As for the bathroom window, I've checked with Sasha, and he had specified clear glazing on his survey sheet. Was there a change to the specification for that window at some stage?",
+    'Thanks, Vlad.'
+  ].join('\n\n');
+  // Editors sometimes discard empty <p> tags or their CSS margins.
+  // Non-empty blank divs containing NBSP are less likely to be collapsed.
+  const blockHTML = '<div>' + parts.map(s => '<div>' + s + '</div>').join('<div>&nbsp;</div>') + '</div>';
+  // Alternate representation: explicit BR breaks with a non-empty spacer between each paragraph.
+  const breakHTML = '<div>' + parts.join('<br><span>&nbsp;</span><br>') + '</div>';
+  const status = document.getElementById('status');
+  async function copy(html) {
+    try {
+      if (navigator.clipboard && window.ClipboardItem) {
+        await navigator.clipboard.write([new ClipboardItem({
+          'text/html': new Blob([html], {type: 'text/html'}),
+          'text/plain': new Blob([plaintext], {type: 'text/plain'})
+        })]);
+        status.textContent = 'Copied. Paste into Zendesk or Telegram.';
+        return;
+      }
+    } catch (_) { /* Clipboard permission blocked: use copy event fallback. */ }
+    const temp = document.createElement('div');
+    temp.setAttribute('contenteditable', 'true');
+    temp.style.cssText = 'position:fixed;left:-10000px;top:0;';
+    temp.innerHTML = html;
+    document.body.appendChild(temp);
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(temp);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    let copied = false;
+    function onCopy(event) {
+      if (!event.clipboardData) return;
+      event.clipboardData.setData('text/html', html);
+      event.clipboardData.setData('text/plain', plaintext);
+      event.preventDefault();
+      copied = true;
+    }
+    document.addEventListener('copy', onCopy);
+    try { document.execCommand('copy'); } catch (_) {}
+    document.removeEventListener('copy', onCopy);
+    selection.removeAllRanges();
+    temp.remove();
+    status.textContent = copied ? 'Copied. Paste into Zendesk or Telegram.' : 'Copy blocked. Select the displayed message manually.';
+  }
+  document.getElementById('copy').addEventListener('click', () => copy(blockHTML));
+  document.getElementById('fallback').addEventListener('click', () => copy(breakHTML));
+})();
+</script>
+</body>
+</html>

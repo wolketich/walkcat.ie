@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build-site.mjs",
-    "dev": "python3 -m http.server 4321"
+    "dev": "python3 -m http.server 4321",
+    "build:vladislav": "node scripts/build-vladislav.mjs"
   }
 }

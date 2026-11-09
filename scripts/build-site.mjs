@@ -299,6 +299,7 @@ for (const locale of localeOrder) {
 await writeFile(path.join(rootDir, 'robots.txt'), buildRobotsTxt(), 'utf8');
 await writeFile(path.join(rootDir, 'sitemap.xml'), buildSitemapXml(), 'utf8');
 await writeFile(manifestPath, buildManifest(), 'utf8');
+await import('./build-vladislav.mjs');
 
 async function writePage(relativePath, html) {
   const absolutePath = path.join(rootDir, relativePath);
